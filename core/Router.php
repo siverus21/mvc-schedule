@@ -30,7 +30,8 @@ class Router
             "path" => "/$path",
             "callback" => $callback,
             "middlewares" => null, // TODO
-            "method" => $method
+            "method" => $method,
+            "needToken" => true,
         ];
 
         return $this;
@@ -54,7 +55,33 @@ class Router
     public function dispatch(): mixed
     {
         $path = $this->request->getPath();
-        dump($path);
-        return "test";
+        $route = $this->matchRoute($path);
+
+        if ($route === false) {
+            abort('Test 404 error');
+        }
+
+        if (is_array($route['callback'])) {
+            $route['callback'][0] = new $route['callback'][0];
+        }
+
+        return call_user_func($route['callback']);
+    }
+
+    protected function matchRoute($path): mixed
+    {
+        foreach ($this->routes as $route)
+            if (
+                preg_match("#^{$route['path']}$#", "/{$path}", $mathes)
+                && in_array($this->request->getMethod(), $route['method'])
+            ) {
+                foreach ($mathes as $k => $v)
+                    if (is_string($k))
+                        $this->params[$k] = $v;
+
+                return $route;
+            }
+
+        return false;
     }
 }

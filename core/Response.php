@@ -4,5 +4,14 @@ namespace Youpi;
 
 class Response
 {
-    public function __construct() {}
+
+    public function setStatusResponse(int $statusCode): void
+    {
+        http_response_code($statusCode);
+    }
+
+    public function redirect()
+    {
+        // TODO
+    }
 }
