@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Youpi\\' => array($baseDir . '/core'),
+    'Valitron\\' => array($vendorDir . '/vlucas/valitron/src/Valitron'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\VarDumper\\' => array($vendorDir . '/symfony/var-dumper'),
     'App\\' => array($baseDir . '/app'),

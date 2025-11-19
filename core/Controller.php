@@ -1,0 +1,5 @@
+<?
+
+namespace Youpi;
+
+class Controller {}

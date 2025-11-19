@@ -2,10 +2,11 @@
 
 /** @var \Youpi\Application $app */
 
-$app->router->get('/', [App\Controllers\HomeController::class, 'index']);
+use App\Controllers\UserController;
+use App\Controllers\HomeController;
 
-$app->router->get('/test', [App\Controllers\HomeController::class, 'test']);
+$app->router->get('/', [HomeController::class, 'index']);
 
-$app->router->get('/post/(?P<slug>[a-z0-9_-]+/?)', function () {
-    return '<p>post</p>';
-});
+$app->router->get('/register', [UserController::class, 'register']);
+$app->router->post('/register', [UserController::class, 'store']);
+$app->router->get('/login', [UserController::class, 'login']);

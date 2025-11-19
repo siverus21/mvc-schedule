@@ -2,12 +2,12 @@
 
 namespace App\Controllers;
 
-class HomeController
+class HomeController extends BaseController
 {
 
     public function index(): string
     {
-        return 'is index';
+        return view('home', ['title' => "Home Page"], 'default');
     }
 
     public function test()

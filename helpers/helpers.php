@@ -18,7 +18,7 @@ function response()
 }
 
 
-function view($view = '', $data = [], $layout = ''): string|View
+function view($view = '', $data = [], $layout = 'default'): string|View
 {
     if ($view) {
         return app()->view->render($view, $data, $layout);
@@ -32,4 +32,9 @@ function abort($error = '', $code = 404)
     response()->setStatusResponse($code);
     echo view("errors/{$code}", ['error' => $error], false);
     die();
+}
+
+function base_url($path = ''): string
+{
+    return PATH . $path;
 }

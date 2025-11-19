@@ -17,6 +17,10 @@ class ComposerStaticInit41e82cf5563a2ba5e574ba4597e394e1
         array (
             'Youpi\\' => 6,
         ),
+        'V' => 
+        array (
+            'Valitron\\' => 9,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
@@ -32,6 +36,10 @@ class ComposerStaticInit41e82cf5563a2ba5e574ba4597e394e1
         'Youpi\\' => 
         array (
             0 => __DIR__ . '/../..' . '/core',
+        ),
+        'Valitron\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vlucas/valitron/src/Valitron',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
