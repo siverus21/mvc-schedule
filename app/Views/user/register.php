@@ -2,13 +2,11 @@
 
     <h1><?= $title ?? "" ?></h1>
 
-    <?
-    dump(session()->getAllSession());
-    ?>
-
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <form action="<?= base_url('/register') ?>" method="post">
+                <?= getCsrfField(); ?>
+
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
                     <input class="form-control <?= getValidationClass('name') ?>" type="text" name="name" id="name" placeholder="name" value="<?= old('name') ?>">

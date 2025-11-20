@@ -89,3 +89,13 @@ function h($str): string
 {
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
+
+function getCsrfField(): string
+{
+    return "<input type='hidden' name='_csrf_token' value='" . session()->get('_csrf_token') . "' />";
+}
+
+function getCsrfMeta(): string
+{
+    return "<meta name='_csrf_token' content='" . session()->get('_csrf_token') . "' />";
+}

@@ -31,7 +31,7 @@ class Router
             "callback" => $callback,
             "middlewares" => null, // TODO
             "method" => $method,
-            "needToken" => true,
+            "needCsrfToken" => true,
         ];
 
         return $this;
@@ -75,7 +75,22 @@ class Router
                 preg_match("#^{$route['path']}$#", "/{$path}", $mathes)
                 && in_array($this->request->getMethod(), $route['method'])
             ) {
-                foreach ($mathes as $k => $v)
+
+            if (request()->isPost()) {
+                if ($route['needCsrfToken'] && !$this->checkCsrfToken()) {
+                    if (request()->isAjax()) {
+                        echo json_encode([
+                            'status' => 'error',
+                            'data' => 'csrf token error',
+                        ]);
+                        die;
+                    } else {
+                        abort('csrf token error', 419);
+                    }
+                }
+            }
+
+            foreach ($mathes as $k => $v)
                     if (is_string($k))
                         $this->params[$k] = $v;
 
@@ -83,5 +98,16 @@ class Router
             }
 
         return false;
+    }
+
+    public function withoutCsrfToken(): self
+    {
+        $this->routes[array_key_last($this->routes)]['needCsrfToken'] = false;
+        return $this;
+    }
+
+    public function checkCsrfToken(): bool
+    {
+        return request()->post('_csrf_token') && request()->post('_csrf_token') === session()->get('_csrf_token');
     }
 }

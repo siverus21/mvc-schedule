@@ -29,10 +29,19 @@ class Application
         $this->session = new Session();
 
         $this->view = new View(LAYOUT);
+
+        $this->generateCsrfToken();
     }
 
     public function run(): void
     {
         echo $this->router->dispatch();
+    }
+
+    public function generateCsrfToken(): void
+    {
+        if (!session()->isSet('_csrf_token')) {
+            session()->set('_csrf_token', md5(uniqid(mt_rand(), true)));
+        }
     }
 }
