@@ -17,6 +17,11 @@ function response()
     return app()->response;
 }
 
+function session()
+{
+    return app()->session;
+}
+
 
 function view($view = '', $data = [], $layout = 'default'): string|View
 {
@@ -37,4 +42,50 @@ function abort($error = '', $code = 404)
 function base_url($path = ''): string
 {
     return PATH . $path;
+}
+
+function getAlerts(): void
+{
+    if (!empty($_SESSION['_flash'])) {
+        foreach ($_SESSION['_flash'] as $type => $message) {
+            echo view()->renderPartial("incs/alert_{$type}", ["flash_{$type}" => session()->getFlash($type)]);
+        }
+    }
+}
+
+function getErrors($fieldName): string
+{
+    $output = "";
+    $errors = session()->get('form_errors');
+
+    if (isset($errors[$fieldName])) {
+        $output .= "<span class='invalid-feedback d-block'><ul class='list-unstyled'>";
+        foreach ($errors[$fieldName] as $error) {
+            $output .= "<li>{$error}</li>";
+        }
+        $output .= "</ul></span>";
+    }
+
+    return $output;
+}
+
+function getValidationClass($fieldName): string
+{
+    $errors = session()->get('form_errors');
+
+    if (empty($errors)) {
+        return '';
+    }
+
+    return isset($errors[$fieldName]) ? 'is-invalid' : 'is-valid';
+}
+
+function old($fieldName): string
+{
+    return isset(session()->get('form_data')[$fieldName]) ? h(session()->get('form_data')[$fieldName]) : '';
+}
+
+function h($str): string
+{
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }

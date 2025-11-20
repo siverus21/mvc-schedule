@@ -21,11 +21,19 @@ class UserController extends BaseController
         $model = new UserModel();
         $model->loadData();
 
-        dump($model->attributes);
-        dump($model->validate());
-        dump($model->getErrors());
+        // Сообщения для алертов тянутся из названия файлов.
+        if (!$model->validate()) {
+            session()->setFlash('error', 'Validation errors');
+            session()->set('form_errors', $model->getErrors());
+            session()->set('form_data', $model->attributes);
+        } else {
+            session()->setFlash('info', 'Info message');
+            session()->setFlash('success', 'Successfully validation');
+        }
 
-        dd($_POST);
+        response()->redirect('/register');
+
+        // dd($_POST);
     }
 
     public function login()

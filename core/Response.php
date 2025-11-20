@@ -10,8 +10,15 @@ class Response
         http_response_code($statusCode);
     }
 
-    public function redirect()
+    public function redirect($url = '')
     {
-        // TODO
+        if ($url) {
+            $redirect = $url;
+        } else {
+            $redirect = $_SERVER['HTTP_REFERER'] ?? base_url('/');
+        }
+
+        header('Location: ' . $redirect);
+        die;
     }
 }
