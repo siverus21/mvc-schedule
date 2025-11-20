@@ -6,7 +6,12 @@ use Youpi\Model;
 
 class UserModel extends Model
 {
-    protected array $fillable = ['name', 'email', 'password', 'confirm-password'];
+    protected $table = "users";
+    public $timestamps = false;
+
+    protected $fillable = ['name', 'email', 'password'];
+
+    protected $loaded = ["name", "email", "password", "confirm-password"];
 
     protected array $rules = [
         'required' => ['name', 'email', 'password', 'confirm-password'],

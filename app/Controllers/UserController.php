@@ -5,12 +5,22 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use Valitron\Validator;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 class UserController extends BaseController
 {
 
     public function register()
     {
-        return view('user/register', ['title' => "Register Page"]);
+        $users = Capsule::table('users')->select(['name', 'email'])->get();
+        dump($users);
+
+        $user = Capsule::table('users')->select(['name', 'email'])->where('id', 1)->first();
+        dump($user);
+        return view('user/register', [
+            'title' => "Register Page",
+            'users' => $users
+        ]);
     }
 
     public function store()
@@ -27,8 +37,16 @@ class UserController extends BaseController
             session()->set('form_errors', $model->getErrors());
             session()->set('form_data', $model->attributes);
         } else {
-            session()->setFlash('info', 'Info message');
-            session()->setFlash('success', 'Successfully validation');
+            // UserModel::query()->create([
+            //     'name' => $model->name,
+            //     'email' => $model->email,
+            //     'password' => password_hash($model->password, PASSWORD_DEFAULT)
+            // ]);
+            if ($model->save()) {
+                session()->setFlash('success', 'Thanks for registration');
+            } else {
+                session()->setFlash('error', 'Error registration');
+            }
         }
 
         response()->redirect('/register');

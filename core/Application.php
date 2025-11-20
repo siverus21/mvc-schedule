@@ -2,6 +2,8 @@
 
 namespace Youpi;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 class Application
 {
 
@@ -31,6 +33,7 @@ class Application
         $this->view = new View(LAYOUT);
 
         $this->generateCsrfToken();
+        $this->setDbConnection();
     }
 
     public function run(): void
@@ -43,5 +46,22 @@ class Application
         if (!session()->isSet('_csrf_token')) {
             session()->set('_csrf_token', md5(uniqid(mt_rand(), true)));
         }
+    }
+
+    public function setDbConnection()
+    {
+        $capsule = new Capsule;
+        $capsule->addConnection([
+            'driver'    => DB_DRIVER,
+            'host'      => DB_HOST,
+            'database'  => DB_DATABASE,
+            'username'  => DB_USERNAME,
+            'password'  => DB_PASSWORD,
+            'charset'   => DB_CHARSET,
+            'collation' => DB_COLLATION,
+            'prefix'    => DB_PREFIX,
+        ]);
+        $capsule->setAsGlobal();
+        $capsule->bootEloquent();
     }
 }

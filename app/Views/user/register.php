@@ -2,6 +2,17 @@
 
     <h1><?= $title ?? "" ?></h1>
 
+    <? foreach ($users as $user): ?>
+        <div>
+            <div>
+                Name: <?= $user->name ?>
+            </div>
+            <div>
+                Email: <?= $user->email ?>
+            </div>
+        </div>
+    <? endforeach ?>
+
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <form action="<?= base_url('/register') ?>" method="post">

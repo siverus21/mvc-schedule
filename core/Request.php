@@ -2,6 +2,8 @@
 
 namespace Youpi;
 
+#[\AllowDynamicProperties]
+// костыль для скрытия предупреждений
 class Request
 {
 
