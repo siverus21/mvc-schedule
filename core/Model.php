@@ -2,31 +2,56 @@
 
 namespace Youpi;
 
-use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Valitron\Validator;
 
-abstract class Model extends EloquentModel
+abstract class Model
 {
-    // выбор полей для записи в бд
-    protected $fillable = [];
+    protected string $table;
 
-    public $attributes = [];
+    protected bool $timestamp = false;
+
+    // выбор полей для записи в бд
+    protected array $fillable = [];
+
+    public array $attributes = [];
 
     // Выбор полей для принятия после отправки формы
-    protected $loaded = [];
+    protected array $loaded = [];
 
     protected array $rules = [];
     protected array $errors = [];
     protected array $labels = [];
 
-    public function save(array $options = [])
+    public function save(): false|string
     {
         foreach ($this->attributes as $key => $value) {
             if (!in_array($key, $this->fillable)) {
                 unset($this->attributes[$key]);
             }
         }
-        return parent::save($options);
+
+        // insert into $tbl (`f1`, `f2`, `f3`) values (:v1, :v2, :v3);
+        $fieldsKeys = array_keys($this->attributes);
+        $fields = array_map(fn($filed) => "`{$filed}`", $fieldsKeys);
+        $fields = implode(', ', $fields);
+
+        if ($this->timestamp) {
+            $fields .= ", `created_at`, `updated_at`";
+        }
+
+        $placeholders = array_map(fn($value) => ":{$value}", $fieldsKeys);
+        $placeholders = implode(', ', $placeholders);
+
+        if ($this->timestamp) {
+            $placeholders .= ", :created_at, :updated_at";
+            $this->attributes['created_at'] = date('Y-m-d H:i:s');
+            $this->attributes['updated_at'] = date('Y-m-d H:i:s');
+        }
+
+        $query = "INSERT INTO `{$this->table}` ({$fields}) VALUES ({$placeholders})";
+        db()->query($query, $this->attributes);
+
+        return db()->getInsertId();
     }
 
     public function loadData()

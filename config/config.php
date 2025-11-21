@@ -15,11 +15,6 @@ define("APP", ROOT . "/app");
 define("VIEWS", APP . "/Views");
 define("LAYOUTS", APP . "/Views/layouts");
 
-
-// Константы
-define("LAYOUT", 'default');
-define("PATH", "http://localhost");
-
 // Langs
 define("LANG_VALIDATOR", PUBLIC_PATH . '/langValidator');
 
@@ -41,3 +36,11 @@ define("DB_OPTIONS", [
 // Log const
 define("LOG_PATH", ROOT . "/tmp/logs");
 define("ERROR_LOGS", LOG_PATH . "/errors.log");
+
+// Константы
+define("LAYOUT", 'default');
+define("PATH", "http://localhost");
+
+// Debug
+// define("DEBUG", "dev");
+define("DEBUG", "prod");

@@ -10,6 +10,8 @@ class UserController extends BaseController
 
     public function register()
     {
+        dump(1 / 0);
+
         return view('user/register', [
             'title' => "Register Page"
         ]);
@@ -29,21 +31,17 @@ class UserController extends BaseController
             session()->set('form_errors', $model->getErrors());
             session()->set('form_data', $model->attributes);
         } else {
-            // UserModel::query()->create([
-            //     'name' => $model->name,
-            //     'email' => $model->email,
-            //     'password' => password_hash($model->password, PASSWORD_DEFAULT)
-            // ]);
-            if ($model->save()) {
-                session()->setFlash('success', 'Thanks for registration');
+
+            $model->attributes['password'] = password_hash($model->attributes['password'], PASSWORD_DEFAULT);
+
+            if ($id = $model->save()) {
+                session()->setFlash('success', 'Thanks for registration, your id is ' . $id);
             } else {
                 session()->setFlash('error', 'Error registration');
             }
         }
 
         response()->redirect('/register');
-
-        // dd($_POST);
     }
 
     public function login()
