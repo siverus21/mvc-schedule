@@ -5,21 +5,13 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use Valitron\Validator;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-
 class UserController extends BaseController
 {
 
     public function register()
     {
-        $users = Capsule::table('users')->select(['name', 'email'])->get();
-        dump($users);
-
-        $user = Capsule::table('users')->select(['name', 'email'])->where('id', 1)->first();
-        dump($user);
         return view('user/register', [
-            'title' => "Register Page",
-            'users' => $users
+            'title' => "Register Page"
         ]);
     }
 

@@ -9,6 +9,7 @@
     "php": ">=8.0",
     "symfony/var-dumper": "^6.4",
     "vlucas/valitron": "^1.4",
-    "illuminate/database": "^10.49"
+    "illuminate/database": "^10.49",
+    "ext-pdo": "*"
   }
 }

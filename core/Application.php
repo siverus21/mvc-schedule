@@ -2,7 +2,7 @@
 
 namespace Youpi;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
+// use Illuminate\Database\Capsule\Manager as Capsule;
 
 class Application
 {
@@ -17,6 +17,8 @@ class Application
 
     public Session $session;
 
+    public Database $db;
+
     public static Application $app;
 
     public function __construct()
@@ -30,10 +32,12 @@ class Application
         $this->router = new Router($this->request, $this->response);
         $this->session = new Session();
 
+        $this->db = new Database();
+
         $this->view = new View(LAYOUT);
 
         $this->generateCsrfToken();
-        $this->setDbConnection();
+        // $this->setDbConnection();
     }
 
     public function run(): void
@@ -48,20 +52,20 @@ class Application
         }
     }
 
-    public function setDbConnection()
-    {
-        $capsule = new Capsule;
-        $capsule->addConnection([
-            'driver'    => DB_DRIVER,
-            'host'      => DB_HOST,
-            'database'  => DB_DATABASE,
-            'username'  => DB_USERNAME,
-            'password'  => DB_PASSWORD,
-            'charset'   => DB_CHARSET,
-            'collation' => DB_COLLATION,
-            'prefix'    => DB_PREFIX,
-        ]);
-        $capsule->setAsGlobal();
-        $capsule->bootEloquent();
-    }
+    // public function setDbConnection()
+    // {
+    //     $capsule = new Capsule;
+    //     $capsule->addConnection([
+    //         'driver'    => DB_DRIVER,
+    //         'host'      => DB_HOST,
+    //         'database'  => DB_DATABASE,
+    //         'username'  => DB_USERNAME,
+    //         'password'  => DB_PASSWORD,
+    //         'charset'   => DB_CHARSET,
+    //         'collation' => DB_COLLATION,
+    //         'prefix'    => DB_PREFIX,
+    //     ]);
+    //     $capsule->setAsGlobal();
+    //     $capsule->bootEloquent();
+    // }
 }

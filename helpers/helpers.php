@@ -22,6 +22,10 @@ function session()
     return app()->session;
 }
 
+function db()
+{
+    return app()->db;
+}
 
 function view($view = '', $data = [], $layout = 'default'): string|View
 {

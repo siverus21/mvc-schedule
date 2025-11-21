@@ -33,3 +33,11 @@ define("DB_PASSWORD", "");
 define("DB_CHARSET", "utf8mb4");
 define("DB_COLLATION", "utf8mb4_unicode_ci");
 define("DB_PREFIX", "");
+define("DB_OPTIONS", [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+]);
+
+// Log const
+define("LOG_PATH", ROOT . "/tmp/logs");
+define("ERROR_LOGS", LOG_PATH . "/errors.log");
