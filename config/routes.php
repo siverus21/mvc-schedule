@@ -12,10 +12,12 @@ define("MIDDLEWARE", [
 
 $app->router->get('/', [HomeController::class, 'index']);
 
-$app->router->get('/register', [UserController::class, 'register'])->middleware(['guest']);
+$app->router->get('/register', [UserController::class, 'register']);
 $app->router->post('/register', [UserController::class, 'store']);
-$app->router->get('/login', [UserController::class, 'login'])->middleware(['guest']);
+$app->router->get('/login', [UserController::class, 'login']);
 
 $app->router->get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth', 'guest']);
+
+$app->router->get('/users', [UserController::class, 'index']);
 
 // dump($app->router->getRoutes());

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 use Valitron\Validator;
+use Youpi\Pagination;
 
 class UserController extends BaseController
 {
@@ -42,5 +43,17 @@ class UserController extends BaseController
     public function login()
     {
         return view('user/login', ['title' => "Login Page"]);
+    }
+
+    public function index()
+    {
+        $pagination = new Pagination(2, 20);
+        dump($pagination);
+
+        $users = db()->findAll('users');
+        return view('user/index', [
+            'title' => "Index Page",
+            'users' => $users
+        ]);
     }
 }
