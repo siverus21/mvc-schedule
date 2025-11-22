@@ -42,5 +42,5 @@ define("LAYOUT", 'default');
 define("PATH", "http://localhost");
 
 // Debug
-// define("DEBUG", "dev");
-define("DEBUG", "prod");
+define("DEBUG", "dev");
+// define("DEBUG", "prod");
