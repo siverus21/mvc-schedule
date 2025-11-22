@@ -28,6 +28,9 @@
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="<?= base_url('/login') ?>">Login</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="<?= base_url('/dashboard') ?>">Dashboard</a>
+                        </li>
                     </ul>
                 </div>
             </div>

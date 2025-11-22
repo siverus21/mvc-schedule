@@ -5,8 +5,17 @@
 use App\Controllers\UserController;
 use App\Controllers\HomeController;
 
+define("MIDDLEWARE", [
+    'auth' => Youpi\Middleware\Auth::class,
+    'guest' => Youpi\Middleware\Guest::class
+]);
+
 $app->router->get('/', [HomeController::class, 'index']);
 
-$app->router->get('/register', [UserController::class, 'register']);
+$app->router->get('/register', [UserController::class, 'register'])->middleware(['guest']);
 $app->router->post('/register', [UserController::class, 'store']);
-$app->router->get('/login', [UserController::class, 'login']);
+$app->router->get('/login', [UserController::class, 'login'])->middleware(['guest']);
+
+$app->router->get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth', 'guest']);
+
+// dump($app->router->getRoutes());

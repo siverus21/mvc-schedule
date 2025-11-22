@@ -29,7 +29,7 @@ class Router
         $this->routes[] = [
             "path" => "/$path",
             "callback" => $callback,
-            "middlewares" => null, // TODO
+            "middleware" => [],
             "method" => $method,
             "needCsrfToken" => true,
         ];
@@ -76,6 +76,15 @@ class Router
                 && in_array($this->request->getMethod(), $route['method'])
             ) {
 
+            if ($route['middleware']) {
+                foreach ($route['middleware'] as $item) {
+                    $middleware = MIDDLEWARE[$item] ?? false;
+                    if ($middleware) {
+                        (new $middleware)->handle();
+                    }
+                }
+            }
+
             if (request()->isPost()) {
                 if ($route['needCsrfToken'] && !$this->checkCsrfToken()) {
                     if (request()->isAjax()) {
@@ -109,5 +118,11 @@ class Router
     public function checkCsrfToken(): bool
     {
         return request()->post('_csrf_token') && request()->post('_csrf_token') === session()->get('_csrf_token');
+    }
+
+    public function middleware(array $middleware): self
+    {
+        $this->routes[array_key_last($this->routes)]['middleware'] = $middleware;
+        return $this;
     }
 }

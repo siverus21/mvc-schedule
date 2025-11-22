@@ -17,9 +17,6 @@ class UserController extends BaseController
 
     public function store()
     {
-        Validator::langDir(LANG_VALIDATOR);
-        Validator::lang('ru');
-
         $model = new UserModel();
         $model->loadData();
 

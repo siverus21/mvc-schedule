@@ -22,7 +22,10 @@ class UserModel extends Model
         ],
         'equals' => [
             ['password', 'confirm-password']
-        ]
+        ],
+        'unique' => [
+            ['email', 'users,email']
+        ],
     ];
 
     protected array $labels = [
