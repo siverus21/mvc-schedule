@@ -7,4 +7,6 @@
         echo $user["name"] . '<br>';
     }
     ?>
+
+    <?= $pagination ?>
 </div>

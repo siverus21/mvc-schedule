@@ -8,13 +8,13 @@ class Pagination
     protected int $currentPage;
     protected string $uri;
 
-    protected int $perPage;
-    protected int $totalRecords;
-    protected int $midSize = 2;
-    protected int $maxPages;
-    protected string $tpl;
+    protected int $totalRecords; // Общее количество элементов
+    protected int $perPage; // Количество элементов на странице
+    protected int $midSize = 2; // Количество элементов слева и справа от текущего
+    protected int $maxPages; // ограничить количество видимых номеров страниц в пагинации
+    protected string $tpl; // шаблон
 
-    public function __construct($perPage = 1, $totalRecords = 1, $midSize = 2, $maxPages = 7, $tpl = 'pagination/base')
+    public function __construct($totalRecords, $perPage = 1, $midSize = 2, $maxPages = 5, $tpl = 'pagination/base')
     {
         $this->perPage = $perPage;
         $this->totalRecords = $totalRecords;
@@ -66,8 +66,77 @@ class Pagination
         return $this->countPages <= $this->maxPages ? $this->countPages : $this->midSize;
     }
 
-    protected function getOffset(): int
+    public function getOffset(): int
     {
         return ($this->currentPage - 1) * $this->perPage;
+    }
+
+    public function getLimit(): int
+    {
+        return $this->perPage;
+    }
+
+    public function getHtml()
+    {
+        $prev = '';
+        $next = '';
+        $firstPage = '';
+        $lastPage = '';
+        $pagesLeft = [];
+        $pagesRight = [];
+        $currentPage = $this->currentPage;
+
+        if ($this->currentPage > 1) {
+            $prev = $this->getLink($this->currentPage - 1);
+        }
+
+        if ($this->currentPage < $this->countPages) {
+            $next = $this->getLink($this->currentPage + 1);
+        }
+
+        if ($this->currentPage > $this->midSize + 1) {
+            $firstPage = $this->getLink(1);
+        }
+
+        if ($this->currentPage < ($this->countPages - $this->midSize)) {
+            $lastPage = $this->getLink($this->countPages);
+        }
+
+        for ($i = $this->midSize; $i > 0; $i--) {
+            if ($this->currentPage - $i > 0) {
+                $pagesLeft[] = [
+                    'link' => $this->getLink($this->currentPage - $i),
+                    'number' => $this->currentPage - $i,
+                ];
+            }
+        }
+
+        for ($i = 1; $i <= $this->midSize; $i++) {
+            if ($this->currentPage + $i <= $this->countPages) {
+                $pagesRight[] = [
+                    'link' => $this->getLink($this->currentPage + $i),
+                    'number' => $this->currentPage + $i,
+                ];
+            }
+        }
+
+        return view()->renderPartial($this->tpl, compact('prev', 'next', 'firstPage', 'lastPage', 'pagesLeft', 'pagesRight', 'currentPage'));
+    }
+
+    protected function getLink($page): string
+    {
+        if ($page == 1) {
+            return rtrim($this->uri, '?&');
+        }
+        if (str_contains($this->uri, '&') || str_contains($this->uri, '?')) {
+            return "{$this->uri}&page={$page}"; // users?status=1&page={$page}
+        } else {
+            return "{$this->uri}?page={$page}"; // users?page={$page}
+        }
+    }
+
+    public function __toString(): string
+    {
+        return $this->getHtml();
     }
 }

@@ -100,4 +100,10 @@ class Database
     {
         return $this->connection->rollBack();
     }
+
+    public function count($tbl): int
+    {
+        $this->query("select count(*) from {$tbl}");
+        return $this->stmt->fetchColumn();
+    }
 }

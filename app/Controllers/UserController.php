@@ -47,13 +47,15 @@ class UserController extends BaseController
 
     public function index()
     {
-        $pagination = new Pagination(2, 20);
-        dump($pagination);
+        $usersCount = db()->count('users');
+        $pagination = new Pagination($usersCount, 1, 2);
 
-        $users = db()->findAll('users');
+        $users = db()->query("select * from users limit {$pagination->getLimit()} offset {$pagination->getOffset()}")->get();
+
         return view('user/index', [
             'title' => "Index Page",
-            'users' => $users
+            'users' => $users,
+            'pagination' => $pagination
         ]);
     }
 }
