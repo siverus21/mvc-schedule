@@ -24,33 +24,30 @@ abstract class Model
 
     public function save(): false|string
     {
-        foreach ($this->attributes as $key => $value) {
-            if (!in_array($key, $this->fillable)) {
-                unset($this->attributes[$key]);
+        $attributes = $this->attributes;
+        foreach ($attributes as $k => $v) {
+            if (!in_array($k, $this->fillable)) {
+                unset($attributes[$k]);
             }
         }
 
-        // insert into $tbl (`f1`, `f2`, `f3`) values (:v1, :v2, :v3);
-        $fieldsKeys = array_keys($this->attributes);
-        $fields = array_map(fn($filed) => "`{$filed}`", $fieldsKeys);
-        $fields = implode(', ', $fields);
-
+        $fields_keys = array_keys($attributes);
+        $fields = array_map(fn($field) => "`{$field}`", $fields_keys);
+        $fields = implode(',', $fields);
         if ($this->timestamp) {
-            $fields .= ", `created_at`, `updated_at`";
+            $fields .= ', `created_at`, `updated_at`';
         }
 
-        $placeholders = array_map(fn($value) => ":{$value}", $fieldsKeys);
-        $placeholders = implode(', ', $placeholders);
-
+        $placeholders = array_map(fn($field) => ":{$field}", $fields_keys);
+        $placeholders = implode(',', $placeholders);
         if ($this->timestamp) {
-            $placeholders .= ", :created_at, :updated_at";
-            $this->attributes['created_at'] = date('Y-m-d H:i:s');
-            $this->attributes['updated_at'] = date('Y-m-d H:i:s');
+            $placeholders .= ', :created_at, :updated_at';
+            $attributes['created_at'] = date("Y-m-d H:i:s");
+            $attributes['updated_at'] = date("Y-m-d H:i:s");
         }
 
-        $query = "INSERT INTO `{$this->table}` ({$fields}) VALUES ({$placeholders})";
-        db()->query($query, $this->attributes);
-
+        $query = "insert into {$this->table} ($fields) values ($placeholders)";
+        db()->query($query, $attributes);
         return db()->getInsertId();
     }
 
@@ -101,5 +98,22 @@ abstract class Model
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    public function listErrors(): string
+    {
+        // dd($this->errors);
+        $str = '<ul class="list-unstyled">';
+        foreach ($this->errors as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $v) {
+                    $str .= '<li>' . $v . '</li>';
+                }
+            } else {
+                $str .= '<li>' . $value . '</li>';
+            }
+        }
+        $str .= '</ul>';
+        return $str;
     }
 }

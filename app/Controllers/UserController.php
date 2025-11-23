@@ -20,6 +20,23 @@ class UserController extends BaseController
         $model = new UserModel();
         $model->loadData();
 
+        if (request()->isAjax()) {
+            if (!$model->validate()) {
+                echo json_encode(['status' => 'error', 'data' => $model->listErrors()]);
+                die;
+            }
+
+            $model->attributes['password'] = password_hash($model->attributes['password'], PASSWORD_DEFAULT);
+
+            if (!$id = $model->save()) {
+                echo json_encode(['status' => 'error', 'data' => 'Error registration']);
+                die;
+            }
+
+            echo json_encode(['status' => 'success', 'data' => 'Thanks for registration. Your id is ' . $id, 'redirect' => base_url('/login')]);
+            die;
+        }
+
         // Сообщения для алертов тянутся из названия файлов.
         if (!$model->validate()) {
             session()->setFlash('error', 'Validation errors');
@@ -39,7 +56,15 @@ class UserController extends BaseController
 
     public function login()
     {
-        return view('user/login', ['title' => "Login Page"]);
+        return view('user/login', [
+            'title' => "Login Page",
+            'styles' => [
+                base_url('/public/assets/css/style.css')
+            ],
+            'footerScripts' => [
+                base_url('/public/assets/js/test.js')
+            ],
+        ]);
     }
 
     public function index()

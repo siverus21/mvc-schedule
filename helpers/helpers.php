@@ -53,6 +53,11 @@ function base_url($path = ''): string
     return PATH . $path;
 }
 
+function publicUrl($path = ''): string
+{
+    return PUBLIC_PATH . $path;
+}
+
 function getAlerts(): void
 {
     if (!empty($_SESSION['_flash'])) {

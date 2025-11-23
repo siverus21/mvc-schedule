@@ -10,10 +10,8 @@ class BaseController extends Controller
 
     public function __construct()
     {
-        app()->set('test', 'Test value');
-
         if (!$menu = cache()->get('menu')) {
-            cache()->set('menu', $this->renderMenu(), 20);
+            cache()->set('menu', $this->renderMenu());
         }
     }
 

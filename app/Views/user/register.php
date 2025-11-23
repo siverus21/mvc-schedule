@@ -4,7 +4,7 @@
 
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <form action="<?= base_url('/register') ?>" method="post">
+            <form class="ajax-form" action="<?= base_url('/register') ?>" method="post">
                 <?= getCsrfField(); ?>
 
                 <div class="mb-3">
