@@ -1,6 +1,6 @@
 <?
-
-define("ROOT", dirname(__DIR__)); // Корневая константа
+// Root path
+define("ROOT", dirname(__DIR__));
 
 // Core
 define("CORE", ROOT . "/core");
@@ -37,7 +37,10 @@ define("DB_OPTIONS", [
 define("LOG_PATH", ROOT . "/tmp/logs");
 define("ERROR_LOGS", LOG_PATH . "/errors.log");
 
-// Константы
+// Cache path
+define("CACHE_PATH", ROOT . "/tmp/cache");
+
+// Enother const
 define("LAYOUT", 'default');
 define("PATH", "http://localhost");
 

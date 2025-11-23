@@ -17,9 +17,13 @@ class Application
 
     public Session $session;
 
+    public Cache $cache;
+
     public Database $db;
 
     public static Application $app;
+
+    protected array $container = [];
 
     public function __construct()
     {
@@ -31,13 +35,13 @@ class Application
         $this->response = new Response();
         $this->router = new Router($this->request, $this->response);
         $this->session = new Session();
+        $this->cache = new Cache();
 
         $this->db = new Database();
 
         $this->view = new View(LAYOUT);
 
         $this->generateCsrfToken();
-        // $this->setDbConnection();
     }
 
     public function run(): void
@@ -52,20 +56,13 @@ class Application
         }
     }
 
-    // public function setDbConnection()
-    // {
-    //     $capsule = new Capsule;
-    //     $capsule->addConnection([
-    //         'driver'    => DB_DRIVER,
-    //         'host'      => DB_HOST,
-    //         'database'  => DB_DATABASE,
-    //         'username'  => DB_USERNAME,
-    //         'password'  => DB_PASSWORD,
-    //         'charset'   => DB_CHARSET,
-    //         'collation' => DB_COLLATION,
-    //         'prefix'    => DB_PREFIX,
-    //     ]);
-    //     $capsule->setAsGlobal();
-    //     $capsule->bootEloquent();
-    // }
+    public function set($key, $value): void
+    {
+        $this->container[$key] = $value;
+    }
+
+    public function get($key, $default = null)
+    {
+        return $this->container[$key] ?? $default;
+    }
 }

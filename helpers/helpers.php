@@ -27,6 +27,11 @@ function db()
     return app()->db;
 }
 
+function cache()
+{
+    return app()->cache;
+}
+
 function view($view = '', $data = [], $layout = 'default'): string|View
 {
     if ($view) {

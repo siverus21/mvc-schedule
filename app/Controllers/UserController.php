@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use Valitron\Validator;
 use Youpi\Pagination;
 
 class UserController extends BaseController
@@ -27,9 +26,7 @@ class UserController extends BaseController
             session()->set('form_errors', $model->getErrors());
             session()->set('form_data', $model->attributes);
         } else {
-
             $model->attributes['password'] = password_hash($model->attributes['password'], PASSWORD_DEFAULT);
-
             if ($id = $model->save()) {
                 session()->setFlash('success', 'Thanks for registration, your id is ' . $id);
             } else {
@@ -48,8 +45,7 @@ class UserController extends BaseController
     public function index()
     {
         $usersCount = db()->count('users');
-        $pagination = new Pagination($usersCount, 1, 2);
-
+        $pagination = new Pagination($usersCount, 4, 2);
         $users = db()->query("select * from users limit {$pagination->getLimit()} offset {$pagination->getOffset()}")->get();
 
         return view('user/index', [

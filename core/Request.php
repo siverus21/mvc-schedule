@@ -7,10 +7,12 @@ namespace Youpi;
 class Request
 {
 
-    public static $uri;
+    public $uri;
+    public $rawUri;
 
     public function __construct($uri)
     {
+        $this->rawUri = $uri;
         $this->uri = trim(urldecode($uri), '/');
     }
 
