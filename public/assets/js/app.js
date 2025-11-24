@@ -63,7 +63,7 @@ $(function () {
 			},
 			error: function () {
 				iziModalAlertError.iziModal('setContent', {
-					content: res.data,
+					content: 'Произошла ошибка',
 				});
 				iziModalAlertError.iziModal('open');
 				btn.prop('disabled', false).text(btnText);

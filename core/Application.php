@@ -42,6 +42,7 @@ class Application
         $this->view = new View(LAYOUT);
 
         $this->generateCsrfToken();
+        Auth::setUser();
     }
 
     public function run(): void

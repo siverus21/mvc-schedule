@@ -31,7 +31,9 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <?= cache()->get('menu'); ?>
+                    <? //= cache()->get('menu'); 
+                    ?>
+                    <?= view()->renderPartial('incs/menu') ?>
                 </div>
             </div>
         </nav>

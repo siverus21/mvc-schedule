@@ -116,5 +116,15 @@ function getCsrfMeta(): string
 
 function checkAuth(): bool
 {
-    return true;   // TODO
+    return \Youpi\Auth::isAuth();
+}
+
+function getUser()
+{
+    return \Youpi\Auth::user();
+}
+
+function logout()
+{
+    \Youpi\Auth::logout();
 }

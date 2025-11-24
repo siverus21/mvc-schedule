@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use Youpi\Auth;
 use Youpi\Pagination;
 
 class UserController extends BaseController
@@ -58,13 +59,36 @@ class UserController extends BaseController
     {
         return view('user/login', [
             'title' => "Login Page",
-            'styles' => [
-                base_url('/public/assets/css/style.css')
-            ],
-            'footerScripts' => [
-                base_url('/public/assets/js/test.js')
-            ],
         ]);
+    }
+
+    public function auth()
+    {
+        $model = new UserModel();
+        $model->loadData();
+
+        if (!$model->validate($model->attributes, [
+            'required' => ['email', 'password']
+        ])) {
+            echo json_encode(['status' => 'error', 'data' => $model->listErrors()]);
+            die;
+        }
+
+        if (Auth::login([
+            'email' => $model->attributes['email'],
+            'password' => $model->attributes['password']
+        ])) {
+            echo json_encode(['status' => 'success', 'data' => 'Thanks for login', 'redirect' => base_url('/users')]);
+        } else {
+            echo json_encode(['status' => 'error', 'data' => 'Wrong email or password']);
+        }
+        die;
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        response()->redirect(base_url('/login'));
     }
 
     public function index()
