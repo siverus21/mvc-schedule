@@ -71,6 +71,12 @@ class Database
     {
         $res = $this->findOne($tbl, $value, $key);
         if (!$res) {
+            if ($_SERVER['HTTP_ACCEPT'] == 'application/json') {
+                response()->json([
+                    'status' => 'error',
+                    'data' => 'Not found',
+                ], 404);
+            }
             abort();
         }
         return $res;

@@ -21,4 +21,11 @@ class Response
         header('Location: ' . $redirect);
         die;
     }
+
+    public function json($data, $code = 200): void
+    {
+        $this->setStatusResponse($code);
+        header('Content-Type: application/json; charset=utf-8');
+        exit(json_encode($data));
+    }
 }

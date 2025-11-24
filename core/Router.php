@@ -70,41 +70,101 @@ class Router
 
     protected function matchRoute($path): mixed
     {
-        foreach ($this->routes as $route)
+        $requestPath = '/' . trim($path, '/');
+        if ($requestPath === '//') {
+            $requestPath = '/';
+        }
+
+        $allowedMethods = [];
+
+        foreach ($this->routes as $route) {
+            $routePattern = preg_replace_callback(
+                '/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/',
+                function ($m) {
+                    return '(?P<' . $m[1] . '>[^/]+)';
+                },
+                $route['path']
+            );
+
+            $regex = "#^" . $routePattern . "$#";
+
             if (
-                preg_match("#^{$route['path']}$#", "/{$path}", $mathes)
-                && in_array($this->request->getMethod(), $route['method'])
+                preg_match($regex, $requestPath, $matches)
             ) {
 
-            if ($route['middleware']) {
-                foreach ($route['middleware'] as $item) {
-                    $middleware = MIDDLEWARE[$item] ?? false;
-                    if ($middleware) {
-                        (new $middleware)->handle();
+                if (!in_array($this->request->getMethod(), $route['method'])) {
+                    $allowedMethods = array_merge($allowedMethods, $route['method']);
+                    continue;
+                }
+
+                // middleware
+                if ($route['middleware']) {
+                    foreach ($route['middleware'] as $item) {
+                        $middleware = MIDDLEWARE[$item] ?? false;
+                        if ($middleware) {
+                            (new $middleware)->handle();
+                        }
                     }
                 }
-            }
 
-            if (request()->isPost()) {
-                if ($route['needCsrfToken'] && !$this->checkCsrfToken()) {
-                    if (request()->isAjax()) {
-                        echo json_encode([
-                            'status' => 'error',
-                            'data' => 'csrf token error',
-                        ]);
-                        die;
-                    } else {
-                        abort('csrf token error', 419);
+                // CSRF
+                if (request()->isPost()) {
+                    if ($route['needCsrfToken'] && !$this->checkCsrfToken()) {
+                        if (request()->isAjax()) {
+                            echo json_encode([
+                                'status' => 'error',
+                                'data' => 'csrf token error',
+                            ]);
+                            die;
+                        } else {
+                            abort('csrf token error', 419);
+                        }
                     }
                 }
-            }
 
-            foreach ($mathes as $k => $v)
-                    if (is_string($k))
+                // Забираем именованные захваты из $matches в $this->params
+                $this->params = [];
+                foreach ($matches as $k => $v) {
+                    if (is_string($k)) {
                         $this->params[$k] = $v;
+                    }
+                }
+
+                // Если callback задан как [ClassName::class, 'method'], превратим его в замыкание,
+                // которое создаёт экземпляр контроллера и вызывает нужный метод с параметрами.
+                // Это позволяет оставить dispatch без изменений (call_user_func).
+                if (is_array($route['callback']) && is_string($route['callback'][0])) {
+                    $class = $route['callback'][0];
+                    $method = $route['callback'][1] ?? null;
+                    $params = $this->params; // фиксируем текущие параметры для замыкания
+
+                    $route['callback'] = function () use ($class, $method, $params) {
+                        $controller = new $class;
+                        if ($method === null) {
+                            // Если передали только класс — попробуем вызвать __invoke
+                            if (is_callable([$controller, '__invoke'])) {
+                                return call_user_func_array([$controller, '__invoke'], array_values($params));
+                            }
+                            throw new \RuntimeException("Method not specified for controller {$class}");
+                        }
+                        return call_user_func_array([$controller, $method], array_values($params));
+                    };
+                }
 
                 return $route;
             }
+        }
+
+        if ($allowedMethods) {
+            header("Allow: " . implode(", ", array_unique($allowedMethods)));
+            if ($_SERVER['HTTP_ACCEPT'] == 'application/json') {
+                response()->json([
+                    'status' => 'error',
+                    'data' => 'Method not allowed',
+                ], 405);
+            }
+            abort('Method not allowed', 405);
+        }
 
         return false;
     }
