@@ -40,6 +40,9 @@ define("ERROR_LOGS", LOG_PATH . "/errors.log");
 // Cache path
 define("CACHE_PATH", ROOT . "/tmp/cache");
 
+// Files
+define("UPLOADS", PUBLIC_PATH . "/uploads");
+
 // Enother const
 define("LAYOUT", 'default');
 define("PATH", "http://localhost");

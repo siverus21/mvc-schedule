@@ -23,6 +23,9 @@ $app->router->get('/dashboard', [HomeController::class, 'dashboard'])->middlewar
 $app->router->get('/users', [UserController::class, 'index']);
 
 
+$app->router->get('/test', [App\Controllers\TestController::class, 'index']);
+$app->router->post('/test', [App\Controllers\TestController::class, 'send']);
+
 // API
 $app->router->get('/api/v1/users', [App\Controllers\API\V1\UserController::class, 'index']);
 $app->router->get('/api/v1/users/{id}', [App\Controllers\API\V1\UserController::class, 'view']);
