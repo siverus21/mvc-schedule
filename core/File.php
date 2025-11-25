@@ -15,12 +15,22 @@ class File
     public function __construct(string $name)
     {
         $files = request()->files;
+        if (self::isArrayFiles($name)) {
+            $nesting = explode('[', rtrim($name, ']'));
 
-        $this->name = $files[$name]['name'] ?? '';
-        $this->type = $files[$name]['type'] ?? '';
-        $this->tmpName = $files[$name]['tmp_name'] ?? '';
-        $this->error = $files[$name]['error'] ?? 4;
-        $this->size = $files[$name]['size'] ?? 0;
+            $this->name = $files[$nesting[0]]['name'][$nesting[1]] ?? '';
+            $this->type = $files[$nesting[0]]['type'][$nesting[1]] ?? '';
+            $this->tmpName = $files[$nesting[0]]['tmp_name'][$nesting[1]] ?? '';
+            $this->error = $files[$nesting[0]]['error'][$nesting[1]] ?? 4;
+            $this->size = $files[$nesting[0]]['size'][$nesting[1]] ?? 0;
+        } else {
+            $this->name = $files[$name]['name'] ?? '';
+            $this->type = $files[$name]['type'] ?? '';
+            $this->tmpName = $files[$name]['tmp_name'] ?? '';
+            $this->error = $files[$name]['error'] ?? 4;
+            $this->size = $files[$name]['size'] ?? 0;
+        }
+
         $this->isFile = is_file($this->tmpName);
     }
 
@@ -51,6 +61,11 @@ class File
         }
 
         return false;
+    }
+
+    public static function isArrayFiles(string $str): bool
+    {
+        return preg_match('/\[[^\]]*\]/', $str) === 1;
     }
 
     public function getExt(): string
@@ -86,5 +101,13 @@ class File
     public function isFile(): bool
     {
         return $this->isFile;
+    }
+
+    public static function remove(string $filename): void
+    {
+        $filename = str_replace('..', '', $filename);
+        if (file_exists($filename)) {
+            @unlink($filename);
+        }
     }
 }

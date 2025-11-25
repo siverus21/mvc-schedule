@@ -15,8 +15,12 @@ class TestController extends BaseController
 
     public function send()
     {
-        $file = new File('file');
-        $file->save();
+        for ($i = 0; $i < count(request()->files['files']['name']); $i++) {
+            $file = new File('files[' . $i . ']');
+            dump($file->save());
+        }
+        $file1 = new File('file');
+        // $file->save();
         // return 'Test';
     }
 }
