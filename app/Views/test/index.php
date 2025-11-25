@@ -2,6 +2,10 @@
 
     <h1><?= $title ?? "" ?></h1>
 
+    <div>
+        <?= $menu ?>
+    </div>
+
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <form class="" action="<?= base_url('/test') ?>" method="post" enctype="multipart/form-data">

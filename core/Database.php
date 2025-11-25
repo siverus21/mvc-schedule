@@ -1,13 +1,13 @@
-<?
+<?php
 
 namespace Youpi;
 
 use PDO;
 use PDOStatement;
+use PDOException;
 
 class Database
 {
-
     protected PDO $connection;
     protected PDOStatement $stmt;
 
@@ -16,7 +16,9 @@ class Database
         $dsn = DB_DRIVER . ":host=" . DB_HOST . ";dbname=" . DB_DATABASE . ";charset=" . DB_CHARSET . ";";
         try {
             $this->connection = new PDO($dsn, DB_USERNAME, DB_PASSWORD, DB_OPTIONS);
-        } catch (\PDOException $e) {
+            // рекомендуемое поведение: выдавать ассоциативные массивы по умолчанию
+            $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
             error_log("[" . date('Y-m-d H:i:s') . "] DB Error: {$e->getMessage()}" . PHP_EOL, 3, ERROR_LOGS);
             abort('DB error connection', 500);
         }
@@ -24,11 +26,41 @@ class Database
         return $this;
     }
 
+    /**
+     * Подготовить и выполнить запрос (prepared)
+     * @param string $query
+     * @param array $params (позиционные или именованные)
+     * @return $this
+     * @throws PDOException
+     */
     public function query(string $query, array $params = [])
     {
         $this->stmt = $this->connection->prepare($query);
         $this->stmt->execute($params);
         return $this;
+    }
+
+    /**
+     * Выполнить "сырой" SQL без подготовки (exec)
+     * Возвращает количество затронутых строк или false при ошибке
+     */
+    public function exec(string $sql)
+    {
+        try {
+            return $this->connection->exec($sql);
+        } catch (PDOException $e) {
+            // логируем и пробрасываем дальше — миграции должны поймать исключение
+            error_log("[" . date('Y-m-d H:i:s') . "] DB Exec Error: {$e->getMessage()}" . PHP_EOL, 3, ERROR_LOGS);
+            throw $e;
+        }
+    }
+
+    /**
+     * Экранирование значения через PDO::quote
+     */
+    public function quote(string $value): string
+    {
+        return $this->connection->quote($value);
     }
 
     public function get(): array|false
@@ -107,9 +139,28 @@ class Database
         return $this->connection->rollBack();
     }
 
+    /**
+     * Возвращает true если в транзакции
+     */
+    public function inTransaction(): bool
+    {
+        return $this->connection->inTransaction();
+    }
+
     public function count($tbl): int
     {
-        $this->query("select count(*) from {$tbl}");
-        return $this->stmt->fetchColumn();
+        $this->query("select count(*) as c from {$tbl}");
+        $r = $this->stmt->fetch();
+        return (int)($r['c'] ?? 0);
+    }
+
+    public function tableIsExists($tbl): bool
+    {
+        try {
+            $this->query("SELECT 1 FROM `{$tbl}` LIMIT 1");
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 }

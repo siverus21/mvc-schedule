@@ -10,8 +10,8 @@ class BaseController extends Controller
 
     public function __construct()
     {
-        if (!$menu = cache()->get('menu')) {
-            cache()->set('menu', $this->renderMenu());
+        if (!$menu = cacheRedis()->get('menu')) {
+            cacheRedis()->set('menu', $this->renderMenu());
         }
     }
 

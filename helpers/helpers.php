@@ -32,6 +32,11 @@ function cache()
     return app()->cache;
 }
 
+function cacheRedis()
+{
+    return app()->cacheRedis;
+}
+
 function view($view = '', $data = [], $layout = 'default'): string|View
 {
     if ($view) {

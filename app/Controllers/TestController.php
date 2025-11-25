@@ -3,13 +3,15 @@
 namespace App\Controllers;
 
 use Youpi\File;
+use Youpi\Migrations\Blueprint;
 
 class TestController extends BaseController
 {
     public function index()
     {
         return view('test/index', [
-            'title' => "Test Page"
+            'title' => "Test Page",
+            'menu' => cacheRedis()->get('menu')
         ]);
     }
 

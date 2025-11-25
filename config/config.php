@@ -1,6 +1,8 @@
 <?
 // Root path
 define("ROOT", dirname(__DIR__));
+define("VENDOR", ROOT . "/vendor");
+define("AUTOLOAD", VENDOR . "/autoload.php");
 
 // Core
 define("CORE", ROOT . "/core");
@@ -32,6 +34,7 @@ define("DB_OPTIONS", [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 ]);
+define("MIGRATIONS", ROOT . "/database/migrations");
 
 // Log const
 define("LOG_PATH", ROOT . "/tmp/logs");
@@ -39,6 +42,9 @@ define("ERROR_LOGS", LOG_PATH . "/errors.log");
 
 // Cache path
 define("CACHE_PATH", ROOT . "/tmp/cache");
+define("USE_REDIS", true);
+define("REDIS_IP", "127.0.0.1");
+define("REDIS_PORT", "6379");
 
 // Files
 define("UPLOADS", PUBLIC_PATH . "/uploads");
