@@ -18,13 +18,8 @@ $app->router->get('/login', [UserController::class, 'login'])->middleware(['gues
 $app->router->post('/login', [UserController::class, 'auth'])->middleware(['guest']);
 $app->router->get('/logout', [UserController::class, 'logout'])->middleware(['auth']);
 
-$app->router->get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth']);
-
-$app->router->get('/users', [UserController::class, 'index']);
-
-
-$app->router->get('/test', [App\Controllers\TestController::class, 'index']);
-$app->router->post('/test', [App\Controllers\TestController::class, 'send']);
+$app->router->get('/users', [UserController::class, 'index'])->middleware(['auth']);
+$app->router->get('/users/{id}', [UserController::class, 'userDetail'])->middleware(['auth']);
 
 // API
 $app->router->get('/api/v1/users', [App\Controllers\API\V1\UserController::class, 'index']);

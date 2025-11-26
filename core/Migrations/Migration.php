@@ -64,74 +64,120 @@ class Migration
     }
 
     /**
-     * Выполнить up миграцию
+     * Выполнить миграцию (up)
+     *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function up(): bool
     {
+        // Валидация имени таблицы (если нужно)
         $this->sanitizeIdentifier($this->table);
+
+        // Убедимся, что таблица migrations существует (и содержит filename)
         $this->ensureMigrationsTable();
 
+        // Вычисляем следующий batch
         $row = $this->db->query("SELECT IFNULL(MAX(batch), 0) as maxbatch FROM `migrations`")->getOne();
         $maxBatch = (int)($row['maxbatch'] ?? 0);
         $batch = $maxBatch + 1;
 
-        $bp = new Blueprint($this->table);
+        // Подготовим Blueprint (пользователь заполнит его, если передан Closure)
+        $bp = new \Youpi\Migrations\Blueprint($this->table);
 
+        // Получаем "up" атрибут
         $upAttr = $this->attributes['up'] ?? null;
+        $sqlToExecute = null;   // string or array
         if ($upAttr instanceof \Closure) {
-            $upAttr($bp);
-            $sql = $bp->toSql($this->db);
+            // Колбэк должен заполнить Blueprint (или вернуть SQL)
+            $maybe = $upAttr($bp);
+            // Если колбэк вернул SQL строку — используем её, иначе берём из Blueprint
+            if (is_string($maybe) && trim($maybe) !== '') {
+                $sqlToExecute = $maybe;
+            } else {
+                // Blueprint генерирует SQL; toSql может вернуть string или array
+                $sqlToExecute = $bp->toSql($this->db);
+            }
         } elseif (is_string($upAttr) && trim($upAttr) !== '') {
-            $sql = $upAttr;
+            $sqlToExecute = $upAttr;
         } else {
             throw new \Exception("Атрибут 'up' не задан или неверного типа. Ожидается Closure(Blueprint) или SQL string.");
         }
 
+        // Подготовим down_sql (чтобы сохранить для отката)
         $downSql = null;
         $downAttr = $this->attributes['down'] ?? null;
         if ($downAttr instanceof \Closure) {
-            $maybe = $downAttr($this->table);
-            if (is_string($maybe) && trim($maybe) !== '') $downSql = $maybe;
+            try {
+                $maybeDown = $downAttr($this->table);
+                if (is_string($maybeDown) && trim($maybeDown) !== '') {
+                    $downSql = $maybeDown;
+                }
+            } catch (\Throwable $e) {
+                // если down-closure выполняет действия вместо возврата SQL — игнорируем здесь
+                $downSql = null;
+            }
         } elseif (is_string($downAttr) && trim($downAttr) !== '') {
             $downSql = $downAttr;
         } else {
             $downSql = "DROP TABLE IF EXISTS `{$this->table}`;";
         }
 
+        // Выполнение: в транзакции, если возможно и если мы её начинаем
+        $startedTx = false;
         try {
-            // начинаем транзакцию, если её нет
             if (!$this->db->inTransaction()) {
                 $this->db->beginTransaction();
                 $startedTx = true;
-            } else {
-                $startedTx = false;
             }
 
-            // Выполняем DDL / SQL
-            $this->db->query($sql);
+            // Выполняем SQL: может быть строка или массив строк
+            if (is_array($sqlToExecute)) {
+                foreach ($sqlToExecute as $s) {
+                    $s = trim($s);
+                    if ($s === '') continue;
+                    // используем exec для DDL (без параметров)
+                    $this->db->exec($s);
+                }
+                // Для записи в БД сохраним упрощённую версию up_sql — объединённую
+                $upSqlForStore = implode("\n", array_map(fn($x) => trim($x), $sqlToExecute));
+            } else {
+                $sqlString = trim((string)$sqlToExecute);
+                if ($sqlString !== '') {
+                    // Многие DDL лучше выполнять через exec
+                    $this->db->exec($sqlString);
+                }
+                $upSqlForStore = $sqlString;
+            }
 
-            // Сохраняем запись о миграции
-            $name = $this->table . '_' . date('Ymd_His');
+            // Сохраняем запись о миграции (prepared)
+            $name = ($this->migrationFile ?? ($this->table . '_' . date('Ymd_His')));
+            // используем prepared insert через query()
             $this->db->query(
-                "INSERT INTO `migrations` (`name`,`table_name`,`filename`,`batch`,`executed_at`,`up_sql`,`down_sql`) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                [$name, $this->table, $this->migrationFile, $batch, date('Y-m-d H:i:s'), $sql, $downSql]
+                "INSERT INTO `migrations` (`name`,`table_name`,`filename`,`batch`,`executed_at`,`up_sql`,`down_sql`)
+             VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [$name, $this->table, $this->migrationFile, $batch, date('Y-m-d H:i:s'), $upSqlForStore, $downSql]
             );
 
-            // commit только если транзакция всё ещё активна
+            // Commit только если мы начали транзакцию и она всё ещё активна
             if ($startedTx && $this->db->inTransaction()) {
                 $this->db->commit();
             }
 
             return true;
         } catch (\Throwable $e) {
+            // Если транзакция активна — откатываем
             if ($this->db->inTransaction()) {
-                $this->db->rollBack();
+                try {
+                    $this->db->rollBack();
+                } catch (\Throwable $_) { /* игнорировать */
+                }
             }
+            // Пробрасываем понятное исключение
             throw new \Exception("Ошибка при выполнении миграции up: " . $e->getMessage(), 0, $e);
         }
     }
+
 
     /**
      * Выполнить down для данной таблицы (последняя запись)

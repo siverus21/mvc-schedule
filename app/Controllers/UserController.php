@@ -95,12 +95,22 @@ class UserController extends BaseController
     {
         $usersCount = db()->count('users');
         $pagination = new Pagination($usersCount, 4, 2);
-        $users = db()->query("select * from users limit {$pagination->getLimit()} offset {$pagination->getOffset()}")->get();
+        $users = db()->query("select id, name from users limit {$pagination->getLimit()} offset {$pagination->getOffset()}")->get();
 
         return view('user/index', [
             'title' => "Index Page",
             'users' => $users,
             'pagination' => $pagination
         ]);
+    }
+
+    public function userDetail($userId)
+    {
+        $user = db()->findOrFail('users', $userId);
+
+        return view('user/detail', [
+            'title' => "Detail Page",
+            'user' => $user
+        ], 'admin');
     }
 }

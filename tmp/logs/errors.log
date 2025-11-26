@@ -42,3 +42,7 @@ Line: 13
 File: D:\OSPanel\domains\mvc-schedule\app\Controllers\UserController.php
 Line: 13
 ================
+[2025-11-26 23:19:18] DB Exec Error: SQLSTATE[HY000]: General error: 3780 Referencing column 'role_id' and referenced column 'id' in foreign key constraint 'fk_users_role_id' are incompatible.
+[2025-11-26 23:20:54] DB Exec Error: SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'role_id'
+[2025-11-26 23:21:27] DB Exec Error: SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'role_id'
+[2025-11-26 23:21:54] DB Exec Error: SQLSTATE[HY000]: General error: 3780 Referencing column 'role_id' and referenced column 'id' in foreign key constraint 'fk_users_role_id' are incompatible.
