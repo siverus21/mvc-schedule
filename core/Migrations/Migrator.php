@@ -117,22 +117,80 @@ class Migrator
      */
     protected function runFile(string $filePath): void
     {
-        echo "Running migration: " . basename($filePath) . "\n";
+        $basename = basename($filePath);
+        echo "Running migration: {$basename}\n";
 
+        // попытка проверить по filename — оборачиваем в try
+        try {
+            $row = $this->db->query("SELECT id FROM `migrations` WHERE `filename` = ? LIMIT 1", [$basename])->getOne();
+        } catch (\Throwable $e) {
+            // Если ошибка про неизвестный столбец - попытаемся починить таблицу сами
+            if (
+                stripos($e->getMessage(), 'Unknown column') !== false
+                || stripos($e->getMessage(), "1054") !== false
+            ) {
+
+                echo "  Notice: column `filename` not found, attempting to repair migrations table...\n";
+
+                // Проверим, есть ли поле filename
+                $col = $this->db->query("SHOW COLUMNS FROM `migrations` LIKE 'filename'")->getOne();
+                if (!$col) {
+                    // добавляем колонку
+                    try {
+                        $this->db->exec("ALTER TABLE `migrations` ADD COLUMN `filename` VARCHAR(255) NULL AFTER `table_name`;");
+                        echo "  Notice: column `filename` added.\n";
+                    } catch (\Throwable $ex) {
+                        // лог и выброс, если не удалось
+                        echo "  Warning: failed to add column `filename`: " . $ex->getMessage() . "\n";
+                        throw $ex;
+                    }
+                }
+
+                // Попытаемся создать уникальный индекс (если это важно)
+                try {
+                    $idx = $this->db->query("SHOW INDEX FROM `migrations` WHERE Key_name = 'migration_filename_unique'")->getOne();
+                    if (!$idx) {
+                        // создание индекса может упасть, если в таблице уже есть дубли/NULL
+                        $this->db->exec("CREATE UNIQUE INDEX `migration_filename_unique` ON `migrations` (`filename`);");
+                    }
+                } catch (\Throwable $ex) {
+                    // не критично — просто логируем
+                    error_log("Could not create unique index migration_filename_unique: " . $ex->getMessage());
+                }
+
+                // повторная попытка SELECT
+                $row = $this->db->query("SELECT id FROM `migrations` WHERE `filename` = ? LIMIT 1", [$basename])->getOne();
+            } else {
+                // иная ошибка — пробрасываем
+                throw $e;
+            }
+        }
+
+        if ($row) {
+            echo "  SKIPPED (already applied)\n";
+            return;
+        }
+
+        // Загружаем объект миграции (файл должен return new Migration(...))
         $obj = require $filePath;
         if (!is_object($obj) || !is_a($obj, Migration::class)) {
-            throw new Exception("Migration file must return instance of Youpi\\Migrations\\Migration — {$filePath}");
+            throw new \Exception("Migration file must return instance of Youpi\\Migrations\\Migration — {$filePath}");
+        }
+
+        // Установим имя файла у объекта миграции, чтобы он записал filename при вставке
+        if (method_exists($obj, 'setMigrationFile')) {
+            $obj->setMigrationFile($basename);
         }
 
         try {
             $obj->up();
             echo "  OK\n";
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             echo "  ERROR: " . $e->getMessage() . "\n";
-            // прерываем дальнейшее выполнение
             throw $e;
         }
     }
+
 
     /**
      * Rollback — откат последнего batch (все миграции с max(batch))

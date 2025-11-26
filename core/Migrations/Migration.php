@@ -11,6 +11,7 @@ class Migration
     protected Database $db;
     protected string $table = '';
     protected array $attributes = [];
+    protected ?string $migrationFile = null;
 
     public function __construct(string $table, array $attributes)
     {
@@ -29,16 +30,37 @@ class Migration
 
     protected function ensureMigrationsTable(): void
     {
-        $sql = "CREATE TABLE IF NOT EXISTS `migrations` (
-            `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            `name` VARCHAR(255) NOT NULL,
-            `table_name` VARCHAR(255) NOT NULL,
-            `batch` INT NOT NULL,
-            `executed_at` DATETIME NOT NULL,
-            `up_sql` TEXT NULL,
-            `down_sql` TEXT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
-        $this->db->exec($sql);
+        // создаём таблицу, если её нет
+        $create = "CREATE TABLE IF NOT EXISTS `migrations` (
+        `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        `name` VARCHAR(255) NOT NULL,
+        `table_name` VARCHAR(255) NOT NULL,
+        `filename` VARCHAR(255) NULL,
+        `batch` INT NOT NULL,
+        `executed_at` DATETIME NOT NULL,
+        `up_sql` TEXT NULL,
+        `down_sql` TEXT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+        $this->db->exec($create);
+
+        // проверяем есть ли столбец filename
+        $col = $this->db->query("SHOW COLUMNS FROM `migrations` LIKE 'filename'")->getOne();
+        if (!$col) {
+            // добавляем колонку
+            $this->db->exec("ALTER TABLE `migrations` ADD COLUMN `filename` VARCHAR(255) NULL AFTER `table_name`;");
+        }
+
+        // проверяем индекс по filename (избегаем повторного добавления)
+        $idx = $this->db->query("SHOW INDEX FROM `migrations` WHERE Key_name = 'migration_filename_unique'")->getOne();
+        if (!$idx) {
+            // создаём уникальный индекс, но если в БД уже есть NULL-записи, unique может упасть — можно пропустить, если не хотите
+            try {
+                $this->db->exec("CREATE UNIQUE INDEX `migration_filename_unique` ON `migrations` (`filename`);");
+            } catch (\Throwable $e) {
+                // если не удалось (например, есть дубли или NULL) — проигнорируем, но логируем
+                error_log("Could not create unique index migration_filename_unique: " . $e->getMessage());
+            }
+        }
     }
 
     /**
@@ -93,8 +115,8 @@ class Migration
             // Сохраняем запись о миграции
             $name = $this->table . '_' . date('Ymd_His');
             $this->db->query(
-                "INSERT INTO `migrations` (`name`,`table_name`,`batch`,`executed_at`,`up_sql`,`down_sql`) VALUES (?, ?, ?, ?, ?, ?)",
-                [$name, $this->table, $batch, date('Y-m-d H:i:s'), $sql, $downSql]
+                "INSERT INTO `migrations` (`name`,`table_name`,`filename`,`batch`,`executed_at`,`up_sql`,`down_sql`) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [$name, $this->table, $this->migrationFile, $batch, date('Y-m-d H:i:s'), $sql, $downSql]
             );
 
             // commit только если транзакция всё ещё активна
@@ -200,5 +222,14 @@ class Migration
             }
             throw new \Exception("Ошибка при rollback: " . $e->getMessage(), 0, $e);
         }
+    }
+
+    /**
+     * Установить имя файла миграции (basename)
+     */
+    public function setMigrationFile(string $file): self
+    {
+        $this->migrationFile = basename($file);
+        return $this;
     }
 }
