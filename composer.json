@@ -10,6 +10,11 @@
     "symfony/var-dumper": "^6.4",
     "vlucas/valitron": "^1.4",
     "ext-pdo": "*",
-    "filp/whoops": "^2.18"
+    "filp/whoops": "^2.18",
+    "illuminate/database": "^12.40",
+    "illuminate/events": "^12.40",
+    "illuminate/filesystem": "^12.40",
+    "illuminate/container": "^12.40",
+    "symfony/console": "^8.0"
   }
 }

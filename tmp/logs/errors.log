@@ -46,3 +46,6 @@ Line: 13
 [2025-11-26 23:20:54] DB Exec Error: SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'role_id'
 [2025-11-26 23:21:27] DB Exec Error: SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'role_id'
 [2025-11-26 23:21:54] DB Exec Error: SQLSTATE[HY000]: General error: 3780 Referencing column 'role_id' and referenced column 'id' in foreign key constraint 'fk_users_role_id' are incompatible.
+[2025-11-27 23:00:35] DB Exec Error: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'mvc-schedule.user_roles' doesn't exist
+[2025-11-27 23:02:42] DB Exec Error: SQLSTATE[HY000]: General error: 3780 Referencing column 'user_id' and referenced column 'id' in foreign key constraint 'fk_user_roles_user_id' are incompatible.
+[2025-11-27 23:04:08] DB Exec Error: SQLSTATE[HY000]: General error: 3780 Referencing column 'role_id' and referenced column 'id' in foreign key constraint 'fk_user_roles_role_id' are incompatible.

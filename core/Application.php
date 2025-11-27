@@ -2,7 +2,7 @@
 
 namespace Youpi;
 
-// use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 class Application
 {
@@ -71,5 +71,22 @@ class Application
     public function get($key, $default = null)
     {
         return $this->container[$key] ?? $default;
+    }
+
+    public function setDbConnection()
+    {
+        $capsule = new Capsule;
+        $capsule->addConnection([
+            'driver'    => DB_DRIVER,
+            'host'      => DB_HOST,
+            'database'  => DB_DATABASE,
+            'username'  => DB_USERNAME,
+            'password'  => DB_PASSWORD,
+            'charset'   => DB_CHARSET,
+            'collation' => DB_COLLATION,
+            'prefix'    => DB_PREFIX,
+        ]);
+        $capsule->setAsGlobal();
+        $capsule->bootEloquent();
     }
 }
