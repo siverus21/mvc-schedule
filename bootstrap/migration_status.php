@@ -41,6 +41,27 @@ $migrationsPath = ROOT . '/database/migrations';
 
 // Получаем статус миграций
 $migrationFiles = $migrator->getMigrationFiles($migrationsPath);
+
+// Проверяем существование таблицы миграций
+if (!$repository->repositoryExists()) {
+    echo "=== Статус миграций ===" . PHP_EOL;
+    echo "Таблица миграций не существует." . PHP_EOL;
+    echo "Все миграции (" . count($migrationFiles) . ") ожидают выполнения:" . PHP_EOL;
+
+    // Преобразуем полные пути в имена файлов
+    $migrationFileNames = array_map(function ($file) {
+        return basename($file, '.php');
+    }, $migrationFiles);
+
+    foreach ($migrationFileNames as $migration) {
+        echo "  ✗ " . $migration . PHP_EOL;
+    }
+
+    echo "Запустите миграции командой: php bootstrap/migrations.php" . PHP_EOL;
+    exit(0);
+}
+
+// Если таблица существует, получаем выполненные миграции
 $ranMigrations = $migrator->getRepository()->getRan();
 
 // Преобразуем полные пути в имена файлов
@@ -65,4 +86,5 @@ if (empty($pendingMigrations)) {
     echo "Все миграции выполнены!" . PHP_EOL;
 } else {
     echo "Есть " . count($pendingMigrations) . " миграций, ожидающих выполнения." . PHP_EOL;
+    echo "Запустите миграции командой: php bootstrap/migrations.php" . PHP_EOL;
 }

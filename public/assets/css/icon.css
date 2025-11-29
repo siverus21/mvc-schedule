@@ -1,0 +1,17 @@
+.icon {
+    padding: 10px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    & svg {
+        flex-shrink: 0;
+    }
+}
+
+.icon_purple {
+    background-color: var(--color-primary);
+}

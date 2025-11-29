@@ -39,6 +39,12 @@ $migrator = new Migrator($repository, $capsule->getDatabaseManager(), $container
 
 $migrationsPath = ROOT . '/database/migrations';
 
+// Проверяем существование таблицы миграций
+if (!$repository->repositoryExists()) {
+    echo "Таблица миграций не существует. Нет миграций для отката." . PHP_EOL;
+    exit(0);
+}
+
 echo "Откат миграций..." . PHP_EOL;
 
 // Получаем миграции до отката

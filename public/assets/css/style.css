@@ -9,7 +9,6 @@ body {
     color: var(--color-text-primary);
     transition: background var(--transition-base), color var(--transition-base);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    padding: 2rem;
 }
 
 button.change-color-theme {
