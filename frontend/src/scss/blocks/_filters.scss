@@ -1,0 +1,57 @@
+.filters {
+	background-color: var(--color-surface);
+	border-radius: 1.5rem;
+	transition: var(--transition-base);
+	padding: 1rem 1.2rem;
+	margin: 1rem 1.2rem;
+
+	& .filters__header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 1rem;
+
+		& h3 {
+			margin: 0;
+		}
+	}
+
+	& .filter__form {
+		display: grid;
+		grid-template-columns: repeat(3, auto);
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	& .filter__item {
+		display: flex;
+		flex-direction: column;
+
+		& label {
+			color: var(--color-text-primary);
+			font-size: 0.875rem;
+			font-weight: 500;
+			margin-bottom: 0.5rem;
+		}
+
+		& select {
+			appearance: none;
+			padding: 0.625rem 1rem;
+			border-radius: 0.75rem;
+			border: 2px solid var(--color-border);
+			background: var(--color-surface);
+			color: var(--color-text-primary);
+			font-size: 0.9375rem;
+			font-weight: 500;
+			outline: none;
+			cursor: pointer;
+			transition: 0.2s;
+			background-image: url(./../images/svg/arrow.svg);
+			background-repeat: no-repeat;
+			background-position: right;
+			background-position-x: 97%;
+			background-position-y: 53%;
+			background-size: 1rem;
+		}
+	}
+}

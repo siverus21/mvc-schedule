@@ -1,0 +1,14 @@
+@import "./normalaize/normalaize";
+
+// utils css
+@import "./utils/variables";
+@import "./utils/color-scheme";
+@import "./utils/helpers";
+@import "./utils/mixins";
+
+// blocks css
+@import "./blocks/icon";
+@import "./blocks/button";
+@import "./blocks/header";
+@import "./blocks/filters";
+@import "./blocks/schedule";

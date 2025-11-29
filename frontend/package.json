@@ -1,0 +1,28 @@
+{
+  "name": "project-frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "webpack --mode=production",
+    "dev": "webpack --mode=development --watch",
+    "serve": "webpack serve --mode=development --static-directory=../public"
+  },
+  "devDependencies": {
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.1.0",
+    "sass": "^1.77.2",
+    "sass-loader": "^16.0.1",
+    "css-loader": "^7.1.2",
+    "mini-css-extract-plugin": "^2.9.0",
+    "css-minimizer-webpack-plugin": "^7.0.0",
+    "terser-webpack-plugin": "^5.3.10",
+    "expose-loader": "^4.1.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "url-loader": "^4.1.1",
+    "file-loader": "^6.2.0"
+  },
+  "dependencies": {
+    "jquery": "^3.7.1",
+    "izimodal": "^1.6.1"
+  }
+}

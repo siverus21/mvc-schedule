@@ -1,0 +1,186 @@
+.schedule {
+	margin: 1rem 1.2rem;
+
+	&__select {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 1rem;
+	}
+
+	&__week {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		gap: 1rem;
+	}
+
+	&__item {
+		border: 2px solid var(--color-border);
+		border-radius: 1.5rem;
+		background-color: var(--color-surface);
+	}
+
+	&__header {
+		padding: 0.5rem 0;
+		border-bottom: 2px solid var(--color-border);
+
+		& p,
+		& h4 {
+			padding-inline: 0.5rem;
+		}
+	}
+
+	&__body {
+		padding: 1rem 0.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	&__type {
+		& p {
+			width: max-content;
+			padding: 0.2rem 0.4rem;
+			border-radius: 1rem;
+			background-color: var(--color-lecture);
+			font-size: 0.875rem;
+			color: var(--color-white);
+			font-weight: 600;
+		}
+	}
+
+	&__info {
+		margin: -0.5rem;
+	}
+
+	&__block {
+		border-radius: 1rem;
+		border: 2px solid var(--color-border);
+		padding: 0.5rem 0.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+
+		&_lecture {
+			background: var(--color-bg-lecture);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-lecture);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-lecture);
+			}
+		}
+
+		&_practice {
+			background: var(--color-bg-practice);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-practice);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-practice);
+			}
+		}
+
+		&_lab {
+			background: var(--color-bg-lab);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-lab);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-lab);
+			}
+		}
+
+		&_seminar {
+			background: var(--color-bg-seminar);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-seminar);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-seminar);
+			}
+		}
+
+		&_replacement {
+			background: var(--color-bg-replacement);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-replacement);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-replacement);
+			}
+		}
+
+		&_cancelled {
+			background: var(--color-bg-cancelled);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-cancelled);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-cancelled);
+			}
+			& .schedule__subject {
+				text-decoration: line-through;
+			}
+		}
+
+		&_online {
+			background: var(--color-bg-online);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-online);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-online);
+			}
+		}
+	}
+
+	&__time {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+
+		& p {
+			font-size: 0.875rem;
+			margin-bottom: 0;
+			font-weight: 600;
+		}
+
+		& svg {
+			width: 1.2rem;
+			height: 1.2rem;
+		}
+	}
+
+	&__subject {
+		font-size: 1.25rem;
+		font-weight: 600;
+		line-height: 1.4;
+	}
+
+	&__teacher,
+	&__room {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+
+		& svg {
+			width: 1.2rem;
+			height: 1.2rem;
+		}
+	}
+}

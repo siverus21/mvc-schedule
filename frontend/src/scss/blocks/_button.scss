@@ -1,0 +1,58 @@
+.button {
+	padding: 0.625rem 1.25rem;
+	border-radius: 0.75rem;
+	border: 2px solid var(--color-border);
+	background: var(--color-surface);
+	color: var(--color-text-primary);
+	font-weight: 600;
+	font-size: 0.9375rem;
+	cursor: pointer;
+	transition: 0.2s;
+	transform: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	transition: var(--transition-base);
+
+	& span {
+		line-height: 1;
+	}
+
+	&.button_active {
+		border: 2px solid rgb(99, 102, 241);
+		background: var(--color-button-active-gradient);
+		color: var(--color-white);
+		transition: var(--transition-base);
+	}
+
+	&.button_change-color-theme {
+		padding: 0.4rem;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, rgb(241, 245, 249) 0%, rgb(226, 232, 240) 100%);
+		border: 1px solid rgb(203, 213, 225);
+	}
+}
+
+body .button_change-color-theme span:first-child {
+	display: block;
+}
+
+body .button_change-color-theme span:last-child {
+	display: none;
+}
+
+body.dark-theme .button_change-color-theme span:first-child {
+	display: none;
+}
+
+body.dark-theme .button_change-color-theme span:last-child {
+	display: block;
+}
+
+body.dark-theme .button.button_change-color-theme {
+	background: linear-gradient(135deg, rgb(51, 65, 85) 0%, rgb(30, 41, 59) 100%);
+	border: 1px solid rgb(71, 85, 105);
+}

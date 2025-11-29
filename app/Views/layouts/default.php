@@ -7,15 +7,7 @@
     <title>Youpi :: <?= $title ?? "" ?></title>
     <?= getCsrfMeta(); ?>
 
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/normalaize.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/iziModal.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/color-scheme.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/button.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/icon.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/header.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/filters.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/schedule.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/public/assets/css/app.css') ?>">
     <? if (!empty($styles)): ?>
         <? foreach ($styles as $style): ?>
             <link rel="stylesheet" href="<?= $style; ?>">
@@ -72,9 +64,11 @@
     <main>
         <div class="filters">
             <div class="filters__header">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-funnel w-5 h-5" aria-hidden="true" style="color: rgb(99, 102, 241);">
-                    <path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path>
-                </svg>
+                <i class="icon icon_no-bg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-funnel w-5 h-5" aria-hidden="true">
+                        <path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path>
+                    </svg>
+                </i>
                 <h3>Фильтры</h3>
             </div>
             <div class="filters__body">
@@ -149,7 +143,12 @@
                         4 => 'schedule__block_replacement',
                         5 => 'schedule__block_cancelled',
                         6 => 'schedule__block_online',
-                    )
+                    );
+
+                    $infoText = array(
+                        "schedule__block_cancelled" => "Занятие отменено. Следующее занятие в пятницу.",
+                        "schedule__block_replacement" => "Замена: вместо Николаева П.С. - Сидорова Е.И.",
+                    );
                     ?>
                     <? for ($i = 0; $i < 7; $i++): ?>
                         <div class="schedule__day">
@@ -180,7 +179,7 @@
                                                 <div class="schedule__type">
                                                     <p>Лекция</p>
                                                 </div>
-                                                <div class="schedule__info">
+                                                <div class="schedule__name">
                                                     <p class="schedule__subject">Математика</p>
                                                 </div>
                                                 <div class="schedule__teacher">
@@ -197,6 +196,11 @@
                                                     </svg>
                                                     <p>101</p>
                                                 </div>
+                                                <? if ($randClass == "schedule__block_cancelled" || $randClass == "schedule__block_replacement"): ?>
+                                                    <div class="schedule__info">
+                                                        <p><?= $infoText[$randClass] ?></p>
+                                                    </div>
+                                                <? endif; ?>
                                             </div>
                                         <? endfor; ?>
                                     <? endif; ?>
@@ -212,19 +216,13 @@
         <p>© 2025 UniSchedule • Современное расписание для студентов и преподавателей</p>
     </footer>
 
-
-
-    <script src="<?= base_url('/public/assets/js/jqeury.js') ?>"></script>
-    <script src="<?= base_url('/public/assets/js/iziModal.min.js') ?>"></script>
-
+    <script src="<?= base_url('/public/assets/js/lib.js') ?>"></script>
+    <script src="<?= base_url('/public/assets/js/app.js') ?>"></script>
     <? if (!empty($footerScripts)): ?>
         <? foreach ($footerScripts as $footerScript): ?>
             <script src="<?= $footerScript; ?>"></script>
         <? endforeach; ?>
     <? endif; ?>
-
-    <script src="<?= base_url('/public/assets/js/app.js') ?>"></script>
-    <script src="<?= base_url('/public/assets/js/change-theme.js') ?>"></script>
 
     <div class="iziModal-alert-success"></div>
     <div class="iziModal-alert-error"></div>
