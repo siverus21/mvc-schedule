@@ -10,9 +10,9 @@ return new class extends Migration
         if (!Capsule::schema()->hasTable('users')) {
             Capsule::schema()->create('users', function ($table) {
                 $table->id();
-                $table->string('username')->unique();
-                $table->string('email')->unique()->nullable();
-                $table->string('password_hash');
+                $table->string('name');
+                $table->string('email')->unique();
+                $table->string('password');
                 $table->string('display_name')->nullable();
                 $table->string('phone')->nullable();
                 $table->boolean('is_active')->default(true);

@@ -1,6 +1,12 @@
-<div class="container mt-4">
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?= $flash_success ?? "" ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+<div class="alert alert_success">
+    <?= $flash_success ?? "" ?>
+    <i class="alert__cross icon icon_no-bg">
+        <svg width="36px" height="36px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+                <path d="M16 8L8 16M12 12L16 16M8 8L10 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+        </svg>
+    </i>
 </div>

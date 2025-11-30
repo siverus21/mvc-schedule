@@ -2,6 +2,7 @@
 
 /** @var \Youpi\Application $app */
 
+use App\Controllers\AdminController;
 use App\Controllers\UserController;
 use App\Controllers\HomeController;
 
@@ -11,6 +12,8 @@ define("MIDDLEWARE", [
 ]);
 
 $app->router->get('/', [HomeController::class, 'index']);
+
+$app->router->get('/admin', [AdminController::class, 'dashboard'])->middleware(['auth']);
 
 $app->router->get('/register', [UserController::class, 'register'])->middleware(['guest']);
 $app->router->post('/register', [UserController::class, 'store'])->middleware(['guest']);

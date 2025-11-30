@@ -13,10 +13,15 @@
 	align-items: center;
 	justify-content: center;
 	gap: 10px;
-	transition: var(--transition-base);
+	transition: all var(--transition-slow);
 
 	& span {
 		line-height: 1;
+	}
+
+	&:hover {
+		background: var(--color-button-active-gradient);
+		color: var(--color-white);
 	}
 
 	&.button_active {

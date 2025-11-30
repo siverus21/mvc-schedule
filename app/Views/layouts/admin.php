@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Youpi :: <?= $title ?? "" ?></title>
     <?= getCsrfMeta(); ?>
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/iziModal.min.css') ?>">
+
+    <link rel="stylesheet" href="<?= base_url('/public/assets/css/app.css') ?>">
+
     <? if (!empty($styles)): ?>
         <? foreach ($styles as $style): ?>
             <link rel="stylesheet" href="<?= $style; ?>">
@@ -22,8 +24,8 @@
 </head>
 
 <body>
-    <header>
-
+    <header class="header">
+        <?= view()->renderPartial('layouts/header/header'); ?>
     </header>
 
     <main>
@@ -31,23 +33,19 @@
         <?= $content ?>
     </main>
 
-    <footer>
+    <footer class="footer pt-4 pb-4">
+        <?= view()->renderPartial('layouts/footer/footer'); ?>
     </footer>
+    <div class="iziModal-alert-success"></div>
+    <div class="iziModal-alert-error"></div>
 
-    <script src="<?= base_url('/public/assets/js/jqeury.js') ?>"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <script src="<?= base_url('/public/assets/js/iziModal.min.js') ?>"></script>
-
+    <script src="<?= base_url('/public/assets/js/lib.js') ?>"></script>
+    <script src="<?= base_url('/public/assets/js/app.js') ?>"></script>
     <? if (!empty($footerScripts)): ?>
         <? foreach ($footerScripts as $footerScript): ?>
             <script src="<?= $footerScript; ?>"></script>
         <? endforeach; ?>
     <? endif; ?>
-
-    <script src="<?= base_url('/public/assets/js/app.js') ?>"></script>
-    <div class="iziModal-alert-success"></div>
-    <div class="iziModal-alert-error"></div>
-
 </body>
 
 </html>

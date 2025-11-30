@@ -119,6 +119,10 @@
 			& .schedule__type p {
 				background: var(--color-status-replacement);
 			}
+
+			& .schedule__info p {
+				color: var(--color-status-replacement);
+			}
 		}
 
 		&_cancelled {
@@ -131,8 +135,13 @@
 			& .schedule__type p {
 				background: var(--color-status-cancelled);
 			}
+
 			& .schedule__subject {
 				text-decoration: line-through;
+			}
+
+			& .schedule__info p {
+				color: var(--color-status-cancelled);
 			}
 		}
 
@@ -181,6 +190,16 @@
 		& svg {
 			width: 1.2rem;
 			height: 1.2rem;
+		}
+	}
+
+	&__info {
+		border-top: 2px solid var(--color-border);
+		padding: .2rem .4rem .4rem;
+		margin-top: .2rem;
+
+		& p {
+			font-size: 0.875rem;
 		}
 	}
 }

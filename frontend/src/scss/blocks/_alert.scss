@@ -1,0 +1,26 @@
+.alert {
+	max-width: rem-calc(600);
+	margin: 2rem auto;
+	padding: 2rem;
+	position: relative;
+	border-radius: 1.5rem;
+
+	&_warning {
+		background: var(--color-bg-replacement);
+	}
+
+	&_success {
+		background: var(--color-bg-seminar);
+	}
+
+	&_error {
+		background: var(--color-bg-cancelled);
+	}
+
+	&__cross {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		cursor: pointer;
+	}
+}

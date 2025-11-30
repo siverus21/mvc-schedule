@@ -78,7 +78,7 @@ function getErrors($fieldName): string
     $errors = session()->get('form_errors');
 
     if (isset($errors[$fieldName])) {
-        $output .= "<span class='invalid-feedback d-block'><ul class='list-unstyled'>";
+        $output .= "<span class='form__helper-error'><ul class='list-unstyled'>";
         foreach ($errors[$fieldName] as $error) {
             $output .= "<li>{$error}</li>";
         }

@@ -1,3 +1,3 @@
-<div class="container">
-    <h2>Hello from test</h2>
-</div>
+<?
+echo view()->render('incs/filter');
+echo view()->render('incs/schedule');

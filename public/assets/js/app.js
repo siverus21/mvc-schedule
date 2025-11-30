@@ -13,9 +13,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _main_app_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_main_app_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _main_change_theme_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./main/change-theme.js */ "./src/js/main/change-theme.js");
 /* harmony import */ var _main_change_theme_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_main_change_theme_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _main_alert_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./main/alert.js */ "./src/js/main/alert.js");
+/* harmony import */ var _main_alert_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_main_alert_js__WEBPACK_IMPORTED_MODULE_2__);
 // import js
 
 
+
+
+/***/ }),
+
+/***/ "./src/js/main/alert.js":
+/*!******************************!*\
+  !*** ./src/js/main/alert.js ***!
+  \******************************/
+/***/ (() => {
+
+$(function () {
+	$(document).on('click', '.alert__cross', function () {
+		$(this).parent().remove();
+	});
+});
 
 
 /***/ }),
