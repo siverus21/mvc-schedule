@@ -56,6 +56,9 @@
 	--transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
 	--transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
 	--transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+	--default-padding: 1rem 1.2rem;
+	--default-margin: 1rem 1.2rem;
 }
 
 :root[data-theme="dark"],

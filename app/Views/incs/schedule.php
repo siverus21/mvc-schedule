@@ -47,7 +47,7 @@
             ?>
             <? for ($i = 0; $i < 7; $i++): ?>
                 <div class="schedule__day">
-                    <div class="schedule__item">
+                    <div class="schedule__item default-block">
                         <?
                         $count = rand(0, 4);
                         ?>

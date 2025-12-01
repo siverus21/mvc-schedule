@@ -1,5 +1,5 @@
 .schedule {
-	margin: 1rem 1.2rem;
+	margin: var(--default-margin);
 
 	&__select {
 		display: flex;
@@ -15,9 +15,6 @@
 	}
 
 	&__item {
-		border: 2px solid var(--color-border);
-		border-radius: 1.5rem;
-		background-color: var(--color-surface);
 	}
 
 	&__header {

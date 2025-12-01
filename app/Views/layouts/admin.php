@@ -29,12 +29,23 @@
     </header>
 
     <main>
-        <?= getAlerts(); ?>
-        <?= $content ?>
+        <? if (Youpi\Auth::isAuth()): ?>
+            <div class="d-flex">
+                <aside class="aside">
+                    <?= view()->renderPartial('incs/admin/menu'); ?>
+                </aside>
+                <div class="main-content w-100">
+                    <?= getAlerts(); ?>
+                    <?= $content ?>
+                </div>
+            </div>
+        <? else: ?>
+            <?= getAlerts(); ?>
+            <?= $content ?>
+        <? endif; ?>
     </main>
 
     <footer class="footer pt-4 pb-4">
-        <?= view()->renderPartial('layouts/footer/footer'); ?>
     </footer>
     <div class="iziModal-alert-success"></div>
     <div class="iziModal-alert-error"></div>

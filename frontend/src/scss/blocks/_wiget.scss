@@ -1,0 +1,57 @@
+.wiget {
+	&_padding {
+		padding: var(--default-padding);
+	}
+
+	&__item {
+		position: relative;
+		padding: var(--default-padding);
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		transition: all var(--transition-slow);
+
+		&_border {
+			padding: 0.5rem 0;
+			border-top: 2px solid var(--color-border);
+		}
+
+		&_badge::before {
+			content: "";
+			position: absolute;
+			left: -0.9rem;
+			top: 1rem;
+			width: rem-calc(8);
+			aspect-ratio: 1/1;
+			background-color: var(--color-status-practice);
+			border-radius: 50%;
+		}
+	}
+
+	&__event {
+		&_bold {
+			font-weight: 600;
+		}
+	}
+
+	&__number {
+		font-size: 1.5rem;
+		font-weight: 700;
+	}
+
+	&__name,
+	&__time,
+	&__user,
+	&__room,
+	&__dot {
+		color: var(--color-text-tertiary);
+		font-size: 0.875rem;
+	}
+
+	&__time {
+		&_blue {
+			color: var(--color-status-practice);
+			font-weight: 600;
+		}
+	}
+}

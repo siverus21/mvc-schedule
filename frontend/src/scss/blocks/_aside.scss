@@ -1,0 +1,7 @@
+.aside {
+	max-width: rem-calc(350);
+	height: 100svh;
+	padding: var(--default-padding);
+	border-right: 2px solid var(--color-border);
+	transition: all var(--transition-slow);
+}

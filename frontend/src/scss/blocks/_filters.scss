@@ -1,9 +1,7 @@
 .filters {
-	background-color: var(--color-surface);
-	border-radius: 1.5rem;
 	transition: var(--transition-base);
-	padding: 1rem 1.2rem;
-	margin: 1rem 1.2rem;
+	padding: var(--default-padding);
+	margin:	var(--default-margin);
 
 	& .filters__header {
 		display: flex;

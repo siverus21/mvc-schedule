@@ -151,6 +151,8 @@ svg * {
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --default-padding: 1rem 1.2rem;
+  --default-margin: 1rem 1.2rem;
 }
 
 :root[data-theme=dark],
@@ -189,6 +191,17 @@ button.change-color-theme {
   cursor: pointer;
   transition: transform 120ms ease, box-shadow 120ms ease;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.main-content {
+  padding: var(--default-padding);
+}
+
+.default-block {
+  border: 2px solid var(--color-border);
+  border-radius: 1.5rem;
+  background-color: var(--color-surface);
+  transition: all var(--transition-slow);
 }
 
 .d-flex {
@@ -235,6 +248,22 @@ button.change-color-theme {
   text-align: end;
 }
 
+.hide {
+  display: none !important;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.lh-1 {
+  line-height: 1;
+}
+
+.d-grid {
+  display: grid;
+}
+
 .mt-1 {
   margin-top: 0.5rem;
 }
@@ -249,10 +278,6 @@ button.change-color-theme {
 
 .mt-4 {
   margin-top: 2rem;
-}
-
-.mt-5 {
-  margin-top: 2.5rem;
 }
 
 .mb-1 {
@@ -303,12 +328,52 @@ button.change-color-theme {
   padding-bottom: 2rem;
 }
 
-.hide {
-  display: none !important;
+.gap-1 {
+  gap: 0.5rem;
 }
 
-.w-100 {
-  width: 100%;
+.gap-2 {
+  gap: 1rem;
+}
+
+.gap-3 {
+  gap: 1.5rem;
+}
+
+.gap-4 {
+  gap: 2rem;
+}
+
+.grid-col {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.grid-col-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-col-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-col-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-col-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.grid-col-6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.grid-col-7 {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.grid-col-8 {
+  grid-template-columns: repeat(8, 1fr);
 }
 
 .icon {
@@ -319,9 +384,19 @@ button.change-color-theme {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all var(--transition-slow);
 }
 .icon_purple {
   background-color: var(--color-icon-bg-primary);
+  color: var(--color-white);
+}
+.icon_blue {
+  background-color: var(--color-status-practice);
+  color: var(--color-white);
+}
+.icon_warning {
+  background-color: var(--color-status-replacement);
+  color: var(--color-white);
 }
 .icon_no-bg {
   padding: 0;
@@ -420,11 +495,9 @@ body.dark-theme .button.button_change-color-theme {
 }
 
 .filters {
-  background-color: var(--color-surface);
-  border-radius: 1.5rem;
   transition: var(--transition-base);
-  padding: 1rem 1.2rem;
-  margin: 1rem 1.2rem;
+  padding: var(--default-padding);
+  margin: var(--default-margin);
 }
 .filters .filters__header {
   display: flex;
@@ -472,7 +545,7 @@ body.dark-theme .button.button_change-color-theme {
 }
 
 .schedule {
-  margin: 1rem 1.2rem;
+  margin: var(--default-margin);
 }
 .schedule__select {
   display: flex;
@@ -484,11 +557,6 @@ body.dark-theme .button.button_change-color-theme {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1rem;
-}
-.schedule__item {
-  border: 2px solid var(--color-border);
-  border-radius: 1.5rem;
-  background-color: var(--color-surface);
 }
 .schedule__header {
   padding: 0.5rem 0;
@@ -689,6 +757,86 @@ body.dark-theme .button.button_change-color-theme {
   top: 1rem;
   right: 1rem;
   cursor: pointer;
+}
+
+.menu__item {
+  padding: 0.4rem 0.875rem;
+  border-radius: 1rem;
+  transition: all var(--transition-slow);
+}
+.menu__item:hover {
+  opacity: 0.8;
+  background-color: var(--color-status-lecture);
+}
+.menu__item:hover span {
+  color: var(--color-white);
+}
+.menu__item_active {
+  background-color: var(--color-status-lecture);
+}
+.menu__item_active span {
+  color: var(--color-white);
+}
+.menu__link {
+  text-decoration: none;
+}
+.menu__icon {
+  line-height: 1;
+  color: var(--color-text-secondary);
+}
+.menu__title {
+  line-height: 1;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.aside {
+  max-width: 21.875rem;
+  height: 100svh;
+  padding: var(--default-padding);
+  border-right: 2px solid var(--color-border);
+  transition: all var(--transition-slow);
+}
+
+.wiget_padding {
+  padding: var(--default-padding);
+}
+.wiget__item {
+  position: relative;
+  padding: var(--default-padding);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: all var(--transition-slow);
+}
+.wiget__item_border {
+  padding: 0.5rem 0;
+  border-top: 2px solid var(--color-border);
+}
+.wiget__item_badge::before {
+  content: "";
+  position: absolute;
+  left: -0.9rem;
+  top: 1rem;
+  width: 0.5rem;
+  aspect-ratio: 1/1;
+  background-color: var(--color-status-practice);
+  border-radius: 50%;
+}
+.wiget__event_bold {
+  font-weight: 600;
+}
+.wiget__number {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.wiget__name, .wiget__time, .wiget__user, .wiget__room, .wiget__dot {
+  color: var(--color-text-tertiary);
+  font-size: 0.875rem;
+}
+.wiget__time_blue {
+  color: var(--color-status-practice);
+  font-weight: 600;
 }
 
 /*# sourceMappingURL=app.css.map*/

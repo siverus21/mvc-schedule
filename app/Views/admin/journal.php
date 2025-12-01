@@ -1,0 +1,1 @@
+<h1 class="mt-0 mb-4 lh-1">Journal</h1>

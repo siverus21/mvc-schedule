@@ -1,0 +1,38 @@
+.menu {
+	&__item {
+		padding: 0.4rem 0.875rem;
+		border-radius: 1rem;
+		transition: all var(--transition-slow);
+
+		&:hover {
+			opacity: 0.8;
+			background-color: var(--color-status-lecture);
+			& span {
+				color: var(--color-white);
+			}
+		}
+
+		&_active {
+			background-color: var(--color-status-lecture);
+
+			& span {
+				color: var(--color-white);
+			}
+		}
+	}
+
+	&__link {
+		text-decoration: none;
+	}
+
+	&__icon {
+		line-height: 1;
+		color: var(--color-text-secondary);
+	}
+
+	&__title {
+		line-height: 1;
+		color: var(--color-text-secondary);
+		font-weight: 600;
+	}
+}
