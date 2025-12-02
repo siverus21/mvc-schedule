@@ -35,6 +35,8 @@ $app->router->post('/admin/auditories/create', [AuditoryController::class, 'stor
 $app->router->get('/admin/buildings', [BuildingController::class, 'list'])->middleware(['auth']);
 $app->router->get('/admin/buildings/create', [BuildingController::class, 'create'])->middleware(['auth']);
 $app->router->post('/admin/buildings/create', [BuildingController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/buildings/edit/{id}', [BuildingController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/buildings/edit/{id}', [BuildingController::class, 'update'])->middleware(['auth']);
 
 // User
 $app->router->get('/register', [UserController::class, 'register'])->middleware(['guest']);

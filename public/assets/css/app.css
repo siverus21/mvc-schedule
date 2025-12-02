@@ -444,7 +444,7 @@ button.change-color-theme {
   line-height: 1;
 }
 .button:hover {
-  background: var(--color-button-active-gradient);
+  background: var(--color-status-lecture);
   color: var(--color-white);
 }
 .button.button_active {

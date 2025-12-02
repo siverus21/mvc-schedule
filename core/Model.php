@@ -51,6 +51,81 @@ abstract class Model
         return db()->getInsertId();
     }
 
+    public function update(): bool
+    {
+        $id = $this->attributes['id'] ?? null;
+
+        if ($id === null) {
+            throw new \InvalidArgumentException('ID is required for update.');
+        }
+
+        $tableName = $this->table;
+
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $tableName)) {
+            throw new \RuntimeException('Invalid table name.');
+        }
+
+        $allowedFields = array_flip($this->fillable);
+        $fieldsToUpdate = array_intersect_key($this->attributes, $allowedFields);
+
+        if ($this->timestamp) {
+            $fieldsToUpdate['updated_at'] = date('Y-m-d H:i:s');
+        }
+
+        $originalRecord = db()->findOne($tableName, $id, 'id');
+        if ($originalRecord === null) {
+            throw new \RuntimeException("Record with id {$id} not found in {$tableName}.");
+        }
+
+        $changedFields = [];
+        foreach ($fieldsToUpdate as $field => $newValue) {
+            $originalValue = $originalRecord[$field] ?? null;
+
+            if ($originalValue === null || $originalValue !== $newValue) {
+                $changedFields[$field] = $newValue;
+            }
+        }
+
+        if (empty($changedFields)) {
+            return false; // nothing has changed
+        }
+
+        $setParts = [];
+        $params = [];
+        foreach ($changedFields as $field => $newValue) {
+            $setParts[] = "`{$field}` = :{$field}";
+            $params[$field] = $newValue;
+        }
+        $setSql = implode(', ', $setParts);
+
+        $params['id'] = $id;
+        $sql = "UPDATE `{$tableName}` SET {$setSql} WHERE `id` = :id";
+
+        $db = db();
+        $useTransactions = method_exists($db, 'beginTransaction') && method_exists($db, 'commit') && method_exists($db, 'rollBack');
+
+        try {
+            if ($useTransactions) {
+                $db->beginTransaction();
+            }
+
+            $db->query($sql, $params);
+
+            if ($useTransactions) {
+                $db->commit();
+            }
+
+            return true;
+        } catch (\Throwable $e) {
+            if ($useTransactions) {
+                $db->rollBack();
+            }
+
+            throw $e;
+        }
+    }
+
+
     public function loadData()
     {
         $data = request()->getData();
