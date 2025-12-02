@@ -26,3 +26,7 @@ button.change-color-theme {
     background-color: var(--color-surface);
 	transition: all var(--transition-slow);
 }
+
+.default-block_padding {
+	padding: var(--default-padding);
+}

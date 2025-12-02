@@ -3,8 +3,10 @@
 /** @var \Youpi\Application $app */
 
 use App\Controllers\AdminController;
+use App\Controllers\AuditoryController;
 use App\Controllers\UserController;
 use App\Controllers\HomeController;
+use App\Controllers\BuildingController;
 
 define("MIDDLEWARE", [
     'auth' => Youpi\Middleware\Auth::class,
@@ -17,13 +19,22 @@ $app->router->get('/', [HomeController::class, 'index']);
 // Admin Panel
 $app->router->get('/admin', [AdminController::class, 'index'])->middleware(['auth']);
 $app->router->get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth']);
-$app->router->get('/admin/auditories', [AdminController::class, 'auditories'])->middleware(['auth']);
 $app->router->get('/admin/teachers', [AdminController::class, 'teachers'])->middleware(['auth']);
 $app->router->get('/admin/journal', [AdminController::class, 'journal'])->middleware(['auth']);
 $app->router->get('/admin/roles', [AdminController::class, 'roles'])->middleware(['auth']);
 $app->router->get('/admin/schedule', [AdminController::class, 'schedule'])->middleware(['auth']);
 $app->router->get('/admin/settings', [AdminController::class, 'settings'])->middleware(['auth']);
 $app->router->get('/admin/import-export', [AdminController::class, 'importExport'])->middleware(['auth']);
+
+// Auditories
+$app->router->get('/admin/auditories', [AuditoryController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/auditories/create', [AuditoryController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/auditories/create', [AuditoryController::class, 'store'])->middleware(['auth']);
+
+// Buildings
+$app->router->get('/admin/buildings', [BuildingController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/buildings/create', [BuildingController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/buildings/create', [BuildingController::class, 'store'])->middleware(['auth']);
 
 // User
 $app->router->get('/register', [UserController::class, 'register'])->middleware(['guest']);

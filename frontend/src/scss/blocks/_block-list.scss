@@ -1,0 +1,31 @@
+.block-list {
+	&__item {
+		position: relative;
+	}
+
+	&__title {
+		font-size: 1.4rem;
+	}
+
+	&__badge {
+		padding: 0.2rem 0.4rem;
+		border-radius: 0.5rem;
+		background: var(--color-status-lecture);
+		color: var(--color-white);
+
+		&_absolute {
+			position: absolute;
+			right: rem-calc(10);
+			top: rem-calc(10);
+		}
+
+		& p {
+			font-size: 0.75rem;
+			font-weight: 600;
+		}
+	}
+
+	&__text {
+		font-size: 0.875rem;
+	}
+}

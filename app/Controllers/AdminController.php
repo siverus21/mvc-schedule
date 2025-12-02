@@ -15,11 +15,6 @@ class AdminController extends BaseController
         return view('admin/dashboard', ['title' => "Dashboard Page"], 'admin');
     }
 
-    public function auditories()
-    {
-        return view('admin/auditories', ['title' => "auditories Page"], 'admin');
-    }
-
     public function importExport()
     {
         return view('admin/import-export', ['title' => "importExport Page"], 'admin');

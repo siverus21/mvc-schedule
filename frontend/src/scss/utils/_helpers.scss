@@ -6,7 +6,7 @@
 	align-items: center;
 }
 
-.justify-space-beetwen {
+.justify-content-beetwen {
 	justify-content: space-between;
 }
 
@@ -56,6 +56,14 @@
 
 .d-grid {
 	display: grid;
+}
+
+.pr {
+  position: relative;
+}
+
+.pa {
+  position: absolute;
 }
 
 $spaces: (

@@ -204,6 +204,10 @@ button.change-color-theme {
   transition: all var(--transition-slow);
 }
 
+.default-block_padding {
+  padding: var(--default-padding);
+}
+
 .d-flex {
   display: flex;
 }
@@ -212,7 +216,7 @@ button.change-color-theme {
   align-items: center;
 }
 
-.justify-space-beetwen {
+.justify-content-beetwen {
   justify-content: space-between;
 }
 
@@ -262,6 +266,14 @@ button.change-color-theme {
 
 .d-grid {
   display: grid;
+}
+
+.pr {
+  position: relative;
+}
+
+.pa {
+  position: absolute;
 }
 
 .mt-1 {
@@ -425,6 +437,7 @@ button.change-color-theme {
   align-items: center;
   justify-content: center;
   gap: 10px;
+  text-decoration: none;
   transition: all var(--transition-slow);
 }
 .button span {
@@ -837,6 +850,31 @@ body.dark-theme .button.button_change-color-theme {
 .wiget__time_blue {
   color: var(--color-status-practice);
   font-weight: 600;
+}
+
+.block-list__item {
+  position: relative;
+}
+.block-list__title {
+  font-size: 1.4rem;
+}
+.block-list__badge {
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.5rem;
+  background: var(--color-status-lecture);
+  color: var(--color-white);
+}
+.block-list__badge_absolute {
+  position: absolute;
+  right: 0.625rem;
+  top: 0.625rem;
+}
+.block-list__badge p {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.block-list__text {
+  font-size: 0.875rem;
 }
 
 /*# sourceMappingURL=app.css.map*/
