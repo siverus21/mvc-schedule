@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="<?= $_COOKIE['themePreference'] ?? "" ?>">
 
 <head>
     <meta charset="UTF-8">
@@ -23,7 +23,7 @@
 
 </head>
 
-<body>
+<body class="<?= $_COOKIE['themePreference'] ?? "" ?>">
     <header class="header">
         <?= view()->renderPartial('layouts/header/header'); ?>
     </header>

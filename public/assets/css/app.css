@@ -155,8 +155,8 @@ svg * {
   --default-margin: 1rem 1.2rem;
 }
 
-:root[data-theme=dark],
-[data-theme=dark] {
+:root[data-theme=dark-theme],
+[data-theme=dark-theme] {
   --color-background: #0f172a;
   --color-surface: #1e293b;
   --color-surface-elevated: #334155;

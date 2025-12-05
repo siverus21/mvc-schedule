@@ -1,4 +1,3 @@
-// import js
 import './main/app.js';
 import './main/change-theme.js';
 import './main/alert.js';
