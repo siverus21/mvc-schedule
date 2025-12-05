@@ -53,36 +53,33 @@ class BuildingController extends Controller
         $model = new BuildingModel();
         $model->loadData();
 
-        // $currentBuilding = $model->getBuilding($id);
+        $res = $model->update($id);
 
-        // TODO UPDATE
-
-
-        if (db()->findOne('buildings', $model->attributes['name'], 'name') !== null) {
+        if ($res === false) {
             session()->setFlash('error', 'Не заполнены обязательные поля');
             session()->set('form_errors', $model->getErrors());
             session()->set('form_data', $model->attributes);
+            response()->redirect('/admin/buildings/edit/' . $id);
+        } elseif ($res === 0) {
+            session()->setFlash('info', 'Данные не изменены');
+            response()->redirect('/admin/buildings/edit/' . $id);
         } else {
-            $model->attributes['updated_at'] = date('Y-m-d H:i:s');
-            if ($model->update()) {
-                session()->setFlash('success', 'Здание' . $model->attributes['name'] . 'успешно обновлено');
-                response()->redirect('/admin/buildings/');
-            } else {
-                session()->setFlash('error', 'Ошибка обновления здания');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
-            }
+            session()->setFlash('success', 'Здание успешно обновлено');
+            response()->redirect('/admin/buildings/');
         }
-        response()->redirect('/admin/buildings/edit/' . $id);
+
+        cacheRedis()->delete('buildings');
     }
+
 
     public function getBuildings()
     {
-        if (!$buildings = cacheRedis()->isSet('buildings')) {
-            $model = new BuildingModel();
+        // if (!$buildings = cacheRedis()->isSet('buildings')) {
+        $model = new BuildingModel();
             $buildings = $model->getBuildings();
-            cacheRedis()->set('buildings', $buildings);
-        }
-        return cacheRedis()->get('buildings');
+        //     cacheRedis()->set('buildings', $buildings);
+        // }
+        // return cacheRedis()->get('buildings');
+        return $buildings;
     }
 }

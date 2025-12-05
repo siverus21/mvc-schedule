@@ -13,7 +13,7 @@ class BuildingModel extends Model
     protected array $loaded = ["code", "name", "address"];
     protected array $fillable = ['code', 'name', 'address', 'created_at'];
 
-    protected array $rules = [
+    public array $rules = [
         'required' => ['name', 'address'],
         'unique' => [['name', "buildings,name"]],
     ];

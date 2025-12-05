@@ -10,3 +10,7 @@
         </svg>
     </i>
 </div>
+<?
+session()->delete('form_data');
+session()->delete('form_errors');
+?>

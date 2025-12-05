@@ -51,77 +51,88 @@ abstract class Model
         return db()->getInsertId();
     }
 
-    public function update(): bool
+    /**
+     * Обновляет запись с id = $id.
+     * Возвращает:
+     *  - int > 0 — число изменённых полей (по нашему подсчёту)
+     *  - 0 — ничего не изменилось
+     *  - false — ошибка (валидация/ошибка БД)
+     *
+     * Контроллер должен обработать эти три варианта отдельно.
+     */
+    public function update($id): int|false
     {
-        $id = $this->attributes['id'] ?? null;
-
-        if ($id === null) {
-            throw new \InvalidArgumentException('ID is required for update.');
+        $row = db()->findOne($this->table, $id, 'id');
+        if (!$row) {
+            $this->errors[] = 'Запись не найдена';
+            return false;
         }
+        $original = is_object($row) ? (array)$row : (array)$row;
 
-        $tableName = $this->table;
-
-        if (!preg_match('/^[a-zA-Z0-9_]+$/', $tableName)) {
-            throw new \RuntimeException('Invalid table name.');
-        }
-
-        $allowedFields = array_flip($this->fillable);
-        $fieldsToUpdate = array_intersect_key($this->attributes, $allowedFields);
-
-        if ($this->timestamp) {
-            $fieldsToUpdate['updated_at'] = date('Y-m-d H:i:s');
-        }
-
-        $originalRecord = db()->findOne($tableName, $id, 'id');
-        if ($originalRecord === null) {
-            throw new \RuntimeException("Record with id {$id} not found in {$tableName}.");
-        }
-
-        $changedFields = [];
-        foreach ($fieldsToUpdate as $field => $newValue) {
-            $originalValue = $originalRecord[$field] ?? null;
-
-            if ($originalValue === null || $originalValue !== $newValue) {
-                $changedFields[$field] = $newValue;
+        $attrs = [];
+        foreach ($this->attributes as $k => $v) {
+            if (in_array($k, $this->fillable, true)) {
+                $attrs[$k] = $v;
             }
         }
 
-        if (empty($changedFields)) {
-            return false; // nothing has changed
+        $changed = [];
+        foreach ($attrs as $k => $v) {
+            $origVal = array_key_exists($k, $original) ? (string)$original[$k] : null;
+            $newVal  = is_null($v) ? null : (string)$v;
+            if ($origVal !== $newVal) {
+                $changed[$k] = $v;
+            }
+        }
+
+        if (empty($changed)) {
+            return 0;
+        }
+
+        $rules = $this->rules;
+        if (!empty($rules['unique'])) {
+            $newUnique = [];
+            foreach ($rules['unique'] as $uniqueRule) {
+                $field = $uniqueRule[0] ?? null;
+                if ($field && array_key_exists($field, $changed)) {
+                    $newUnique[] = $uniqueRule;
+                }
+            }
+            if (!empty($newUnique)) {
+                $rules['unique'] = $newUnique;
+            } else {
+                unset($rules['unique']);
+            }
+        }
+
+        $dataForValidation = array_merge($original, $attrs);
+
+        if (!$this->validate($dataForValidation, $rules)) {
+            return false;
+        }
+
+        if ($this->timestamp) {
+            $changed['updated_at'] = date("Y-m-d H:i:s");
         }
 
         $setParts = [];
         $params = [];
-        foreach ($changedFields as $field => $newValue) {
-            $setParts[] = "`{$field}` = :{$field}";
-            $params[$field] = $newValue;
+        foreach ($changed as $k => $v) {
+            $setParts[] = "`{$k}` = :{$k}";
+            $params[$k] = $v;
         }
         $setSql = implode(', ', $setParts);
 
-        $params['id'] = $id;
-        $sql = "UPDATE `{$tableName}` SET {$setSql} WHERE `id` = :id";
+        $params['id_for_update'] = $id;
 
-        $db = db();
-        $useTransactions = method_exists($db, 'beginTransaction') && method_exists($db, 'commit') && method_exists($db, 'rollBack');
+        $query = "UPDATE `{$this->table}` SET {$setSql} WHERE `id` = :id_for_update";
 
         try {
-            if ($useTransactions) {
-                $db->beginTransaction();
-            }
-
-            $db->query($sql, $params);
-
-            if ($useTransactions) {
-                $db->commit();
-            }
-
-            return true;
+            db()->query($query, $params);
+            return count($changed);
         } catch (\Throwable $e) {
-            if ($useTransactions) {
-                $db->rollBack();
-            }
-
-            throw $e;
+            $this->errors[] = $e->getMessage();
+            return false;
         }
     }
 
@@ -177,7 +188,6 @@ abstract class Model
 
     public function listErrors(): string
     {
-        // dd($this->errors);
         $str = '<ul class="list-unstyled">';
         foreach ($this->errors as $key => $value) {
             if (is_array($value)) {

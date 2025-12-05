@@ -14,7 +14,3 @@
     </div>
     <button type="submit" class="button button_primary w-100 mt-4">Вход</button>
 </form>
-<?
-session()->delete('form_data');
-session()->delete('form_errors');
-?>
