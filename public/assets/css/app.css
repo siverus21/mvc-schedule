@@ -461,6 +461,10 @@ button.change-color-theme {
   background: linear-gradient(135deg, rgb(241, 245, 249) 0%, rgb(226, 232, 240) 100%);
   border: 1px solid rgb(203, 213, 225);
 }
+.button.button_danger:hover {
+  background: var(--color-status-cancelled);
+  color: var(--color-white);
+}
 
 body .button_change-color-theme span:first-child {
   display: block;

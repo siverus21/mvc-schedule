@@ -37,6 +37,7 @@ $app->router->get('/admin/buildings/create', [BuildingController::class, 'create
 $app->router->post('/admin/buildings/create', [BuildingController::class, 'store'])->middleware(['auth']);
 $app->router->get('/admin/buildings/edit/{id}', [BuildingController::class, 'edit'])->middleware(['auth']);
 $app->router->post('/admin/buildings/edit/{id}', [BuildingController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/buildings/delete/{id}', [BuildingController::class, 'delete'])->middleware(['auth']);
 
 // User
 $app->router->get('/register', [UserController::class, 'register'])->middleware(['guest']);

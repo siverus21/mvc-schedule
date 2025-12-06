@@ -51,6 +51,17 @@ abstract class Model
         return db()->getInsertId();
     }
 
+    public function delete($id)
+    {
+        $query = "delete from {$this->table} where id = :id";
+        try {
+            db()->query($query, ['id' => $id]);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     /**
      * Обновляет запись с id = $id.
      * Возвращает:

@@ -71,6 +71,18 @@ class BuildingController extends Controller
         cacheRedis()->delete('buildings');
     }
 
+    public function delete($id)
+    {
+        $model = new BuildingModel();
+        $model->loadData();
+        if ($model->delete($id)) {
+            session()->setFlash('success', 'Здание успешно удалено');
+            cacheRedis()->delete('buildings');
+        } else {
+            session()->setFlash('error', 'Произошла ошибка при удалении здания');
+        }
+        response()->redirect('/admin/buildings/');
+    }
 
     public function getBuildings()
     {
