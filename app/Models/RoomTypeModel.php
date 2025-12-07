@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Youpi\Model;
 
-class AuditoryModel extends Model
+class RoomTypeModel extends Model
 {
-    protected string $table = 'rooms';
-
+    protected string $table = 'room_types';
     public bool $timestamp = false;
 
     protected array $loaded = ["code", "name"];
@@ -15,7 +14,7 @@ class AuditoryModel extends Model
 
     public array $rules = [
         'required' => ['name', 'code'],
-        'unique' => [['code', "rooms,code"]],
+        'unique' => [['code', "room_types,code"]],
     ];
 
     public function getRoomTypes()
@@ -25,6 +24,6 @@ class AuditoryModel extends Model
 
     public function getRoomType($id)
     {
-        return db()->findOrFail('rooms', $id);
+        return db()->findOrFail('room_types', $id);
     }
 }

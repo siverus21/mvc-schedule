@@ -9,7 +9,6 @@ class BuildingController extends Controller
 {
     public function list()
     {
-
         return view('admin/buildings', ['title' => "Buildings Page", 'buildings' => $this->getBuildings()], 'admin');
     }
 
@@ -86,12 +85,8 @@ class BuildingController extends Controller
 
     public function getBuildings()
     {
-        // if (!$buildings = cacheRedis()->isSet('buildings')) {
         $model = new BuildingModel();
-            $buildings = $model->getBuildings();
-        //     cacheRedis()->set('buildings', $buildings);
-        // }
-        // return cacheRedis()->get('buildings');
+        $buildings = $model->getBuildings();
         return $buildings;
     }
 }

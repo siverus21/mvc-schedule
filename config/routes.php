@@ -7,6 +7,7 @@ use App\Controllers\AuditoryController;
 use App\Controllers\UserController;
 use App\Controllers\HomeController;
 use App\Controllers\BuildingController;
+use App\Controllers\RoomTypeController;
 
 define("MIDDLEWARE", [
     'auth' => Youpi\Middleware\Auth::class,
@@ -38,6 +39,14 @@ $app->router->post('/admin/buildings/create', [BuildingController::class, 'store
 $app->router->get('/admin/buildings/edit/{id}', [BuildingController::class, 'edit'])->middleware(['auth']);
 $app->router->post('/admin/buildings/edit/{id}', [BuildingController::class, 'update'])->middleware(['auth']);
 $app->router->get('/admin/buildings/delete/{id}', [BuildingController::class, 'delete'])->middleware(['auth']);
+
+// Room Types
+$app->router->get('/admin/room-types', [RoomTypeController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/room-types/create', [RoomTypeController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/room-types/create', [RoomTypeController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/room-types/edit/{id}', [RoomTypeController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/room-types/edit/{id}', [RoomTypeController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/room-types/delete/{id}', [RoomTypeController::class, 'delete'])->middleware(['auth']);
 
 // User
 $app->router->get('/register', [UserController::class, 'register'])->middleware(['guest']);
