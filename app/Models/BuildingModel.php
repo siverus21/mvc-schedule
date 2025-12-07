@@ -20,7 +20,7 @@ class BuildingModel extends Model
 
     public function getBuildings()
     {
-        return db()->query("SELECT id, name, address FROM $this->table")->get();
+        return db()->query("SELECT id, name, address FROM $this->table")->getAssoc();
     }
 
     public function getBuilding($id)

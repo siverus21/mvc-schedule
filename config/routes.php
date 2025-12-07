@@ -31,6 +31,9 @@ $app->router->get('/admin/import-export', [AdminController::class, 'importExport
 $app->router->get('/admin/auditories', [AuditoryController::class, 'list'])->middleware(['auth']);
 $app->router->get('/admin/auditories/create', [AuditoryController::class, 'create'])->middleware(['auth']);
 $app->router->post('/admin/auditories/create', [AuditoryController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/auditories/edit/{id}', [AuditoryController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/auditories/edit/{id}', [AuditoryController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/auditories/delete/{id}', [AuditoryController::class, 'delete'])->middleware(['auth']);
 
 // Buildings
 $app->router->get('/admin/buildings', [BuildingController::class, 'list'])->middleware(['auth']);

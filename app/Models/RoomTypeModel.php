@@ -19,7 +19,7 @@ class RoomTypeModel extends Model
 
     public function getRoomTypes()
     {
-        return db()->query("SELECT id, code, name FROM $this->table")->get();
+        return db()->query("SELECT id, code, name FROM $this->table")->getAssoc();
     }
 
     public function getRoomType($id)

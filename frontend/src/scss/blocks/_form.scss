@@ -29,4 +29,24 @@
 			color: var(--color-status-cancelled);
 		}
 	}
+
+	&__select {
+		appearance: none;
+		padding: 0.625rem 1rem;
+		border-radius: 0.75rem;
+		border: 2px solid var(--color-border);
+		background: var(--color-surface);
+		color: var(--color-text-primary);
+		font-size: 0.9375rem;
+		font-weight: 500;
+		outline: none;
+		cursor: pointer;
+		transition: 0.2s;
+		background-image: url(./../images/svg/arrow.svg);
+		background-repeat: no-repeat;
+		background-position: right;
+		background-position-x: 99%;
+		background-position-y: 53%;
+		background-size: 1rem;
+	}
 }

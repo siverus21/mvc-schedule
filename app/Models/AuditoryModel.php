@@ -10,20 +10,38 @@ class AuditoryModel extends Model
 
     public bool $timestamp = false;
 
-    protected array $loaded = ["code", "name"];
-    protected array $fillable = ['code', 'name'];
+    protected array $loaded = ["building_id", "code", "capacity", "floor", "name", "room_type_id", "notes"];
+    protected array $fillable = ["building_id", "code", "capacity", "floor", "name", "room_type_id", "notes"];
 
     public array $rules = [
-        'required' => ['name', 'code'],
-        'unique' => [['code', "rooms,code"]],
+        'required' => [
+            ['name'],
+            ['code']
+        ],
+        'integer' => [
+            ['capacity'],
+            ['floor'],
+            ['building_id'],
+            ['room_type_id']
+        ],
+        'min' => [
+            ['capacity', 0],
+            ['floor', -1]
+        ],
+        'lengthMax' => [
+            ['notes', 255]
+        ],
+        'unique' => [
+            ['code', "rooms,code"]
+        ],
     ];
 
-    public function getRoomTypes()
+    public function getAuditories()
     {
-        return db()->query("SELECT id, code, name FROM $this->table")->get();
+        return db()->query("SELECT * FROM $this->table")->get();
     }
 
-    public function getRoomType($id)
+    public function getAuditory($id)
     {
         return db()->findOrFail('rooms', $id);
     }
