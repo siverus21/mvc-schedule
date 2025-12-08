@@ -11,7 +11,7 @@
         </div>
         <div class="form__group d-flex flex-column">
             <label class="form__label" for="password">Password</label>
-            <input class="form__input <?= getValidationClass('password') ?>" type="password" name="password" id="password" placeholder="password">
+            <input class="form__input <?= getValidationClass('password') ?>" type="password" name="password" id="password" placeholder="password" autocomplete="on">
             <?= getErrors('password') ?>
         </div>
         <button type="submit" class="button button_primary w-100 mt-4">Вход</button>
