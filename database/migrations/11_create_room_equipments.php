@@ -9,12 +9,14 @@ return new class extends Migration
     {
         if (!Capsule::schema()->hasTable('room_equipments')) {
             Capsule::schema()->create('room_equipments', function ($table) {
+                $table->id();
                 $table->unsignedBigInteger('room_id');
                 $table->unsignedBigInteger('equipment_type_id');
                 $table->integer('quantity')->default(1);
                 $table->string('notes')->nullable();
 
-                $table->primary(['room_id', 'equipment_type_id']);
+                // уникальный индекс на пару (если нужна уникальность)
+                $table->unique(['room_id', 'equipment_type_id']);
 
                 $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
                 $table->foreign('equipment_type_id')->references('id')->on('equipment_types')->onDelete('cascade');

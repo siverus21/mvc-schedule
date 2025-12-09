@@ -178,6 +178,45 @@ abstract class Model
             return !(db()->findOne($data[0], $value, $data[1]));
         }, 'must be unique.');
 
+        Validator::addRule('unique_pair', function ($field, $value, array $params, array $fields) {
+            // Поддерживаем оба формата параметров:
+            // 1) строка "table,col1,col2"
+            // 2) массив ['table','col1','col2']
+            if (count($params) === 1 && is_string($params[0])) {
+                $parts = array_map('trim', explode(',', $params[0]));
+            } else {
+                $parts = $params;
+            }
+
+            $table = $parts[0] ?? null;
+            $col1  = $parts[1] ?? $field;
+            $col2  = $parts[2] ?? null;
+
+            if (!$table || !$col2) {
+                return true;
+            }
+
+            $val1 = $fields[$col1] ?? null;
+            $val2 = $fields[$col2] ?? null;
+            if ($val1 === null || $val2 === null) {
+                return true;
+            }
+            $found = db()->findOne($table, $val1, $col1);
+            if (!$found) {
+                return true;
+            }
+            if (is_array($found)) {
+                $foundCol2 = $found[$col2] ?? null;
+            } else {
+                $foundCol2 = $found->{$col2} ?? null;
+            }
+            if ($foundCol2 == $val2) {
+                return false;
+            }
+            return true;
+        }, 'Такая комбинация полей уже существует.');
+
+
         Validator::langDir(LANG_VALIDATOR);
         Validator::lang('ru');
         $validator = new Validator($data);

@@ -8,6 +8,8 @@ use App\Controllers\UserController;
 use App\Controllers\HomeController;
 use App\Controllers\BuildingController;
 use App\Controllers\RoomTypeController;
+use App\Controllers\EquipmentTypeController;
+use App\Controllers\RoomEquipmentController;
 
 define("MIDDLEWARE", [
     'auth' => Youpi\Middleware\Auth::class,
@@ -50,6 +52,22 @@ $app->router->post('/admin/room-types/create', [RoomTypeController::class, 'stor
 $app->router->get('/admin/room-types/edit/{id}', [RoomTypeController::class, 'edit'])->middleware(['auth']);
 $app->router->post('/admin/room-types/edit/{id}', [RoomTypeController::class, 'update'])->middleware(['auth']);
 $app->router->get('/admin/room-types/delete/{id}', [RoomTypeController::class, 'delete'])->middleware(['auth']);
+
+// Equipment Types
+$app->router->get('/admin/equipment-types', [EquipmentTypeController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/equipment-types/create', [EquipmentTypeController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/equipment-types/create', [EquipmentTypeController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/equipment-types/edit/{id}', [EquipmentTypeController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/equipment-types/edit/{id}', [EquipmentTypeController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/equipment-types/delete/{id}', [EquipmentTypeController::class, 'delete'])->middleware(['auth']);
+
+// Room Equipment
+$app->router->get('/admin/room-equipment', [RoomEquipmentController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/room-equipment/create', [RoomEquipmentController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/room-equipment/create', [RoomEquipmentController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/room-equipment/edit/{id}', [RoomEquipmentController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/room-equipment/edit/{id}', [RoomEquipmentController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/room-equipment/delete/{id}', [RoomEquipmentController::class, 'delete'])->middleware(['auth']);
 
 // User
 $app->router->get('/register', [UserController::class, 'register'])->middleware(['guest']);
