@@ -32,9 +32,9 @@
         <?= getErrors('quantity') ?>
     </div>
     <div class="form__group d-flex flex-column">
-        <label class="form__label" for="description">Описание</label>
-        <input class="form__input" type="text" name="description" id="description" value="<?= old('description') ?>">
-        <?= getErrors('description') ?>
+        <label class="form__label" for="notes">Описание</label>
+        <input class="form__input" type="text" name="notes" id="notes" value="<?= old('notes') ?>">
+        <?= getErrors('notes') ?>
     </div>
     <button type="submit" class="button button_primary w-100 mt-4">Создать</button>
 </form>

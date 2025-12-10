@@ -16,5 +16,5 @@
         <input class="form__input" type="text" name="description" id="description" placeholder="" value="<?= $equipmentType['description'] ?>">
         <?= getErrors('description') ?>
     </div>
-    <button type="submit" class="button button_primary w-100 mt-4">Создать</button>
+    <button type="submit" class="button button_primary w-100 mt-4">Изменить</button>
 </form>

@@ -5,5 +5,4 @@
     </div>
 </div>
 
-<? //= view()->renderPartial('admin/room-equipment/list', $roomEquipments) 
-?>
+<?= view()->renderPartial('admin/room-equipment/list', $equipmentTypes) ?>

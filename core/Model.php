@@ -100,22 +100,65 @@ abstract class Model
             return 0;
         }
 
+        // Копия правил, которые будем редактировать для валидатора
         $rules = $this->rules;
-        if (!empty($rules['unique'])) {
+
+        // Обрабатываем оба типа уникальности: 'unique' и 'unique_pair'
+        foreach (['unique', 'unique_pair'] as $uniqKey) {
+            if (empty($rules[$uniqKey])) {
+                continue;
+            }
+
             $newUnique = [];
-            foreach ($rules['unique'] as $uniqueRule) {
+            foreach ($rules[$uniqKey] as $uniqueRule) {
                 $field = $uniqueRule[0] ?? null;
-                if ($field && array_key_exists($field, $changed)) {
+                if (!$field) {
+                    continue;
+                }
+
+                $include = false;
+
+                // Если правило повешено на поле, которое изменилось — оставляем правило
+                if (array_key_exists($field, $changed)) {
+                    $include = true;
+                } elseif ($uniqKey === 'unique_pair') {
+                    // Для unique_pair нужно учитывать оба столбца из параметров,
+                    // потому парное правило должно сработать, если изменилось любое из полей пары.
+                    $params = $uniqueRule[1] ?? null;
+                    $parts = [];
+
+                    if (is_string($params)) {
+                        $parts = array_map('trim', explode(',', $params));
+                    } elseif (is_array($params)) {
+                        $parts = $params;
+                    }
+
+                    // Ожидаемый формат: "table,col1,col2" => parts[1] = col1, parts[2] = col2
+                    $col1 = $parts[1] ?? $field;
+                    $col2 = $parts[2] ?? null;
+
+                    if ($col1 && array_key_exists($col1, $changed)) {
+                        $include = true;
+                    }
+                    if ($col2 && array_key_exists($col2, $changed)) {
+                        $include = true;
+                    }
+                }
+
+                if ($include) {
                     $newUnique[] = $uniqueRule;
                 }
             }
+
             if (!empty($newUnique)) {
-                $rules['unique'] = $newUnique;
+                $rules[$uniqKey] = $newUnique;
             } else {
-                unset($rules['unique']);
+                // если ни одно правило unique/unique_pair не относится к изменённым полям — удаляем ключ правил
+                unset($rules[$uniqKey]);
             }
         }
 
+        // Данные для валидации — оригинал + новые значения (чтобы валидатор видел оба)
         $dataForValidation = array_merge($original, $attrs);
 
         if (!$this->validate($dataForValidation, $rules)) {
