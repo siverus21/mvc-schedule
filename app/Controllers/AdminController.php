@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\AuditoryModel;
+
 class AdminController extends BaseController
 {
 
@@ -12,7 +14,7 @@ class AdminController extends BaseController
 
     public function dashboard()
     {
-        return view('admin/dashboard', ['title' => "Dashboard Page"], 'admin');
+        return view('admin/dashboard', ['title' => "Dashboard Page", "countAuditories" => (new AuditoryModel())->countAuditories()], 'admin');
     }
 
     public function importExport()

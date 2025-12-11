@@ -32,6 +32,30 @@ class RoomEquipmentModel extends Model
         return $equipmentTypeModel->getEquipmentTypes();
     }
 
+    public function getRoomWithEquipmentName()
+    {
+        $data = db()->query("
+        SELECT 
+            re.id,
+            re.room_id,
+            re.equipment_type_id,
+
+            et.code       AS equipment_type_code,
+            et.name       AS equipment_type_name
+
+            FROM room_equipments AS re
+            JOIN equipment_types AS et
+            ON re.equipment_type_id = et.id
+        ")->get();
+
+        $res = [];
+        foreach ($data as $item) {
+            $res[$item['room_id']][$item['equipment_type_id']] = $item['equipment_type_name'];
+        }
+
+        return $res;
+    }
+
     public function getCurrentRoomEquipment($id)
     {
         return db()->findOrFail('room_equipments', $id);

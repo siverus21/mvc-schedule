@@ -10,21 +10,8 @@ class AuditoryController extends BaseController
 {
     public function list()
     {
-        $buildingsModel = (new BuildingModel())->getBuildings();
-        $roomTypesModel = (new RoomTypeModel())->getRoomTypes();
-        $auditories = (new AuditoryModel())->getAuditories();
-
-        // Set building and room type names
-        foreach ($auditories as &$auditory) {
-            if (isset($auditory['building_id'])) {
-                $auditory["building_name"] = $buildingsModel[$auditory["building_id"]]["name"];
-            }
-            if (isset($auditory['room_type_id'])) {
-                $auditory["room_type_name"] = $roomTypesModel[$auditory["room_type_id"]]["name"];
-            }
-        }
-
-        return view('admin/auditories', ['title' => "Auditories Page", 'auditories' => $auditories], 'admin');
+        $model = new AuditoryModel();
+        return view('admin/auditories', ['title' => "Auditories Page", 'auditories' => $model->getListData()], 'admin');
     }
 
     public function create()
