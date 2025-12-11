@@ -22,10 +22,17 @@ class Auth
             return false;
         }
 
+        $role = db()->findOne('roles', $user['role_id'], 'id, code, name');
+
         session()->set('user', [
             'id' => $user['id'],
             'name' => $user['name'],
-            'email' => $user['email']
+            'email' => $user['email'],
+            'role' => [
+                'id' => $role['id'],
+                'code' => $role['code'],
+                'name' => $role['name'],
+            ],
         ]);
 
         return true;

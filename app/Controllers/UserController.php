@@ -49,7 +49,7 @@ class UserController extends BaseController
             session()->set('form_errors', $model->getErrors());
             session()->set('form_data', $model->attributes);
         } else {
-            $model->attributes['password'] = password_hash($model->attributes['password'], PASSWORD_DEFAULT);
+            $model->attributes['password'] = password_hash($model->attributes['password'], PASSWORD_ARGON2ID);
             if ($id = $model->save()) {
                 session()->setFlash('success', 'Thanks for registration, your id is ' . $id);
                 response()->redirect('/login');
