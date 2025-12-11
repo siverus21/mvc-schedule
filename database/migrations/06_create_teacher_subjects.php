@@ -9,10 +9,9 @@ return new class extends Migration
     {
         if (!Capsule::schema()->hasTable('teacher_subjects')) {
             Capsule::schema()->create('teacher_subjects', function ($table) {
+                $table->id();
                 $table->unsignedBigInteger('teacher_id');
                 $table->unsignedBigInteger('subject_id');
-
-                $table->primary(['teacher_id', 'subject_id']);
 
                 $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
                 $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');

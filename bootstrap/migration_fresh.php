@@ -22,15 +22,42 @@ $capsule->addConnection([
 $capsule->setEventDispatcher(new Dispatcher(new Container));
 $capsule->setAsGlobal();
 
-// Получаем все таблицы в базе данных
-$tables = Capsule::select('SHOW TABLES');
-$databaseName = DB_DATABASE;
-$key = 'Tables_in_' . $databaseName;
+// Снижение риска: если используете MySQL — временно отключаем проверку внешних ключей
+$driver = strtolower(DB_DRIVER);
 
-foreach ($tables as $table) {
-    $tableName = $table->$key;
-    Capsule::statement("DROP TABLE IF EXISTS `$tableName`");
-    echo "Удалена таблица: $tableName" . PHP_EOL;
+try {
+    if ($driver === 'mysql') {
+        Capsule::statement('SET FOREIGN_KEY_CHECKS = 0;');
+    } elseif ($driver === 'sqlite') {
+        // Для SQLite (если когда-нибудь захотите) можно отключать PRAGMA
+        Capsule::statement('PRAGMA foreign_keys = OFF;');
+    }
+
+    // Получаем все таблицы в базе данных (работает для MySQL)
+    $tables = Capsule::select('SHOW TABLES');
+    $databaseName = DB_DATABASE;
+    $key = 'Tables_in_' . $databaseName;
+
+    foreach ($tables as $table) {
+        $tableName = $table->$key;
+        Capsule::statement("DROP TABLE IF EXISTS `$tableName`");
+        echo "Удалена таблица: $tableName" . PHP_EOL;
+    }
+
+    echo "Все таблицы удалены. Теперь запустите миграции заново." . PHP_EOL;
+} catch (\Exception $e) {
+    // Выводим ошибку для отладки
+    fwrite(STDERR, "Ошибка при удалении таблиц: " . $e->getMessage() . PHP_EOL);
+} finally {
+    // Обязательно включаем проверку внешних ключей обратно
+    try {
+        if ($driver === 'mysql') {
+            Capsule::statement('SET FOREIGN_KEY_CHECKS = 1;');
+        } elseif ($driver === 'sqlite') {
+            Capsule::statement('PRAGMA foreign_keys = ON;');
+        }
+    } catch (\Exception $e) {
+        // если даже восстановление упало — сообщим, но не бросаем дальше
+        fwrite(STDERR, "Не удалось восстановить проверку FK: " . $e->getMessage() . PHP_EOL);
+    }
 }
-
-echo "Все таблицы удалены. Теперь запустите миграции заново." . PHP_EOL;

@@ -13,5 +13,10 @@ class EquipmentTypesSeeder extends Seeder
             "name" => "Проектор",
             "description" => "HDMI, 4000 люмен",
         ]);
+        DB::table('equipment_types')->insert([
+            "code" => "COMPUTER",
+            "name" => "Компьютер",
+            "description" => "Игровой супер компьютер",
+        ]);
     }
 }

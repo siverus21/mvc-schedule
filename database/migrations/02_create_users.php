@@ -15,8 +15,13 @@ return new class extends Migration
                 $table->string('password');
                 $table->string('display_name')->nullable();
                 $table->string('phone')->nullable();
+
+                $table->unsignedBigInteger('role_id')->default(3);
+
                 $table->boolean('is_active')->default(true);
                 $table->timestamps();
+
+                $table->foreign('role_id')->references('id')->on('roles');
             });
             echo "Таблица users создана" . PHP_EOL;
         } else {
