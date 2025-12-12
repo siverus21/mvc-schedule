@@ -13,7 +13,8 @@ use App\Controllers\RoomEquipmentController;
 
 define("MIDDLEWARE", [
     'auth' => Youpi\Middleware\Auth::class,
-    'guest' => Youpi\Middleware\Guest::class
+    'guest' => Youpi\Middleware\Guest::class,
+    // 'role' => Youpi\Middleware\Role::class,
 ]);
 
 // Index
@@ -26,7 +27,7 @@ $app->router->get('/admin/teachers', [AdminController::class, 'teachers'])->midd
 $app->router->get('/admin/journal', [AdminController::class, 'journal'])->middleware(['auth']);
 $app->router->get('/admin/roles', [AdminController::class, 'roles'])->middleware(['auth']);
 $app->router->get('/admin/schedule', [AdminController::class, 'schedule'])->middleware(['auth']);
-$app->router->get('/admin/settings', [AdminController::class, 'settings'])->middleware(['auth']);
+$app->router->get('/admin/settings', [AdminController::class, 'settings'])->middleware(['auth', 'role:redactor']);
 $app->router->get('/admin/import-export', [AdminController::class, 'importExport'])->middleware(['auth']);
 
 // Auditories

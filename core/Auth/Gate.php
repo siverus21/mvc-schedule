@@ -1,24 +1,36 @@
 <?php
 
-namespace core\Auth;
+namespace Youpi\Auth;
 
 class Gate
 {
     protected static array $definitions = [];
     protected static array $policies = [];
 
-    public static function define(string $ability, callable $callback)
+    public static function define(string $ability, callable $callback): void
     {
         self::$definitions[$ability] = $callback;
     }
 
-    public static function policy(string $class, string $policyClass)
+    public static function policy(string $modelClass, string $policyClass): void
     {
-        self::$policies[$class] = new $policyClass;
+        self::$policies[$modelClass] = new $policyClass;
     }
 
-    public static function allows(string $ability, $user, $resource = null): bool
+    /**
+     * Проверка: имеет ли пользователь ability для ресурса.
+     * $user можно передать (массив), но по умолчанию берём Youpi\Auth::user()
+     */
+    public static function allows(string $ability, $resource = null, $user = null): bool
     {
+        if ($user === null) {
+            $user = \Youpi\Auth::user();
+        }
+
+        if (!$user) {
+            return false;
+        }
+
         if (isset(self::$definitions[$ability])) {
             return (bool) call_user_func(self::$definitions[$ability], $user, $resource);
         }
