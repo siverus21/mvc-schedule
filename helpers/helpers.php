@@ -129,6 +129,12 @@ function getUser()
     return \Youpi\Auth::user();
 }
 
+function getUserRole()
+{
+    $user = getUser();
+    return $user['role']['code'] ?? null;
+}
+
 function logout()
 {
     \Youpi\Auth::logout();

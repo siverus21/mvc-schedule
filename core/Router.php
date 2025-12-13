@@ -100,9 +100,16 @@ class Router
                 // middleware
                 if ($route['middleware']) {
                     foreach ($route['middleware'] as $item) {
-                        $middleware = MIDDLEWARE[$item] ?? false;
+                        if (strpos($item, ':') !== false) {
+                            $nameParam = explode(':', $item)[0];
+                            $valueParam = explode(',', explode(':', $item)[1]);
+                        } else {
+                            $nameParam = $item;
+                            $valueParam = [];
+                        }
+                        $middleware = MIDDLEWARE[$nameParam] ?? false;
                         if ($middleware) {
-                            (new $middleware)->handle();
+                            (new $middleware)->handle($valueParam);
                         }
                     }
                 }

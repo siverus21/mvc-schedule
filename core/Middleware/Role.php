@@ -1,32 +1,19 @@
 <?php
 
-namespace core\Middleware;
+namespace Youpi\Middleware;
 
 class Role
 {
-    public function handle($request, $next, ...$params)
+    public function handle(array $needRole)
     {
-        // $params может быть ['admin'] или ['admin,teacher']
-        $user = $request->user();
-
-        if (!$user) {
-            http_response_code(401);
-            echo "Unauthorized";
-            exit;
+        $role = getUserRole();
+        if (!$role) {
+            abort(404);
         }
 
-        $roles = [];
-        foreach ($params as $p) {
-            $parts = array_map('trim', explode(',', $p));
-            $roles = array_merge($roles, $parts);
+        if (!in_array($role, $needRole)) {
+            session()->setFlash('error', 'Forbidden');
+            response()->redirect(base_url('/admin/dashboard'));
         }
-
-        if ($user->hasAnyRole($roles)) {
-            return $next($request);
-        }
-
-        http_response_code(403);
-        echo "Forbidden";
-        exit;
     }
 }
