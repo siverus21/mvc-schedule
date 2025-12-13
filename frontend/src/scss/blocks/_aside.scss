@@ -1,5 +1,6 @@
 .aside {
-	max-width: rem-calc(350);
+	max-width: rem-calc(300);
+	min-width: rem-calc(300);
 	height: 100svh;
 	padding: var(--default-padding);
 	border-right: 2px solid var(--color-border);
