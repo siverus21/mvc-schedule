@@ -23,6 +23,10 @@
 			font-size: 0.75rem;
 			font-weight: 600;
 		}
+
+		&_danger {
+			background-color: var(--color-status-cancelled);	
+		}
 	}
 
 	&__text {

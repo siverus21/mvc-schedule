@@ -3,21 +3,21 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\RoleModel;
 use Youpi\Auth;
 use Youpi\Pagination;
 
 class UserController extends BaseController
 {
 
-    public function register()
+    public function list()
     {
-        return view(
-            'user/register',
-            [
-            'title' => "Register Page"
-            ],
-            'admin'
-        );
+        return view('admin/users', ['title' => "Users Page", 'users' => (new UserModel())->getAllUsers()], 'admin');
+    }
+
+    public function create()
+    {
+        return view('admin/users/create', ['title' => "Register Page", 'roles' => (new RoleModel())->getAllRoles()], 'admin');
     }
 
     public function store()
@@ -26,36 +26,38 @@ class UserController extends BaseController
         $model->loadData();
 
         // if need ajax
-        // if (request()->isAjax()) {
-        //     if (!$model->validate()) {
-        //         echo json_encode(['status' => 'error', 'data' => $model->listErrors()]);
-        //         die;
-        //     }
+        /*if (request()->isAjax()) {
+            if (!$model->validate()) {
+                echo json_encode(['status' => 'error', 'data' => $model->listErrors()]);
+                die;
+            }
 
-        //     $model->attributes['password'] = password_hash($model->attributes['password'], PASSWORD_DEFAULT);
+            $model->attributes['password'] = password_hash($model->attributes['password'], PASSWORD_DEFAULT);
 
-        //     if (!$id = $model->save()) {
-        //         echo json_encode(['status' => 'error', 'data' => 'Error registration']);
-        //         die;
-        //     }
+            if (!$id = $model->save()) {
+                echo json_encode(['status' => 'error', 'data' => 'Error registration']);
+                die;
+            }
 
-        //     echo json_encode(['status' => 'success', 'data' => 'Thanks for registration. Your id is ' . $id, 'redirect' => base_url('/login')]);
-        //     die;
-        // }
+            echo json_encode(['status' => 'success', 'data' => 'Thanks for registration. Your id is ' . $id, 'redirect' => base_url('/login')]);
+            die;
+        }*/
 
         // Сообщения для алертов тянутся из названия файлов.
         if (!$model->validate()) {
-            session()->setFlash('error', 'Validation errors');
+            session()->setFlash('error', 'Не заполнены обязательные поля');
             session()->set('form_errors', $model->getErrors());
             session()->set('form_data', $model->attributes);
+            response()->redirect('/admin/users/create');
         } else {
             $model->attributes['password'] = password_hash($model->attributes['password'], PASSWORD_ARGON2ID);
+            $model->attributes['is_active'] = 1;
             if ($id = $model->save()) {
-                session()->setFlash('success', 'Thanks for registration, your id is ' . $id);
-                response()->redirect('/login');
+                session()->setFlash('success', 'Пользователь успешно зарегистрирован. ID = ' . $id);
+                response()->redirect('/admin/users');
             } else {
-                session()->setFlash('error', 'Error registration');
-                response()->redirect('/register');
+                session()->setFlash('error', 'Ошибка регистрации');
+                response()->redirect('/admin/users/create');
             }
         }
     }
@@ -72,25 +74,25 @@ class UserController extends BaseController
         $model = new UserModel();
         $model->loadData();
 
-        // if need ajax
-        // if (request()->isAjax()) {
-        //     if (!$model->validate($model->attributes, [
-        //         'required' => ['email', 'password']
-        //     ])) {
-        //         echo json_encode(['status' => 'error', 'data' => $model->listErrors()]);
-        //         die;
-        //     }
+        /*if need ajax
+        if (request()->isAjax()) {
+            if (!$model->validate($model->attributes, [
+                'required' => ['email', 'password']
+            ])) {
+                echo json_encode(['status' => 'error', 'data' => $model->listErrors()]);
+                die;
+            }
 
-        //     if (Auth::login([
-        //         'email' => $model->attributes['email'],
-        //         'password' => $model->attributes['password']
-        //     ])) {
-        //         echo json_encode(['status' => 'success', 'data' => 'Thanks for login', 'redirect' => base_url('/users')]);
-        //     } else {
-        //         echo json_encode(['status' => 'error', 'data' => 'Wrong email or password']);
-        //     }
-        //     die;
-        // }
+            if (Auth::login([
+                'email' => $model->attributes['email'],
+                'password' => $model->attributes['password']
+            ])) {
+                echo json_encode(['status' => 'success', 'data' => 'Thanks for login', 'redirect' => base_url('/users')]);
+            } else {
+                echo json_encode(['status' => 'error', 'data' => 'Wrong email or password']);
+            }
+            die;
+        }*/
 
         if (!$model->validate($model->attributes, [
             'required' => ['email', 'password']

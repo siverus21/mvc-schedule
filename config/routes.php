@@ -20,6 +20,10 @@ define("MIDDLEWARE", [
 // Index
 $app->router->get('/', [HomeController::class, 'index']);
 
+// User from not authenticated
+$app->router->get('/login', [UserController::class, 'login'])->middleware(['guest']);
+$app->router->post('/login', [UserController::class, 'auth'])->middleware(['guest']);
+
 // Admin Panel
 $app->router->get('/admin', [AdminController::class, 'index'])->middleware(['auth']);
 $app->router->get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth']);
@@ -70,16 +74,14 @@ $app->router->get('/admin/room-equipment/edit/{id}', [RoomEquipmentController::c
 $app->router->post('/admin/room-equipment/edit/{id}', [RoomEquipmentController::class, 'update'])->middleware(['auth']);
 $app->router->get('/admin/room-equipment/delete/{id}', [RoomEquipmentController::class, 'delete'])->middleware(['auth']);
 
-// User
-$app->router->get('/register', [UserController::class, 'register'])->middleware(['guest']);
-$app->router->post('/register', [UserController::class, 'store'])->middleware(['guest']);
-$app->router->get('/login', [UserController::class, 'login'])->middleware(['guest']);
-$app->router->post('/login', [UserController::class, 'auth'])->middleware(['guest']);
-$app->router->get('/logout', [UserController::class, 'logout'])->middleware(['auth']);
-
-// Users test. Remove this in production
-$app->router->get('/users', [UserController::class, 'index'])->middleware(['auth']);
-$app->router->get('/users/{id}', [UserController::class, 'userDetail'])->middleware(['auth']);
+// Users
+$app->router->get('/admin/users', [UserController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/users/create', [UserController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/users/create', [UserController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/users/edit/{id}', [UserController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/users/edit/{id}', [UserController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/users/delete/{id}', [UserController::class, 'delete'])->middleware(['auth']);
+$app->router->get('/admin/logout', [UserController::class, 'logout'])->middleware(['auth']);
 
 // API
 $app->router->get('/api/v1/users', [App\Controllers\API\V1\UserController::class, 'index']);

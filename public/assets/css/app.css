@@ -925,6 +925,9 @@ body.dark-theme .button.button_change-color-theme {
   font-size: 0.75rem;
   font-weight: 600;
 }
+.block-list__badge_danger {
+  background-color: var(--color-status-cancelled);
+}
 .block-list__text {
   font-size: 0.875rem;
 }
