@@ -62,6 +62,77 @@ class UserController extends BaseController
         }
     }
 
+    public function edit($id)
+    {
+        $model = new UserModel();
+        $user = $model->getUser($id);
+        return view('admin/users/edit', ['title' => "Edit User Page", 'user' => $user, 'roles' => (new RoleModel())->getAllRoles()], 'admin');
+    }
+
+    public function update($id)
+    {
+        $model = new UserModel();
+        $model->loadData();
+
+        if ($model->attributes['is_active'] == 'on') {
+            $model->attributes['is_active'] = 1;
+        } else {
+            $model->attributes['is_active'] = 0;
+        }
+
+        if ($model->attributes['password'] != '') {
+
+            if ($model->attributes['password'] != $model->attributes['confirm-password']) {
+                session()->setFlash('error', 'Пароли не совпадают');
+                session()->set('form_errors', $model->getErrors());
+                session()->set('form_data', $model->attributes);
+                response()->redirect('/admin/users/edit/' . $id);
+            } else {
+                $model->attributes['password'] = password_hash($model->attributes['password'], PASSWORD_ARGON2ID);
+                unset($model->attributes['confirm-password']);
+                unset($model->rules['equals']);
+                unset($model->rules['lengthMin']);
+                foreach ($model->rules['required'] as $key => $value) {
+                    if ($value == 'password' || $value == 'confirm-password') {
+                        unset($model->rules['required'][$key]);
+                    }
+                }
+            }
+        } else {
+            unset($model->attributes['password']);
+            unset($model->attributes['confirm-password']);
+            unset($model->rules['equals']);
+            unset($model->rules['lengthMin']);
+            foreach ($model->rules['required'] as $key => $value) {
+                if ($value == 'password' || $value == 'confirm-password') {
+                    unset($model->rules['required'][$key]);
+                }
+            }
+        }
+
+        $res = $model->update($id);
+
+        if ($res === false) {
+            session()->setFlash('error', 'Не заполнены обязательные поля');
+            session()->set('form_errors', $model->getErrors());
+            session()->set('form_data', $model->attributes);
+            response()->redirect('/admin/users/edit/' . $id);
+        } elseif ($res === 0) {
+            session()->setFlash('info', 'Данные не изменены');
+            response()->redirect('/admin/users/edit/' . $id);
+        } else {
+            session()->setFlash('success', 'Данные пользователя успешно изменены');
+            response()->redirect('/admin/users');
+        }
+    }
+
+    public function delete($id)
+    {
+        $model = new UserModel();
+        $model->delete($id);
+        response()->redirect('/admin/users');
+    }
+
     public function login()
     {
         return view('user/login', [
@@ -120,7 +191,7 @@ class UserController extends BaseController
         response()->redirect(base_url('/login'));
     }
 
-    public function index()
+    /*public function index()
     {
         $usersCount = db()->count('users');
         $pagination = new Pagination($usersCount, 4, 2);
@@ -131,15 +202,5 @@ class UserController extends BaseController
             'users' => $users,
             'pagination' => $pagination
         ], 'admin');
-    }
-
-    public function userDetail($userId)
-    {
-        $user = db()->findOrFail('users', $userId);
-
-        return view('user/detail', [
-            'title' => "Detail Page",
-            'user' => $user
-        ], 'admin');
-    }
+    }*/
 }

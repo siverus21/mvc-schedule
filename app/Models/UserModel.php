@@ -19,7 +19,7 @@ class UserModel extends Model
     protected array $loaded = ['name', 'display_name', 'email', 'password', 'role_id', 'confirm-password', 'phone', 'is_active'];
 
     // Правила валидации
-    protected array $rules = [
+    public array $rules = [
         'required' => ['name', 'display_name', 'email', 'password', 'role_id', 'confirm-password'],
         'email' => ['email'],
         'lengthMin' => [
@@ -58,5 +58,10 @@ class UserModel extends Model
         JOIN roles AS r
         ON u.role_id = r.id
         ")->get();
+    }
+
+    public function getUser($id)
+    {
+        return db()->findOrFail('users', $id);
     }
 }

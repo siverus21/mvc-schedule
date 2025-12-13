@@ -49,4 +49,10 @@
 		background-position-y: 53%;
 		background-size: 1rem;
 	}
+
+	&__checkbox {
+		width: 20px;
+  		height: 20px;
+		accent-color: var(--color-status-lecture);
+	}
 }

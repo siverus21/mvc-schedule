@@ -775,6 +775,11 @@ body.dark-theme .button.button_change-color-theme {
   background-position-y: 53%;
   background-size: 1rem;
 }
+.form__checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-status-lecture);
+}
 
 .alert {
   max-width: 37.5rem;
