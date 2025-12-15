@@ -12,6 +12,7 @@ return new class extends Migration
                 $table->id();
                 $table->string('code')->unique();
                 $table->string('name');
+                $table->timestamps();
             });
             echo "Таблица room_types создана" . PHP_EOL;
         } else {

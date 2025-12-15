@@ -12,11 +12,15 @@ class EquipmentTypesSeeder extends Seeder
             "code" => "PROJECTOR",
             "name" => "Проектор",
             "description" => "HDMI, 4000 люмен",
+            "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
         ]);
         DB::table('equipment_types')->insert([
             "code" => "COMPUTER",
             "name" => "Компьютер",
             "description" => "Игровой супер компьютер",
+            "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
         ]);
     }
 }

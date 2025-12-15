@@ -7,7 +7,7 @@ use Youpi\Model;
 class RoomTypeModel extends Model
 {
     protected string $table = 'room_types';
-    public bool $timestamp = false;
+    public bool $timestamp = true;
 
     protected array $loaded = ["code", "name"];
     protected array $fillable = ['code', 'name'];

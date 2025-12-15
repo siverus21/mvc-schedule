@@ -19,8 +19,8 @@ return new class extends Migration
                 $table->time('start_time');
                 $table->time('end_time');
                 $table->unsignedBigInteger('created_by')->nullable();
-                $table->timestamp('created_at')->useCurrent();
                 $table->text('notes')->nullable();
+                $table->timestamps();
 
                 // Исправляем имя индекса
                 $table->index(['student_group_id', 'date', 'start_time'], 'sch_inst_group_date_time_idx');

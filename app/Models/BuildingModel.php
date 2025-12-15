@@ -8,7 +8,7 @@ class BuildingModel extends Model
 {
     protected string $table = 'buildings';
 
-    public bool $timestamp = false;
+    public bool $timestamp = true;
 
     protected array $loaded = ["code", "name", "address"];
     protected array $fillable = ['code', 'name', 'address', 'created_at'];

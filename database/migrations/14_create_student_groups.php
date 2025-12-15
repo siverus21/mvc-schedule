@@ -16,6 +16,7 @@ return new class extends Migration
                 $table->tinyInteger('course_number')->nullable();
                 $table->year('intake_year')->nullable();
                 $table->text('notes')->nullable();
+                $table->timestamps();
             });
             echo "Таблица student_groups создана" . PHP_EOL;
         } else {

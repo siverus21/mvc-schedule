@@ -20,7 +20,7 @@ return new class extends Migration
                 $table->time('end_time')->nullable();
                 $table->string('reason')->nullable();
                 $table->unsignedBigInteger('created_by')->nullable();
-                $table->timestamp('created_at')->useCurrent();
+                $table->timestamps();
 
                 // Исправляем имена индексов
                 $table->index(['template_id', 'date'], 'sch_ovr_template_date_idx');

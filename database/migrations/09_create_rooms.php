@@ -17,6 +17,7 @@ return new class extends Migration
                 $table->unsignedBigInteger('room_type_id')->nullable();
                 $table->integer('floor')->nullable();
                 $table->text('notes')->nullable();
+                $table->timestamps();
 
                 $table->foreign('building_id')->references('id')->on('buildings')->onDelete('cascade');
                 $table->foreign('room_type_id')->references('id')->on('room_types')->onDelete('set null');

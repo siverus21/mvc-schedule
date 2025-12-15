@@ -13,7 +13,7 @@ return new class extends Migration
                 $table->string('code')->nullable();
                 $table->string('name')->nullable();
                 $table->string('address')->nullable();
-                $table->timestamp('created_at')->useCurrent();
+                $table->timestamps();
             });
             echo "Таблица buildings создана" . PHP_EOL;
         } else {

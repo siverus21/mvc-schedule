@@ -9,7 +9,7 @@ class RoleModel extends Model
 {
     protected string $table = 'roles';
 
-    public bool $timestamp = false;
+    public bool $timestamp = true;
 
     protected array $fillable = ['code', 'name', 'description'];
 

@@ -14,6 +14,7 @@ return new class extends Migration
                 $table->string('title');
                 $table->integer('credits')->default(0);
                 $table->text('description')->nullable();
+                $table->timestamps();
             });
             echo "Таблица subjects создана" . PHP_EOL;
         } else {

@@ -13,7 +13,7 @@ return new class extends Migration
                 $table->string('code')->unique();
                 $table->string('name');
                 $table->text('description')->nullable();
-                $table->timestamp('created_at')->useCurrent();
+                $table->timestamps();
             });
             echo "Таблица roles создана" . PHP_EOL;
         } else {

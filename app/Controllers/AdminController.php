@@ -41,9 +41,4 @@ class AdminController extends BaseController
     {
         return view('admin/settings', ['title' => "settings Page"], 'admin');
     }
-
-    public function teachers()
-    {
-        return view('admin/teachers', ['title' => "teachers Page"], 'admin');
-    }
 }

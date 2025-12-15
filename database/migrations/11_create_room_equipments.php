@@ -14,6 +14,7 @@ return new class extends Migration
                 $table->unsignedBigInteger('equipment_type_id');
                 $table->integer('quantity')->default(1);
                 $table->string('notes')->nullable();
+                $table->timestamps();
 
                 // уникальный индекс на пару (если нужна уникальность)
                 $table->unique(['room_id', 'equipment_type_id']);

@@ -10,7 +10,7 @@ class RoomEquipmentModel extends Model
 {
     protected string $table = 'room_equipments';
 
-    public bool $timestamp = false;
+    public bool $timestamp = true;
 
     protected array $loaded = ["room_id", "equipment_type_id", "quantity", "notes"];
     protected array $fillable = ["room_id", "equipment_type_id", "quantity", "notes"];

@@ -22,7 +22,7 @@ return new class extends Migration
                 $table->tinyInteger('ordinal')->nullable();
                 $table->text('notes')->nullable();
                 $table->unsignedBigInteger('created_by')->nullable();
-                $table->timestamp('created_at')->useCurrent();
+                $table->timestamps();
 
                 // Исправляем имя индекса
                 $table->index(['schedule_set_id', 'day_of_week', 'start_time'], 'sch_tpl_set_day_time_idx');

@@ -17,7 +17,7 @@ return new class extends Migration
                 $table->integer('version')->default(1);
                 $table->boolean('is_active')->default(false);
                 $table->unsignedBigInteger('created_by')->nullable();
-                $table->timestamp('created_at')->useCurrent();
+                $table->timestamps();
 
                 // Исправляем имя индекса
                 $table->index(['student_group_id', 'semester_id', 'academic_year_id'], 'sch_sets_group_sem_year_idx');

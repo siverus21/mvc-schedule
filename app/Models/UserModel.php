@@ -64,4 +64,21 @@ class UserModel extends Model
     {
         return db()->findOrFail('users', $id);
     }
+
+    public function getUsersTeacherButNoInTableTeacher()
+    {
+        return db()->query("
+            SELECT 
+                u.id,
+                u.display_name,
+                r.name AS role_name
+            FROM users AS u
+            JOIN roles AS r
+                ON u.role_id = r.id
+            LEFT JOIN teachers AS t
+                ON u.id = t.user_id
+            WHERE u.role_id = 3
+            AND t.user_id IS NULL
+        ")->get();
+    }
 }

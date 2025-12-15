@@ -8,7 +8,7 @@ class AuditoryModel extends Model
 {
     protected string $table = 'rooms';
 
-    public bool $timestamp = false;
+    public bool $timestamp = true;
 
     protected array $loaded = ["building_id", "code", "capacity", "floor", "name", "room_type_id", "notes"];
     protected array $fillable = ["building_id", "code", "capacity", "floor", "name", "room_type_id", "notes"];

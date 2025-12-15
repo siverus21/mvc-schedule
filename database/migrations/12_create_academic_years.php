@@ -14,6 +14,7 @@ return new class extends Migration
                 $table->date('start_date');
                 $table->date('end_date');
                 $table->string('description')->nullable();
+                $table->timestamps();
             });
             echo "Таблица academic_years создана" . PHP_EOL;
         } else {

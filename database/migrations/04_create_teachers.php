@@ -11,12 +11,15 @@ return new class extends Migration
             Capsule::schema()->create('teachers', function ($table) {
                 $table->id();
                 $table->unsignedBigInteger('user_id');
+                $table->unsignedBigInteger('department_id')->nullable();
                 $table->string('staff_number')->unique()->nullable();
-                $table->string('academic_title')->nullable();
-                $table->string('department')->nullable();
-                $table->text('bio')->nullable();
+                $table->unsignedBigInteger('academic_degree_id')->nullable();
+
+                $table->timestamps();
 
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('department_id')->references('id')->on('department')->onDelete('cascade');
+                $table->foreign('academic_degree_id')->references('id')->on('academic_degrees')->onDelete('cascade');
             });
             echo "Таблица teachers создана" . PHP_EOL;
         } else {

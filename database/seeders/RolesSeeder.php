@@ -13,18 +13,21 @@ class RolesSeeder extends Seeder
             "name" => "Администратор",
             "description" => "Администратор системы",
             "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
         ]);
         DB::table('roles')->insert([
             "code" => "redactor",
             "name" => "Редактор",
             "description" => "Редактор",
             "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
         ]);
         DB::table('roles')->insert([
             "code" => "teacher",
             "name" => "Преподаватель",
             "description" => "Преподаватель",
             "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
         ]);
     }
 }

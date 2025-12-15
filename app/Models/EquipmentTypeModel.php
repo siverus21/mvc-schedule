@@ -8,7 +8,7 @@ class EquipmentTypeModel extends Model
 {
     protected string $table = 'equipment_types';
 
-    public bool $timestamp = false;
+    public bool $timestamp = true;
 
     protected array $loaded = ["code", "name", "description"];
     protected array $fillable = ['code', 'name', 'description'];

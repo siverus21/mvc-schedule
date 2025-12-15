@@ -10,6 +10,9 @@ use App\Controllers\BuildingController;
 use App\Controllers\RoomTypeController;
 use App\Controllers\EquipmentTypeController;
 use App\Controllers\RoomEquipmentController;
+use App\Controllers\DepartmentController;
+use App\Controllers\TeacherController;
+use App\Controllers\AcademicDegreeController;
 
 define("MIDDLEWARE", [
     'auth' => Youpi\Middleware\Auth::class,
@@ -27,7 +30,6 @@ $app->router->post('/login', [UserController::class, 'auth'])->middleware(['gues
 // Admin Panel
 $app->router->get('/admin', [AdminController::class, 'index'])->middleware(['auth']);
 $app->router->get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth']);
-$app->router->get('/admin/teachers', [AdminController::class, 'teachers'])->middleware(['auth']);
 $app->router->get('/admin/journal', [AdminController::class, 'journal'])->middleware(['auth']);
 $app->router->get('/admin/roles', [AdminController::class, 'roles'])->middleware(['auth']);
 $app->router->get('/admin/schedule', [AdminController::class, 'schedule'])->middleware(['auth']);
@@ -82,6 +84,31 @@ $app->router->get('/admin/users/edit/{id}', [UserController::class, 'edit'])->mi
 $app->router->post('/admin/users/edit/{id}', [UserController::class, 'update'])->middleware(['auth']);
 $app->router->get('/admin/users/delete/{id}', [UserController::class, 'delete'])->middleware(['auth']);
 $app->router->get('/admin/logout', [UserController::class, 'logout'])->middleware(['auth']);
+
+// Departments
+$app->router->get('/admin/department', [DepartmentController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/department/create', [DepartmentController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/department/create', [DepartmentController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/department/edit/{id}', [DepartmentController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/department/edit/{id}', [DepartmentController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/department/delete/{id}', [DepartmentController::class, 'delete'])->middleware(['auth']);
+
+// Teachers
+$app->router->get('/admin/teachers', [TeacherController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/teachers/create', [TeacherController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/teachers/create', [TeacherController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/teachers/edit/{id}', [TeacherController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/teachers/edit/{id}', [TeacherController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/teachers/delete/{id}', [TeacherController::class, 'delete'])->middleware(['auth']);
+
+// Academic degrees
+$app->router->get('/admin/academic-degrees', [AcademicDegreeController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/academic-degrees/create', [AcademicDegreeController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/academic-degrees/create', [AcademicDegreeController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/academic-degrees/edit/{id}', [AcademicDegreeController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/academic-degrees/edit/{id}', [AcademicDegreeController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/academic-degrees/delete/{id}', [AcademicDegreeController::class, 'delete'])->middleware(['auth']);
+
 
 // API
 $app->router->get('/api/v1/users', [App\Controllers\API\V1\UserController::class, 'index']);
