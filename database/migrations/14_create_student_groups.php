@@ -13,8 +13,6 @@ return new class extends Migration
                 $table->string('code')->unique();
                 $table->string('name')->nullable();
                 $table->string('program')->nullable();
-                $table->tinyInteger('course_number')->nullable();
-                $table->year('intake_year')->nullable();
                 $table->text('notes')->nullable();
                 $table->timestamps();
             });

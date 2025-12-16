@@ -13,6 +13,10 @@ use App\Controllers\RoomEquipmentController;
 use App\Controllers\DepartmentController;
 use App\Controllers\TeacherController;
 use App\Controllers\AcademicDegreeController;
+use App\Controllers\SubjectController;
+use App\Controllers\LessonTypeController;
+use App\Controllers\StudentGroupController;
+use App\Controllers\SemesterController;
 
 define("MIDDLEWARE", [
     'auth' => Youpi\Middleware\Auth::class,
@@ -109,6 +113,37 @@ $app->router->get('/admin/academic-degrees/edit/{id}', [AcademicDegreeController
 $app->router->post('/admin/academic-degrees/edit/{id}', [AcademicDegreeController::class, 'update'])->middleware(['auth']);
 $app->router->get('/admin/academic-degrees/delete/{id}', [AcademicDegreeController::class, 'delete'])->middleware(['auth']);
 
+// Subjects
+$app->router->get('/admin/subjects', [SubjectController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/subjects/create', [SubjectController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/subjects/create', [SubjectController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/subjects/edit/{id}', [SubjectController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/subjects/edit/{id}', [SubjectController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/subjects/delete/{id}', [SubjectController::class, 'delete'])->middleware(['auth']);
+
+// Lesson Types
+$app->router->get('/admin/lesson-types', [LessonTypeController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/lesson-types/create', [LessonTypeController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/lesson-types/create', [LessonTypeController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/lesson-types/edit/{id}', [LessonTypeController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/lesson-types/edit/{id}', [LessonTypeController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/lesson-types/delete/{id}', [LessonTypeController::class, 'delete'])->middleware(['auth']);
+
+// Student groups
+$app->router->get('/admin/student-groups', [StudentGroupController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/student-groups/create', [StudentGroupController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/student-groups/create', [StudentGroupController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/student-groups/edit/{id}', [StudentGroupController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/student-groups/edit/{id}', [StudentGroupController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/student-groups/delete/{id}', [StudentGroupController::class, 'delete'])->middleware(['auth']);
+
+// Semesters
+$app->router->get('/admin/semesters', [SemesterController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/semesters/create', [SemesterController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/semesters/create', [SemesterController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/semesters/edit/{id}', [SemesterController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/semesters/edit/{id}', [SemesterController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/semesters/delete/{id}', [SemesterController::class, 'delete'])->middleware(['auth']);
 
 // API
 $app->router->get('/api/v1/users', [App\Controllers\API\V1\UserController::class, 'index']);

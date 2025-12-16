@@ -280,6 +280,10 @@ button.change-color-theme {
   position: absolute;
 }
 
+.fs-0 {
+  flex-shrink: 0;
+}
+
 .mt-1 {
   margin-top: 0.5rem;
 }

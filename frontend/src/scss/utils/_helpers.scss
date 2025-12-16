@@ -66,6 +66,10 @@
   position: absolute;
 }
 
+.fs-0 {
+  flex-shrink: 0;
+}
+
 $spaces: (
   1: .5rem,
   2: 1rem,

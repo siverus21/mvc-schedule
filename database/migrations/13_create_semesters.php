@@ -10,14 +10,8 @@ return new class extends Migration
         if (!Capsule::schema()->hasTable('semesters')) {
             Capsule::schema()->create('semesters', function ($table) {
                 $table->id();
-                $table->unsignedBigInteger('academic_year_id');
-                $table->tinyInteger('number');
-                $table->date('start_date');
-                $table->date('end_date');
                 $table->string('name')->nullable();
                 $table->timestamps();
-
-                $table->foreign('academic_year_id')->references('id')->on('academic_years')->onDelete('cascade');
             });
             echo "Таблица semesters создана" . PHP_EOL;
         } else {

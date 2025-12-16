@@ -11,8 +11,7 @@ return new class extends Migration
             Capsule::schema()->create('subjects', function ($table) {
                 $table->id();
                 $table->string('code')->unique()->nullable();
-                $table->string('title');
-                $table->integer('credits')->default(0);
+                $table->string('name');
                 $table->text('description')->nullable();
                 $table->timestamps();
             });
