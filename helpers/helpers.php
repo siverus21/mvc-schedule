@@ -139,3 +139,8 @@ function logout()
 {
     \Youpi\Auth::logout();
 }
+
+function getDays()
+{
+    return ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+}

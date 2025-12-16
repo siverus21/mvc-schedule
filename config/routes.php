@@ -17,6 +17,7 @@ use App\Controllers\SubjectController;
 use App\Controllers\LessonTypeController;
 use App\Controllers\StudentGroupController;
 use App\Controllers\SemesterController;
+use App\Controllers\ScheduleTemplateController;
 
 define("MIDDLEWARE", [
     'auth' => Youpi\Middleware\Auth::class,
@@ -36,7 +37,6 @@ $app->router->get('/admin', [AdminController::class, 'index'])->middleware(['aut
 $app->router->get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth']);
 $app->router->get('/admin/journal', [AdminController::class, 'journal'])->middleware(['auth']);
 $app->router->get('/admin/roles', [AdminController::class, 'roles'])->middleware(['auth']);
-$app->router->get('/admin/schedule', [AdminController::class, 'schedule'])->middleware(['auth']);
 $app->router->get('/admin/settings', [AdminController::class, 'settings'])->middleware(['auth', 'role:admin,redactor']);
 $app->router->get('/admin/import-export', [AdminController::class, 'importExport'])->middleware(['auth']);
 
@@ -144,6 +144,15 @@ $app->router->post('/admin/semesters/create', [SemesterController::class, 'store
 $app->router->get('/admin/semesters/edit/{id}', [SemesterController::class, 'edit'])->middleware(['auth']);
 $app->router->post('/admin/semesters/edit/{id}', [SemesterController::class, 'update'])->middleware(['auth']);
 $app->router->get('/admin/semesters/delete/{id}', [SemesterController::class, 'delete'])->middleware(['auth']);
+
+// Schedules
+$app->router->get('/admin/schedules', [ScheduleTemplateController::class, 'list'])->middleware(['auth']);
+$app->router->get('/admin/schedules/semester/{semesterId}/group/{groupId}', [ScheduleTemplateController::class, 'schedules'])->middleware(['auth']);
+$app->router->get('/admin/schedules/create', [ScheduleTemplateController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/schedules/create', [ScheduleTemplateController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/schedules/edit/{id}', [ScheduleTemplateController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/schedules/edit/{id}', [ScheduleTemplateController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/schedules/delete/{id}', [ScheduleTemplateController::class, 'delete'])->middleware(['auth']);
 
 // API
 $app->router->get('/api/v1/users', [App\Controllers\API\V1\UserController::class, 'index']);

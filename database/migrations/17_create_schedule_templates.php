@@ -10,7 +10,8 @@ return new class extends Migration
         if (!Capsule::schema()->hasTable('schedule_templates')) {
             Capsule::schema()->create('schedule_templates', function ($table) {
                 $table->id();
-                $table->unsignedBigInteger('schedule_set_id');
+                $table->unsignedBigInteger('student_group_id');
+                $table->unsignedBigInteger('semester_id')->nullable();
                 $table->unsignedBigInteger('subject_id');
                 $table->unsignedBigInteger('teacher_id')->nullable();
                 $table->unsignedBigInteger('room_id')->nullable();
@@ -21,13 +22,11 @@ return new class extends Migration
                 $table->time('end_time');
                 $table->tinyInteger('ordinal')->nullable();
                 $table->text('notes')->nullable();
-                $table->unsignedBigInteger('created_by')->nullable();
+                $table->boolean('is_active')->default(true);
                 $table->timestamps();
 
-                // Исправляем имя индекса
-                $table->index(['schedule_set_id', 'day_of_week', 'start_time'], 'sch_tpl_set_day_time_idx');
-
-                $table->foreign('schedule_set_id')->references('id')->on('schedule_sets')->onDelete('cascade');
+                $table->foreign('student_group_id')->references('id')->on('student_groups')->onDelete('cascade');
+                $table->foreign('semester_id')->references('id')->on('semesters')->onDelete('set null');
                 $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('restrict');
                 $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('set null');
                 $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null');
