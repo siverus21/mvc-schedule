@@ -98,11 +98,24 @@ class ScheduleTemplateModel extends Model
             $result["days"][$dayOfWeek[$item['day_of_week']]]["schedules"][] = $item;
         }
 
+        if (isset($result["days"])) {
+            $sortedDays = [];
+            foreach ($dayOfWeek as $dayName) {
+                if (isset($result['days'][$dayName])) $sortedDays[$dayName] = $result['days'][$dayName];
+            }
+            $result['days'] = $sortedDays;
+        }
+
         return $result;
     }
 
     public function getAllScheduleTemplates()
     {
         return db()->query("SELECT * FROM $this->table")->getAssoc();
+    }
+
+    public function getScheduleTemplate($id)
+    {
+        return db()->findOrFail($this->table, $id);
     }
 }

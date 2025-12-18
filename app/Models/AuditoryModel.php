@@ -41,6 +41,20 @@ class AuditoryModel extends Model
         return db()->query("SELECT * FROM $this->table")->get();
     }
 
+    public function getAuditoriesWithBuilding()
+    {
+        return db()->query("
+        SELECT
+            r.id,
+            r.building_id,
+            r.name,
+            b.name AS building_name
+        FROM rooms r
+        LEFT JOIN buildings b
+            ON r.building_id = b.id
+        ")->get();
+    }
+
     public function getAuditory($id)
     {
         return db()->findOrFail('rooms', $id);

@@ -148,11 +148,11 @@ $app->router->get('/admin/semesters/delete/{id}', [SemesterController::class, 'd
 // Schedules
 $app->router->get('/admin/schedules', [ScheduleTemplateController::class, 'list'])->middleware(['auth']);
 $app->router->get('/admin/schedules/semester/{semesterId}/group/{groupId}', [ScheduleTemplateController::class, 'schedules'])->middleware(['auth']);
-$app->router->get('/admin/schedules/create', [ScheduleTemplateController::class, 'create'])->middleware(['auth']);
-$app->router->post('/admin/schedules/create', [ScheduleTemplateController::class, 'store'])->middleware(['auth']);
-$app->router->get('/admin/schedules/edit/{id}', [ScheduleTemplateController::class, 'edit'])->middleware(['auth']);
-$app->router->post('/admin/schedules/edit/{id}', [ScheduleTemplateController::class, 'update'])->middleware(['auth']);
-$app->router->get('/admin/schedules/delete/{id}', [ScheduleTemplateController::class, 'delete'])->middleware(['auth']);
+$app->router->get('/admin/schedules/semester/{semesterId}/group/{groupId}/create', [ScheduleTemplateController::class, 'create'])->middleware(['auth']);
+$app->router->post('/admin/schedules/semester/{semesterId}/group/{groupId}/create', [ScheduleTemplateController::class, 'store'])->middleware(['auth']);
+$app->router->get('/admin/schedules/semester/{semesterId}/group/{groupId}/edit/{itemId}', [ScheduleTemplateController::class, 'edit'])->middleware(['auth']);
+$app->router->post('/admin/schedules/semester/{semesterId}/group/{groupId}/edit/{itemId}', [ScheduleTemplateController::class, 'update'])->middleware(['auth']);
+$app->router->get('/admin/schedules/semester/{semesterId}/group/{groupId}/delete/{itemId}', [ScheduleTemplateController::class, 'delete'])->middleware(['auth']);
 
 // API
 $app->router->get('/api/v1/users', [App\Controllers\API\V1\UserController::class, 'index']);

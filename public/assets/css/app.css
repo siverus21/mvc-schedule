@@ -737,6 +737,7 @@ body.dark-theme .button.button_change-color-theme {
 
 .form__group {
   margin-bottom: 1rem;
+  position: relative;
 }
 .form__label {
   color: var(--color-text-primary);
@@ -744,7 +745,7 @@ body.dark-theme .button.button_change-color-theme {
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
-.form__input {
+.form__input, .form__time {
   padding: 0.625rem 1rem;
   border-radius: 0.75rem;
   border: 2px solid var(--color-border);
@@ -756,6 +757,15 @@ body.dark-theme .button.button_change-color-theme {
   cursor: pointer;
   transition: 0.2s;
   background-size: 1rem;
+}
+.form__time::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  position: absolute;
+  width: 82%;
+  left: 10%;
+  color: #fff;
+  cursor: pointer;
+  filter: invert(40%) sepia(61%) saturate(950%) hue-rotate(207deg) brightness(95%) contrast(99%);
 }
 .form__helper-error li {
   color: var(--color-status-cancelled);

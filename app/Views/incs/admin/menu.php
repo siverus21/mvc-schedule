@@ -189,7 +189,7 @@ foreach ($arLeftMenu as $item) {
                         </svg>
                     </span>
                 </span>
-                <ul class="menu__list d-flex flex-column gap-1 pt-1 <?= strpos($_COOKIE['openMenu'], $key) === false ? 'hide' : '' ?>">
+                <ul class="menu__list d-flex flex-column gap-1 pt-1 <?= isset($_COOKIE['openMenu']) && strpos($_COOKIE['openMenu'], $key) === false ? 'hide' : '' ?>">
                     <? foreach ($items as $item): ?>
                         <li class="menu__item">
                             <a class="menu__link d-flex align-items-center gap-2" href="<?= $item['LINK']; ?>">
