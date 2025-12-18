@@ -616,22 +616,22 @@ body.dark-theme .button.button_change-color-theme {
   flex-direction: column;
   gap: 0.5rem;
 }
-.schedule__block_lecture {
+.schedule__block_LECTION, .schedule__block_ONLINE {
   background: var(--color-bg-lecture);
 }
-.schedule__block_lecture .schedule__time svg {
+.schedule__block_LECTION .schedule__time svg, .schedule__block_ONLINE .schedule__time svg {
   stroke: var(--color-status-lecture);
 }
-.schedule__block_lecture .schedule__type p {
+.schedule__block_LECTION .schedule__type p, .schedule__block_ONLINE .schedule__type p {
   background: var(--color-status-lecture);
 }
-.schedule__block_practice {
+.schedule__block_PRACTICUM, .schedule__block_PRACTICAL {
   background: var(--color-bg-practice);
 }
-.schedule__block_practice .schedule__time svg {
+.schedule__block_PRACTICUM .schedule__time svg, .schedule__block_PRACTICAL .schedule__time svg {
   stroke: var(--color-status-practice);
 }
-.schedule__block_practice .schedule__type p {
+.schedule__block_PRACTICUM .schedule__type p, .schedule__block_PRACTICAL .schedule__type p {
   background: var(--color-status-practice);
 }
 .schedule__block_lab {
@@ -643,13 +643,13 @@ body.dark-theme .button.button_change-color-theme {
 .schedule__block_lab .schedule__type p {
   background: var(--color-status-lab);
 }
-.schedule__block_seminar {
+.schedule__block_seminar, .schedule__block_SEMINAR {
   background: var(--color-bg-seminar);
 }
-.schedule__block_seminar .schedule__time svg {
+.schedule__block_seminar .schedule__time svg, .schedule__block_SEMINAR .schedule__time svg {
   stroke: var(--color-status-seminar);
 }
-.schedule__block_seminar .schedule__type p {
+.schedule__block_seminar .schedule__type p, .schedule__block_SEMINAR .schedule__type p {
   background: var(--color-status-seminar);
 }
 .schedule__block_replacement {

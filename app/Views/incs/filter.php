@@ -9,33 +9,11 @@
     </div>
     <div class="filters__body">
         <form class="filter__form" method="post">
-            <div class="filter__item">
-                <label for="group">Группа</label>
-                <select name="group" id="group">
-                    <option value="ИВТ-101">ИВТ-101</option>
-                    <option value="ИВТ-102">ИВТ-102</option>
-                    <option value="ИВТ-103">ИВТ-103</option>
-                    <option value="ИВТ-104">ИВТ-104</option>
-                </select>
-            </div>
-            <div class="filter__item">
-                <label for="teacher">Преподаватель</label>
-                <select name="teacher" id="teacher">
-                    <option value="Иванов">Иванов</option>
-                    <option value="Петров">Петров</option>
-                    <option value="Сидоров">Сидоров</option>
-                    <option value="Смирнов">Смирнов</option>
-                </select>
-            </div>
-            <div class="filter__item">
-                <label for="classroom">Аудитория</label>
-                <select name="classroom" id="classroom">
-                    <option value="101">101</option>
-                    <option value="102">102</option>
-                    <option value="103">103</option>
-                    <option value="104">104</option>
-                </select>
-            </div>
+            <? foreach ($data as $filter): ?>
+                <div class="filter__item">
+                    <?= $filter ?>
+                </div>
+            <? endforeach; ?>
         </form>
     </div>
 </div>

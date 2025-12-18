@@ -58,7 +58,8 @@
 		flex-direction: column;
 		gap: 0.5rem;
 
-		&_lecture {
+		&_LECTION,
+		&_ONLINE {
 			background: var(--color-bg-lecture);
 
 			& .schedule__time svg {
@@ -70,7 +71,8 @@
 			}
 		}
 
-		&_practice {
+		&_PRACTICUM,
+		&_PRACTICAL {
 			background: var(--color-bg-practice);
 
 			& .schedule__time svg {
@@ -94,7 +96,8 @@
 			}
 		}
 
-		&_seminar {
+		&_seminar,
+		&_SEMINAR {
 			background: var(--color-bg-seminar);
 
 			& .schedule__time svg {

@@ -35,7 +35,7 @@ class ScheduleTemplateModel extends Model
         return $groups;
     }
 
-    public function getCurrentGroupScheduleTemplates($semesterId, $groupId)
+    public function getCurrentGroupScheduleTemplates($semesterId, $groupId, $allDays = false)
     {
         $data = db()->query("
         SELECT
@@ -101,7 +101,11 @@ class ScheduleTemplateModel extends Model
         if (isset($result["days"])) {
             $sortedDays = [];
             foreach ($dayOfWeek as $dayName) {
-                if (isset($result['days'][$dayName])) $sortedDays[$dayName] = $result['days'][$dayName];
+                if ($allDays) {
+                    $sortedDays[$dayName] = isset($result['days'][$dayName]) ? $result['days'][$dayName] : ['schedules' => []];
+                } else {
+                    if (isset($result['days'][$dayName])) $sortedDays[$dayName] = $result['days'][$dayName];
+                }
             }
             $result['days'] = $sortedDays;
         }

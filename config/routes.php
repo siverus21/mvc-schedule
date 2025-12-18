@@ -155,5 +155,4 @@ $app->router->post('/admin/schedules/semester/{semesterId}/group/{groupId}/edit/
 $app->router->get('/admin/schedules/semester/{semesterId}/group/{groupId}/delete/{itemId}', [ScheduleTemplateController::class, 'delete'])->middleware(['auth']);
 
 // API
-$app->router->get('/api/v1/users', [App\Controllers\API\V1\UserController::class, 'index']);
-$app->router->get('/api/v1/users/{id}', [App\Controllers\API\V1\UserController::class, 'view']);
+$app->router->post('/api/v1/schedule', [App\Controllers\API\V1\ScheduleController::class, 'index']);

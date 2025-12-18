@@ -1,0 +1,32 @@
+// получить объект всех фильтров
+var all = FiltersAPI.getFilters('.filter__form');
+
+// получить конкретный фильтр по имени
+var group = FiltersAPI.getFilter('group');
+
+// установить значение (например select или text)
+FiltersAPI.setFilter('group', '3');
+
+// для checkbox: можно передать true/false или массив значений
+FiltersAPI.setFilter('someCheckbox', true);
+FiltersAPI.setFilter('tags', ['a','b']);
+
+// очистить конкретный фильтр
+FiltersAPI.clearFilter('teacher');
+
+// очистить все
+FiltersAPI.clearAll('.filter__form');
+
+// проверить — есть ли активные фильтры
+if (FiltersAPI.isAnyFilterActive('.filter__form')) { /* ... */ }
+
+// подписаться на изменения (debounce 200ms)
+var unsubscribe = FiltersAPI.onFiltersChange(function(e, filters){
+  console.log('changed', filters);
+}, '.filter__form', 200);
+
+// отписаться
+unsubscribe();
+
+// получить query-string
+var qs = FiltersAPI.serialize('.filter__form');

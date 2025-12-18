@@ -18,7 +18,7 @@ class ScheduleTemplateController extends BaseController
         return view('admin/schedule-templates', ['title' => "Schedule Templates Page", 'groups' => $model->getListGroupsWithSemesters()], 'admin');
     }
 
-    public function schedules($semesterId, $groupId)
+    public function schedules($semesterId, $groupId, $api = false)
     {
         $model = new ScheduleTemplateModel();
 
