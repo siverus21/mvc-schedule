@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Models\AuditoryModel;
+use App\Wigets\AuditoryWiget;
+use App\Wigets\TeacherWiget;
+use App\Wigets\ScheduleWiget;
 
 class AdminController extends BaseController
 {
@@ -14,7 +16,12 @@ class AdminController extends BaseController
 
     public function dashboard()
     {
-        return view('admin/dashboard', ['title' => "Dashboard Page", "countAuditories" => (new AuditoryModel())->countAuditories()], 'admin');
+        $wigets = [
+            'schedule' => ScheduleWiget::renderHTML(),
+            'auditories' => AuditoryWiget::renderHTML(),
+            'teachers' => TeacherWiget::renderHTML(),
+        ];
+        return view('admin/dashboard', ['title' => "Dashboard Page", 'wigets' => $wigets], 'admin');
     }
 
     public function importExport()

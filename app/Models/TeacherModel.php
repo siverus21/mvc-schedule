@@ -42,4 +42,9 @@ class TeacherModel extends Model
     {
         return db()->findOrFail($this->table, $id);
     }
+
+    public function countTeachers()
+    {
+        return db()->count('teachers');
+    }
 }

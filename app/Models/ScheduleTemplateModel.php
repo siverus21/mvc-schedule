@@ -122,4 +122,9 @@ class ScheduleTemplateModel extends Model
     {
         return db()->findOrFail($this->table, $id);
     }
+
+    public function countScheduleTemplates()
+    {
+        return db()->count($this->table);
+    }
 }
