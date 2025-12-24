@@ -140,7 +140,17 @@ function logout()
     \Youpi\Auth::logout();
 }
 
-function getDays()
+function getDays(): array
 {
     return ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+}
+
+function getWeekParity(): array
+{
+    return ["Каждая неделя", "Четная неделя", "Нечетная неделя"];
+}
+
+function isEvenIsoWeek(): bool
+{
+    return date('W') % 2 == 0;
 }

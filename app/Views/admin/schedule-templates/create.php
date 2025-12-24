@@ -62,7 +62,7 @@
         </select>
         <?= getErrors('lesson_type_id') ?>
     </div>
-    <div class="d-grid grid-col-3 gap-2">
+    <div class="d-grid grid-col-4 gap-2">
         <div class="form__group d-flex flex-column">
             <label class="form__label" for="day_of_week">День недели</label>
             <select class="form__select <?= getValidationClass('day_of_week') ?>" name="day_of_week" id="day_of_week">
@@ -77,6 +77,21 @@
                 <? endforeach ?>
             </select>
             <?= getErrors('day_of_week') ?>
+        </div>
+        <div class="form__group d-flex flex-column">
+            <label class="form__label" for="week_parity">Четность недели</label>
+            <select class="form__select <?= getValidationClass('week_parity') ?>" name="week_parity" id="week_parity">
+                <? $oldValue = old('week_parity'); ?>
+                <? if (!$oldValue): ?>
+                    <option value="" selected disabled>Выберите четность недели</option>
+                <? endif; ?>
+                <? foreach ($weekParity as $key => $item): ?>
+                    <option value="<?= $key ?>" <?= $oldValue == $item ? 'selected' : '' ?>>
+                        <?= $item ?>
+                    </option>
+                <? endforeach ?>
+            </select>
+            <?= getErrors('week_parity') ?>
         </div>
         <div class="form__group d-flex flex-column">
             <label class="form__label" for="start_time">Начало занятия</label>

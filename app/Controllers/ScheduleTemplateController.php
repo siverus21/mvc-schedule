@@ -34,11 +34,10 @@ class ScheduleTemplateController extends BaseController
             'list' => $model->getCurrentGroupScheduleTemplates($semesterId, $groupId),
             'groupId' => $groupId,
             'groupData' => $group,
-            'semesterId' => $semesterId
+            'semesterId' => $semesterId,
+            'weekParity' => getWeekParity()
         ], 'admin');
     }
-
-    // public function listSemesters($groupId) {}
 
     public function create($semesterId, $groupId)
     {
@@ -47,6 +46,7 @@ class ScheduleTemplateController extends BaseController
         $auditories = (new AuditoryModel())->getAuditoriesWithBuilding();
         $lessonTypes = (new LessonTypeModel())->getLessonTypes();
         $days = getDays();
+        $weekParity = getWeekParity();
         return view('admin/schedule-templates/create', [
             'title' => "Create Room Types Page",
             'semesterId' => $semesterId,
@@ -55,7 +55,8 @@ class ScheduleTemplateController extends BaseController
             'subjects' => $subjects,
             'auditories' => $auditories,
             'lessonTypes' => $lessonTypes,
-            'days' => $days
+            'days' => $days,
+            'weekParity' => $weekParity
         ], 'admin');
     }
 
@@ -69,13 +70,9 @@ class ScheduleTemplateController extends BaseController
         $model->attributes['start_time'] = date('H:i:s', strtotime($model->attributes['start_time']));
         $model->attributes['end_time'] = date('H:i:s', strtotime($model->attributes['end_time']));
 
-        if ($model->attributes["is_active"] == "on") {
-            $model->attributes["is_active"] = 1;
-        } else {
-            $model->attributes["is_active"] = 0;
-        }
+        $model->attributes["is_active"] = $model->attributes["is_active"] == "on" ? 1 : 0;
+        $model->attributes['notes'] = trim($model->attributes['notes']) === '' ? NULL : $model->attributes['notes'];
 
-        $model->attributes["week_parity"] = 0;  // !!! TODO THIS, пока что костыль !!!
         $model->attributes["ordinal"] = NULL;   // !!! TODO THIS, пока что костыль !!!
 
         if (!$model->validate()) {
@@ -103,6 +100,7 @@ class ScheduleTemplateController extends BaseController
         $lessonTypes = (new LessonTypeModel())->getLessonTypes();
         $schedule = (new ScheduleTemplateModel())->getScheduleTemplate($itemId);
         $days = getDays();
+        $weekParity = getWeekParity();
 
         return view('admin/schedule-templates/edit', [
             'title' => "Create Room Types Page",
@@ -114,7 +112,8 @@ class ScheduleTemplateController extends BaseController
             'auditories' => $auditories,
             'lessonTypes' => $lessonTypes,
             'days' => $days,
-            'schedule' => $schedule
+            'schedule' => $schedule,
+            'weekParity' => $weekParity
         ], 'admin');
     }
 
@@ -129,13 +128,9 @@ class ScheduleTemplateController extends BaseController
         $model->attributes['start_time'] = date('H:i:s', strtotime($model->attributes['start_time']));
         $model->attributes['end_time'] = date('H:i:s', strtotime($model->attributes['end_time']));
 
-        if ($model->attributes["is_active"] == "on") {
-            $model->attributes["is_active"] = 1;
-        } else {
-            $model->attributes["is_active"] = 0;
-        }
+        $model->attributes["is_active"] = $model->attributes["is_active"] == "on" ? 1 : 0;
+        $model->attributes['notes'] = trim($model->attributes['notes']) === '' ? NULL : $model->attributes['notes'];
 
-        $model->attributes["week_parity"] = 0;  // !!! TODO THIS, пока что костыль !!!
         $model->attributes["ordinal"] = NULL;   // !!! TODO THIS, пока что костыль !!!
 
         $res = $model->update($itemId);

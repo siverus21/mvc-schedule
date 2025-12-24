@@ -31,7 +31,7 @@
                         <div class="schedule__item default-block">
                             <div class="schedule__header">
                                 <h4 class="schedule__title"><?= $key ?></h4>
-                                <? $count = count($item['schedules']) ?>
+                                <? $count = count($item) ?>
                                 <?
                                 $text = 'пар';
                                 if ($count == 1) {
@@ -46,7 +46,7 @@
                                 <? if ($count == 0): ?>
                                     <p style="text-align: center;">Нет пар</p>
                                 <? else: ?>
-                                    <? foreach ($item['schedules'] as $schedule): ?>
+                                    <? foreach ($item as $schedule): ?>
                                         <div class="schedule__block <?= $schedule['lesson_type_code'] ? "schedule__block_" . $schedule['lesson_type_code'] : "" ?>">
                                             <div class="schedule__time">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock w-4 h-4" aria-hidden="true" style="color: rgb(99, 102, 241);">
@@ -57,6 +57,9 @@
                                                 <span>-</span>
                                                 <p><?= date('H:i', strtotime($schedule['end_time'])) ?></p>
                                             </div>
+                                            <? if ($schedule['week_parity'] > 0): ?>
+                                                <p class="schedule__name"><?= $data['weekParity'][$schedule['week_parity']] ?></p>
+                                            <? endif; ?>
                                             <div class="schedule__type">
                                                 <p><?= $schedule['lesson_type_name'] ?></p>
                                             </div>
@@ -81,14 +84,14 @@
                                                 <div class="schedule__info">
                                                     <p><?= $infoText[$randClass] ?></p>
                                                 </div>
-                                            <? endif; */ ?>
+                                            <? endif;   */ ?>
                                         </div>
                                     <? endforeach; ?>
                                 <? endif; ?>
                             </div>
                         </div>
                     </div>
-                <? endforeach; ?>
+                <? endforeach;   ?>
             </div>
         </div>
     <? endif; ?>

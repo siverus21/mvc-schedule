@@ -35,9 +35,9 @@ class ScheduleTemplateModel extends Model
         return $groups;
     }
 
-    public function getCurrentGroupScheduleTemplates($semesterId, $groupId, $allDays = false)
+    public function getCurrentGroupScheduleTemplates($semesterId, $groupId, $allDays = false, $is_active = false)
     {
-        $data = db()->query("
+        $query = "        
         SELECT
             st.id AS id,
             st.student_group_id AS group_id,
@@ -77,10 +77,16 @@ class ScheduleTemplateModel extends Model
             LEFT JOIN users AS u ON u.id = t.user_id
             LEFT JOIN rooms AS r ON r.id = st.room_id
             LEFT JOIN lesson_types AS lt ON lt.id = st.lesson_type_id
+            
+            WHERE st.semester_id = $semesterId AND st.student_group_id = $groupId";
 
-            WHERE st.semester_id = $semesterId AND st.student_group_id = $groupId
-            ORDER BY st.start_time ASC
-        ")->get();
+        if ($is_active) {
+            $query .= " AND st.is_active = 1";
+        }
+
+        $query .= " ORDER BY st.start_time ASC";
+
+        $data = db()->query($query)->get();
 
         $result = [];
 
@@ -95,14 +101,18 @@ class ScheduleTemplateModel extends Model
             unset($item['student_group_notes']);
             unset($item['semester_name']);
 
-            $result["days"][$dayOfWeek[$item['day_of_week']]]["schedules"][] = $item;
+            $result["days"][$dayOfWeek[$item['day_of_week']]][$item['week_parity']][] = $item;
         }
 
         if (isset($result["days"])) {
+            foreach ($result["days"] as $day => $v) {
+                ksort($result["days"][$day]);
+            }
+
             $sortedDays = [];
             foreach ($dayOfWeek as $dayName) {
                 if ($allDays) {
-                    $sortedDays[$dayName] = isset($result['days'][$dayName]) ? $result['days'][$dayName] : ['schedules' => []];
+                    $sortedDays[$dayName] = isset($result['days'][$dayName]) ? $result['days'][$dayName] : [];
                 } else {
                     if (isset($result['days'][$dayName])) $sortedDays[$dayName] = $result['days'][$dayName];
                 }

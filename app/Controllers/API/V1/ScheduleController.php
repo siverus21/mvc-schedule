@@ -61,14 +61,34 @@ class ScheduleController
     {
         $model = new ScheduleTemplateModel();
 
-        $list = $model->getCurrentGroupScheduleTemplates($semesterId, $groupId, true);
+        $list = $model->getCurrentGroupScheduleTemplates($semesterId, $groupId, true, true);
 
         if (empty($list)) {
             return null;
+        } else {
+            foreach ($list['days'] as $day => $weekParity) {
+                $lesson = [];
+                if (empty($weekParity)) {
+                    continue;
+                }
+
+                foreach ($weekParity as $schedule) {
+                    foreach ($schedule as $les) {
+                        $lesson[] = $les;
+                    }
+                }
+
+                uasort($lesson, function ($a, $b) {
+                    return strcmp($a['start_time'], $b['start_time']);;
+                });
+
+                $list['days'][$day] = $lesson;
+            }
         }
 
         return view()->renderPartial('incs/schedule', [
             'list' => $list,
+            'weekParity' => getWeekParity()
         ]);
     }
 }
