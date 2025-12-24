@@ -20,6 +20,6 @@ $(function () {
 		$(document.documentElement).attr('data-theme', theme === 'dark-theme' ? 'dark-theme' : 'light-theme');
 		$('body').toggleClass('dark-theme', theme === 'dark-theme');
 		let date = new Date();
-		setCookie(STORAGE_KEY, theme, { secure: false, 'max-age': date.getTime() + 10 * 365 * 24 * 60 * 60 });
+		setCookie(STORAGE_KEY, theme, { 'max-age': date.getTime() + 10 * 365 * 24 * 60 * 60 });
 	}
 });

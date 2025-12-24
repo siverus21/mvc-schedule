@@ -28,7 +28,7 @@ $(function () {
 			data: filters,
 			success: function (data) {
 				$('.schedule').html(data.message);
-				setCookie('lastScheduleId', filters['group'], { secure: false, 'max-age': 24 * 60 * 60 });
+				setCookie('lastScheduleId', filters['group'], { 'max-age': 24 * 60 * 60 });
 			},
 			error: function (err) {
 				console.error('Error fetching schedule:', err);
