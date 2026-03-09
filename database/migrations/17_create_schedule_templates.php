@@ -8,6 +8,8 @@ return new class extends Migration
     public function up()
     {
         if (!Capsule::schema()->hasTable('schedule_templates')) {
+            // Шаблоны расписания: у каждой группы может быть несколько занятий в течение недели
+            // (разные день, время, чётность недели). Валидация пересечений по времени — в приложении.
             Capsule::schema()->create('schedule_templates', function ($table) {
                 $table->id();
                 $table->unsignedBigInteger('student_group_id');

@@ -1,4 +1,15 @@
 $(function () {
+	// Автоскрытие алертов через N секунд
+	$('.alerts-container .alert[data-auto-dismiss]').each(function () {
+		var $el = $(this);
+		var ms = parseInt($el.attr('data-auto-dismiss'), 10) || 5000;
+		setTimeout(function () {
+			$el.fadeOut(300, function () {
+				$el.remove();
+			});
+		}, ms);
+	});
+
 	$('.js-schedule-select-week').on('click', function () {
 		$(this).addClass('button_active');
 		$('.js-schedule-select-day').removeClass('button_active');

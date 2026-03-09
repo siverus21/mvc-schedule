@@ -38,5 +38,35 @@ class RoomTypesSeeder extends Seeder
             "created_at" => date('Y-m-d H:i:s'),
             "updated_at" => date('Y-m-d H:i:s'),
         ]);
+        DB::table('room_types')->insert([
+            "code" => "AUD",
+            "name" => "Аудитория",
+            "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
+        ]);
+        DB::table('room_types')->insert([
+            "code" => "COWORK",
+            "name" => "Коворкинг",
+            "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
+        ]);
+        DB::table('room_types')->insert([
+            "code" => "CONF",
+            "name" => "Конференц-зал",
+            "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
+        ]);
+        DB::table('room_types')->insert([
+            "code" => "DRAFT",
+            "name" => "Чертёжная",
+            "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
+        ]);
+        DB::table('room_types')->insert([
+            "code" => "READING",
+            "name" => "Читальный зал",
+            "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
+        ]);
     }
 }

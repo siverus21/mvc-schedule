@@ -124,11 +124,11 @@ foreach ($toRun as $class) {
 
         $seeder->run();
 
-        echo "  OK: {$class} выполнен." . PHP_EOL;
+        echo "  - {$class} выполнен успешно." . PHP_EOL;
     } catch (Throwable $e) {
         echo "Ошибка при выполнении {$class}: " . $e->getMessage() . PHP_EOL;
         echo $e->getTraceAsString() . PHP_EOL;
     }
 }
 
-echo "Сиды завершены." . PHP_EOL;
+echo "Сиды завершены успешно." . PHP_EOL;

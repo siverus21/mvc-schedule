@@ -136,4 +136,81 @@ class ScheduleTemplateModel extends BaseModel
     {
         return db()->count($this->table);
     }
+
+    /**
+     * Проверка пересечения по времени: в тот же день и неделю (чётная/нечётная)
+     * уже есть занятие у этой группы или у этого преподавателя.
+     * Возвращает массив строк-предупреждений (пустой, если конфликтов нет).
+     *
+     * @param int|string $semesterId
+     * @param int|string $studentGroupId
+     * @param int|string $teacherId
+     * @param int $dayOfWeek
+     * @param int $weekParity
+     * @param string $startTime время 'H:i' или 'H:i:s'
+     * @param string $endTime
+     * @param int|string|null $excludeId id записи, которую не учитывать (при редактировании)
+     * @return array<string>
+     */
+    public function findTimeConflicts($semesterId, $studentGroupId, $teacherId, $dayOfWeek, $weekParity, $startTime, $endTime, $excludeId = null): array
+    {
+        $warnings = [];
+        $startTime = date('H:i:s', strtotime($startTime));
+        $endTime = date('H:i:s', strtotime($endTime));
+
+        $excludeCond = $excludeId !== null && $excludeId !== ''
+            ? ' AND st.id != :exclude_id'
+            : '';
+        $params = [
+            'semester_id'    => $semesterId,
+            'day_of_week'    => $dayOfWeek,
+            'week_parity'    => $weekParity,
+            'start_time'     => $endTime,
+            'end_time'       => $startTime,
+        ];
+        if ($excludeCond) {
+            $params['exclude_id'] = $excludeId;
+        }
+
+        // Конфликт по группе: в это время у группы уже есть занятие
+        $sqlGroup = "SELECT st.id, st.start_time, st.end_time, sub.name AS subject_name
+            FROM {$this->table} AS st
+            LEFT JOIN subjects AS sub ON sub.id = st.subject_id
+            WHERE st.semester_id = :semester_id AND st.student_group_id = :student_group_id
+            AND st.day_of_week = :day_of_week AND st.week_parity = :week_parity
+            AND st.start_time < :start_time AND st.end_time > :end_time
+            {$excludeCond}";
+        $paramsGroup = $params + ['student_group_id' => $studentGroupId];
+        $groupConflicts = db()->query($sqlGroup, $paramsGroup)->get();
+        if (!empty($groupConflicts)) {
+            $subjects = array_map(fn($r) => $r['subject_name'] . ' (' . $r['start_time'] . '–' . $r['end_time'] . ')', $groupConflicts);
+            $warnings[] = 'В это время у группы уже запланировано занятие: ' . implode(', ', $subjects);
+        }
+
+        // Конфликт по преподавателю: в это время у преподавателя уже есть занятие
+        $sqlTeacher = "SELECT st.id, st.start_time, st.end_time, sub.name AS subject_name, sg.name AS group_name
+            FROM {$this->table} AS st
+            LEFT JOIN subjects AS sub ON sub.id = st.subject_id
+            LEFT JOIN student_groups AS sg ON sg.id = st.student_group_id
+            WHERE st.semester_id = :semester_id AND st.teacher_id = :teacher_id
+            AND st.day_of_week = :day_of_week AND st.week_parity = :week_parity
+            AND st.start_time < :start_time AND st.end_time > :end_time
+            {$excludeCond}";
+        $paramsTeacher = $params + ['teacher_id' => $teacherId];
+        $teacherConflicts = db()->query($sqlTeacher, $paramsTeacher)->get();
+        if (!empty($teacherConflicts)) {
+            $items = array_map(fn($r) => $r['subject_name'] . ' — ' . $r['group_name'] . ' (' . $r['start_time'] . '–' . $r['end_time'] . ')', $teacherConflicts);
+            $warnings[] = 'В это время у преподавателя уже есть занятие: ' . implode('; ', $items);
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * Установить предупреждения о пересечении по времени (для вывода на форму).
+     */
+    public function setTimeConflictWarnings(array $warnings): void
+    {
+        $this->errors['time_conflict'] = $warnings;
+    }
 }

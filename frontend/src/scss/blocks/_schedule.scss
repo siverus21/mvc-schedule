@@ -84,6 +84,7 @@
 			}
 		}
 
+		&_LAB,
 		&_lab {
 			background: var(--color-bg-lab);
 
@@ -96,8 +97,8 @@
 			}
 		}
 
-		&_seminar,
-		&_SEMINAR {
+		&_SEMINAR,
+		&_seminar {
 			background: var(--color-bg-seminar);
 
 			& .schedule__time svg {
@@ -106,6 +107,114 @@
 
 			& .schedule__type p {
 				background: var(--color-status-seminar);
+			}
+		}
+
+		&_CONSULTATION {
+			background: var(--color-bg-consultation);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-consultation);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-consultation);
+			}
+		}
+
+		&_EXAM {
+			background: var(--color-bg-exam);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-exam);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-exam);
+			}
+		}
+
+		&_CREDIT {
+			background: var(--color-bg-credit);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-credit);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-credit);
+			}
+		}
+
+		&_WORKSHOP {
+			background: var(--color-bg-workshop);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-workshop);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-workshop);
+			}
+		}
+
+		&_INDEPENDENT {
+			background: var(--color-bg-independent);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-independent);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-independent);
+			}
+		}
+
+		&_INTERNSHIP {
+			background: var(--color-bg-internship);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-internship);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-internship);
+			}
+		}
+
+		&_CONTROL {
+			background: var(--color-bg-control);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-control);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-control);
+			}
+		}
+
+		&_COLLOQUIUM {
+			background: var(--color-bg-colloquium);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-colloquium);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-colloquium);
+			}
+		}
+
+		&_COURSE_PROJECT {
+			background: var(--color-bg-course-project);
+
+			& .schedule__time svg {
+				stroke: var(--color-status-course-project);
+			}
+
+			& .schedule__type p {
+				background: var(--color-status-course-project);
 			}
 		}
 

@@ -35,12 +35,16 @@
                     <?= view()->renderPartial('incs/admin/menu'); ?>
                 </aside>
                 <div class="main-content w-100">
-                    <?= getAlerts(); ?>
+                    <div class="alerts-container">
+                        <? getAlerts(); ?>
+                    </div>
                     <?= $content ?>
                 </div>
             </div>
         <? else: ?>
-            <?= getAlerts(); ?>
+            <div class="alerts-container">
+                <? getAlerts(); ?>
+            </div>
             <?= $content ?>
         <? endif; ?>
     </main>

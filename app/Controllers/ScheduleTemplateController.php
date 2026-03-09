@@ -73,15 +73,32 @@ class ScheduleTemplateController extends BaseController
 
         if (!$model->validate()) {
             $this->rememberFormErrors($model);
-        } else {
-            if ($id = $model->save()) {
-                session()->setFlash('success', 'Занятие успешно добавлено. ID = ' . $id);
-                response()->redirect("/admin/schedules/semester/{$semesterId}/group/{$groupId}");
-            } else {
-                $this->rememberFormErrors($model, 'Ошибка добавления занятия');
-            }
+            response()->redirect("/admin/schedules/semester/{$semesterId}/group/{$groupId}/create");
+            return;
         }
-        response()->redirect("/admin/schedules/semester/{$semesterId}/group/{$groupId}/create");
+
+        // Проверяем пересечения по времени, но не блокируем сохранение — только предупреждаем
+        $conflicts = $model->findTimeConflicts(
+            $semesterId,
+            $groupId,
+            $model->attributes['teacher_id'],
+            (int) $model->attributes['day_of_week'],
+            (int) ($model->attributes['week_parity'] ?? 0),
+            $model->attributes['start_time'],
+            $model->attributes['end_time'],
+            null
+        );
+        if (!empty($conflicts)) {
+            session()->setFlash('info', implode(' ', $conflicts));
+        }
+
+        if ($id = $model->save()) {
+            session()->setFlash('success', 'Занятие успешно добавлено. ID = ' . $id);
+            response()->redirect("/admin/schedules/semester/{$semesterId}/group/{$groupId}");
+        } else {
+            $this->rememberFormErrors($model, 'Ошибка добавления занятия');
+            response()->redirect("/admin/schedules/semester/{$semesterId}/group/{$groupId}/create");
+        }
     }
 
     public function edit($semesterId, $groupId, $itemId)
@@ -121,6 +138,27 @@ class ScheduleTemplateController extends BaseController
         $model->attributes['is_active'] = $model->attributes['is_active'] == 'on' ? 1 : 0;
         $model->attributes['notes'] = trim($model->attributes['notes'] ?? '') === '' ? null : $model->attributes['notes'];
         $model->attributes['ordinal'] = null;   // TODO
+
+        if (!$model->validate()) {
+            $this->rememberFormErrors($model);
+            response()->redirect("/admin/schedules/semester/{$semesterId}/group/{$groupId}/edit/" . $itemId);
+            return;
+        }
+
+        // Проверка пересечений по времени — только предупреждение, не блокируем обновление
+        $conflicts = $model->findTimeConflicts(
+            $semesterId,
+            $groupId,
+            $model->attributes['teacher_id'],
+            (int) $model->attributes['day_of_week'],
+            (int) ($model->attributes['week_parity'] ?? 0),
+            $model->attributes['start_time'],
+            $model->attributes['end_time'],
+            $itemId
+        );
+        if (!empty($conflicts)) {
+            session()->setFlash('info', implode(' ', $conflicts));
+        }
 
         $res = $model->update($itemId);
 

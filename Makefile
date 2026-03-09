@@ -85,6 +85,10 @@ migrate-fresh:
 seed:
 	$(COMPOSE) exec $(SERVICE) php bootstrap/seed.php
 
+# migrate-seed — применить миграции и выполнить сидеры (migrate + seed).
+# Когда: первая настройка БД или полное пересоздание данных.
+migrate-seed: migrate seed
+
 # fix-migrations — утилита для исправления состояния таблицы миграций.
 # Когда: миграции «сломались» или нужно починить запись в migrations.
 fix-migrations:
@@ -112,6 +116,9 @@ migrate-status-dev:
 seed-dev:
 	$(COMPOSE_DEV) exec $(SERVICE) php bootstrap/seed.php
 
+# migrate-seed-dev — миграции + сидеры в dev-контейнере.
+migrate-seed-dev: migrate-dev seed-dev
+
 # -----------------------------------------------------------------------------
 # Фронтенд (webpack)
 # -----------------------------------------------------------------------------
@@ -126,4 +133,4 @@ frontend-build:
 frontend-watch:
 	cd frontend && npm run dev
 
-.PHONY: up up-dev down build exec exec-dev shell shell-dev migrate migrate-dev migrate-status migrate-rollback migrate-fresh seed fix-migrations create-migration migrate-status-dev seed-dev frontend-build frontend-watch
+.PHONY: up up-dev down build exec exec-dev shell shell-dev migrate migrate-dev migrate-status migrate-rollback migrate-fresh seed migrate-seed migrate-seed-dev fix-migrations create-migration migrate-status-dev seed-dev frontend-build frontend-watch

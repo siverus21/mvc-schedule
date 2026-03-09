@@ -2,6 +2,12 @@
 
 <form class="form" action="<?= base_url("/admin/schedules/semester/{$semesterId}/group/{$groupId}/create") ?>" method="post">
     <?= getCsrfField(); ?>
+    <? if (getErrors('time_conflict')): ?>
+    <div class="form__group mb-3 p-3 border border-warning rounded">
+        <strong>Предупреждение:</strong>
+        <?= getErrors('time_conflict') ?>
+    </div>
+    <? endif; ?>
     <div class="form__group d-flex flex-column">
         <label class="form__label" for="subject_id">Предмет</label>
         <select class="form__select <?= getValidationClass('subject_id') ?>" name="subject_id" id="subject_id">
