@@ -87,6 +87,15 @@ $spaces: (
 
 $max-grid-cols: 8;
 
+// Брейкпоинты (min-width), mobile-first
+$breakpoints: (
+  xs: 576px,
+  md: 768px,
+  l: 992px,
+  xl: 1200px,
+  xxl: 1440px
+);
+
 $utils: (
   mt: margin-top,
   mb: margin-bottom,
@@ -103,14 +112,24 @@ $utils: (
   }
 }
 
+// Стандартная сетка без брейкпоинта: grid-col, grid-col-2, ... grid-col-8
 @for $i from 1 through $max-grid-cols {
-  @if $i == 1 {
-    .grid-col {
-      grid-template-columns: repeat(1, 1fr);
-    }
-  } @else {
-    .grid-col-#{$i} {
-      grid-template-columns: repeat($i, 1fr);
+  .grid-col-#{$i} {
+    grid-template-columns: repeat($i, 1fr);
+  }
+}
+.grid-col {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+// Сетка: grid-col-{брейкпоинт}-{кол-во колонок}, например grid-col-md-3, grid-col-xl-4
+// Использование: <div class="d-grid grid-col-xs-1 grid-col-md-2 grid-col-xl-4">...</div>
+@each $bp-name, $bp-width in $breakpoints {
+  @media (min-width: $bp-width) {
+    @for $i from 1 through $max-grid-cols {
+      .grid-col-#{$bp-name}-#{$i} {
+        grid-template-columns: repeat($i, 1fr);
+      }
     }
   }
 }

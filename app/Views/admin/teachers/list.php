@@ -5,7 +5,7 @@
         </div>
     </div>
 <? else: ?>
-    <div class="block-list d-grid grid-col-4 gap-2">
+    <div class="block-list d-grid grid-col-l-3 grid-col-4 gap-2">
         <? foreach ($data as $item): ?>
             <div class="block-list__item default-block default-block_padding">
                 <div class="d-flex align-items-center justify-content-between mb-2">
