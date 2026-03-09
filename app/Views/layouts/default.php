@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Youpi :: <?= $title ?? "" ?></title>
     <?= getCsrfMeta(); ?>
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/vendors.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/public/assets/css/app.css') ?>">
+    <link rel="stylesheet" href="/assets/css/vendors.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
     <? if (!empty($styles)): ?>
         <? foreach ($styles as $style): ?>
             <link rel="stylesheet" href="<?= $style; ?>">
@@ -32,9 +32,9 @@
         <?= view()->renderPartial('layouts/footer/footer'); ?>
     </footer>
 
-    <script src="<?= base_url('/public/assets/js/lib.js') ?>"></script>
-    <script src="<?= base_url('/public/assets/js/vendors.js') ?>"></script>
-    <script src="<?= base_url('/public/assets/js/app.js') ?>"></script>
+    <script src="/assets/js/lib.js"></script>
+    <script src="/assets/js/vendors.js"></script>
+    <script src="/assets/js/app.js"></script>
     <? if (!empty($footerScripts)): ?>
         <? foreach ($footerScripts as $footerScript): ?>
             <script src="<?= $footerScript; ?>"></script>

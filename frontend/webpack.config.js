@@ -12,7 +12,6 @@ module.exports = (env, argv) => {
 		entry: {
 			lib: ['jquery', 'izimodal'],
 			vendor: ['izimodal/css/iziModal.min.css'],
-
 			app: {
 				import: ['./src/js/import.js', './src/js/main/app.js', './src/scss/settings.scss'],
 				dependOn: 'lib',
@@ -22,7 +21,7 @@ module.exports = (env, argv) => {
 			path: path.resolve(__dirname, '../public/assets'),
 			filename: 'js/[name].js',
 			clean: true,
-			publicPath: '/public/assets/',
+			publicPath: '/assets/',
 		},
 		module: {
 			rules: [
@@ -34,21 +33,14 @@ module.exports = (env, argv) => {
 							loader: 'css-loader',
 							options: {
 								sourceMap: !isProduction,
-								url: {
-									filter: (url, resourcePath) => {
-										if (url.includes('images/')) return true;
-										return false;
-									},
-								},
+								url: { filter: (url) => url.includes('images/') },
 							},
 						},
 						{
 							loader: 'sass-loader',
 							options: {
 								sourceMap: !isProduction,
-								sassOptions: {
-									outputStyle: isProduction ? 'compressed' : 'expanded',
-								},
+								sassOptions: { outputStyle: isProduction ? 'compressed' : 'expanded' },
 							},
 						},
 					],
@@ -58,12 +50,7 @@ module.exports = (env, argv) => {
 					use: [MiniCssExtractPlugin.loader, 'css-loader'],
 				},
 				{
-					test: /\.(png|jpg|jpeg|gif)$/i,
-					type: 'asset/resource',
-					generator: { filename: 'images/[name][ext]' },
-				},
-				{
-					test: /\.svg$/i,
+					test: /\.(png|jpg|jpeg|gif|svg)$/i,
 					type: 'asset/resource',
 					generator: { filename: 'images/[name][ext]' },
 				},
@@ -79,12 +66,10 @@ module.exports = (env, argv) => {
 		},
 		plugins: [
 			new RemoveEmptyScriptsPlugin(),
-
 			new MiniCssExtractPlugin({
 				filename: 'css/[name].css',
 				chunkFilename: 'css/[id].[contenthash].css',
 			}),
-
 			new CopyPlugin({
 				patterns: [
 					{
@@ -108,52 +93,27 @@ module.exports = (env, argv) => {
 			splitChunks: {
 				chunks: 'all',
 				cacheGroups: {
-					// Основная группа для entry point vendor (включая CSS из node_modules)
 					vendor: {
 						name: 'vendor',
 						test: (module) => {
-							// Проверяем, что модуль является CSS из node_modules ИЛИ
-							// находится в entry point vendor
-							const isNodeModuleCSS =
-								module.resource && /[\\/]node_modules[\\/].*\.css$/.test(module.resource);
-							const isVendorEntry =
-								module.chunks && module.chunks.some((chunk) => chunk.name === 'vendor');
-
-							return isNodeModuleCSS || isVendorEntry;
-						},
-						chunks: (chunk) => chunk.name === 'vendor',
-						enforce: true,
-						priority: 50,
-						reuseExistingChunk: true,
-					},
-
-					// Группа для стилей из vendor.scss
-					vendorStyles: {
-						name: 'vendor',
-						test(module) {
 							if (!module.resource) return false;
-
-							const isVendorPath = (resourcePath) =>
-								typeof resourcePath === 'string' &&
-								/[\\/]src[\\/]scss[\\/]vendor\.scss$/.test(resourcePath);
-
-							if (module.resource && isVendorPath(module.resource)) return true;
-
+							const r = module.resource;
+							if (/[\\/]node_modules[\\/].*\.css$/.test(r)) return true;
+							if (module.chunks?.some((c) => c.name === 'vendor')) return true;
+							if (/[\\/]src[\\/]scss[\\/]vendor\.scss$/.test(r)) return true;
 							let issuer = module.issuer;
 							while (issuer) {
-								if (issuer.resource && isVendorPath(issuer.resource)) return true;
+								if (issuer.resource && /[\\/]src[\\/]scss[\\/]vendor\.scss$/.test(issuer.resource))
+									return true;
 								issuer = issuer.issuer;
 							}
-
 							return false;
 						},
 						chunks: 'all',
 						enforce: true,
-						priority: 40,
+						priority: 50,
 						reuseExistingChunk: true,
 					},
-
-					// Стандартная группа для node_modules JS (низкий приоритет)
 					defaultVendors: {
 						test: /[\\/]node_modules[\\/]/,
 						name: 'vendors',

@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+Dockerfile
+docker-compose*.yml
+.docker
+node_modules
+frontend/node_modules
+vendor
+*.md
+tmp/logs/*
+tmp/cache/*
+!tmp/logs/.gitkeep
+!tmp/cache/.gitkeep

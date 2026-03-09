@@ -1,0 +1,71 @@
+# mvc-schedule — приложение, MySQL, phpMyAdmin, Redis, phpRedisAdmin
+# Запуск: docker compose up -d
+# Режим dev (монтирование кода): docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_DATABASE: mvc-schedule
+      DB_USERNAME: root
+      DB_PASSWORD: ""
+      REDIS_IP: redis
+      REDIS_PORT: "6379"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: mvc-schedule
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 128M
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  phpredisadmin:
+    image: erikdubbelboer/phpredisadmin:latest
+    ports:
+      - "8082:80"
+    environment:
+      REDIS_1_HOST: redis
+      REDIS_1_NAME: Redis
+    depends_on:
+      - redis
+
+volumes:
+  mysql_data:
+  redis_data:

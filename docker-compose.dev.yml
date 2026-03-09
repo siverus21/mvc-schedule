@@ -1,0 +1,13 @@
+# Режим dev: монтирование кода — изменения на хосте сразу видны в контейнере
+# Запуск: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+services:
+  app:
+    volumes:
+      - .:/var/www/html
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        if [ ! -f vendor/autoload.php ]; then composer install --no-dev; fi
+        chown -R www-data:www-data /var/www/html/tmp /var/www/html/public/uploads 2>/dev/null || true
+        exec apache2-foreground

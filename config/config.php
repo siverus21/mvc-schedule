@@ -20,13 +20,13 @@ define("LAYOUTS", APP . "/Views/layouts");
 // Langs
 define("LANG_VALIDATOR", PUBLIC_PATH . '/langValidator');
 
-// DB settings
+// DB settings (в Docker задаются через environment)
 define("DB_DRIVER", "mysql");
-define("DB_HOST", "127.0.0.1");
-define("DB_PORT", "3306");
-define("DB_DATABASE", "mvc-schedule");
-define("DB_USERNAME", "root");
-define("DB_PASSWORD", "");
+define("DB_HOST", getenv("DB_HOST") ?: "127.0.0.1");
+define("DB_PORT", getenv("DB_PORT") ?: "3306");
+define("DB_DATABASE", getenv("DB_DATABASE") ?: "mvc-schedule");
+define("DB_USERNAME", getenv("DB_USERNAME") ?: "root");
+define("DB_PASSWORD", getenv("DB_PASSWORD") !== false ? getenv("DB_PASSWORD") : "");
 define("DB_CHARSET", "utf8mb4");
 define("DB_COLLATION", "utf8mb4_unicode_ci");
 define("DB_PREFIX", "");
@@ -43,15 +43,15 @@ define("ERROR_LOGS", LOG_PATH . "/errors.log");
 // Cache path
 define("CACHE_PATH", ROOT . "/tmp/cache");
 define("USE_REDIS", true);
-define("REDIS_IP", "127.0.0.1");
-define("REDIS_PORT", "6379");
+define("REDIS_IP", getenv("REDIS_IP") ?: "127.0.0.1");
+define("REDIS_PORT", getenv("REDIS_PORT") ?: "6379");
 
 // Files
 define("UPLOADS", PUBLIC_PATH . "/uploads");
 
 // Enother const
 define("LAYOUT", 'default');
-define("PATH", "http://localhost");
+define("PATH", "http://localhost:8080");
 
 // Debug
 define("DEBUG", "dev");
