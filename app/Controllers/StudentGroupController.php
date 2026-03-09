@@ -10,12 +10,12 @@ class StudentGroupController extends BaseController
     {
         $model = new StudentGroupModel();
         $studentGroups = $model->getStudentGroups();
-        return view('admin/student-groups', ['title' => "Room Types Page", 'studentGroups' => $studentGroups], 'admin');
+        return view('admin/student-groups', ['title' => 'Учебные группы', 'studentGroups' => $studentGroups], 'admin');
     }
 
     public function create()
     {
-        return view('admin/student-groups/create', ['title' => "Create Room Types Page"], 'admin');
+        return view('admin/student-groups/create', ['title' => 'Добавить группу'], 'admin');
     }
 
     public function store()
@@ -24,17 +24,13 @@ class StudentGroupController extends BaseController
         $model->loadData();
 
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             if ($id = $model->save()) {
                 session()->setFlash('success', 'Группа успешно добавлена. ID = ' . $id);
                 response()->redirect('/admin/student-groups/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления группы');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления группы');
             }
         }
         response()->redirect('/admin/student-groups/create');
@@ -44,7 +40,7 @@ class StudentGroupController extends BaseController
     {
         $model = new StudentGroupModel();
         $studentGroup = $model->getStudentGroup($id);
-        return view('admin/student-groups/edit', ['title' => "Edit Room Type Page", 'studentGroup' => $studentGroup], 'admin');
+        return view('admin/student-groups/edit', ['title' => 'Редактировать группу', 'studentGroup' => $studentGroup], 'admin');
     }
 
     public function update($id)
@@ -55,9 +51,7 @@ class StudentGroupController extends BaseController
         $res = $model->update($id);
 
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/student-groups/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');
@@ -75,7 +69,7 @@ class StudentGroupController extends BaseController
         $model = new StudentGroupModel();
         $model->loadData();
         if ($model->delete($id)) {
-            session()->setFlash('success', 'Группа успешно удален');
+            session()->setFlash('success', 'Группа успешно удалена');
             cacheRedis()->delete('student-groups');
         } else {
             session()->setFlash('error', 'Произошла ошибка при удалении группы');

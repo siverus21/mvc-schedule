@@ -13,7 +13,7 @@ class TeacherController extends BaseController
     {
         $model = new TeacherModel();
         $teachers = $model->getAllTeachers();
-        return view('admin/teachers', ['title' => "Teachers Page", 'teachers' => $teachers], 'admin');
+        return view('admin/teachers', ['title' => 'Преподаватели', 'teachers' => $teachers], 'admin');
     }
 
     public function create()
@@ -21,7 +21,7 @@ class TeacherController extends BaseController
         $department = (new DepartmentModel())->getAllDepartments();
         $academicDegree = (new AcademicDegreeModel())->getAllAcademicDegrees();
         $users = (new UserModel())->getUsersTeacherButNoInTableTeacher();
-        return view('admin/teachers/create', ['title' => "Create Teachers Page", 'department' => $department, 'academicDegree' => $academicDegree, 'users' => $users], 'admin');
+        return view('admin/teachers/create', ['title' => 'Добавить преподавателя', 'department' => $department, 'academicDegree' => $academicDegree, 'users' => $users], 'admin');
     }
 
     public function store()
@@ -30,18 +30,14 @@ class TeacherController extends BaseController
         $model->loadData();
 
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             $model->attributes['created_at'] = date('Y-m-d H:i:s');
             if ($id = $model->save()) {
                 session()->setFlash('success', 'Преподаватель успешно добавлен. ID = ' . $id);
                 response()->redirect('/admin/teachers/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления здания');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления преподавателя');
             }
         }
         response()->redirect('/admin/teachers/create');
@@ -53,7 +49,7 @@ class TeacherController extends BaseController
         $academicDegree = (new AcademicDegreeModel())->getAllAcademicDegrees();
         $users = (new UserModel())->getAllUsers();
         $teacher = (new TeacherModel())->getTeacher($id);
-        return view('admin/teachers/edit', ['title' => "Edit Teachers Page", 'department' => $department, 'academicDegree' => $academicDegree, 'users' => $users, 'teacher' => $teacher], 'admin');
+        return view('admin/teachers/edit', ['title' => 'Редактировать преподавателя', 'department' => $department, 'academicDegree' => $academicDegree, 'users' => $users, 'teacher' => $teacher], 'admin');
     }
 
     public function update($id)
@@ -64,15 +60,13 @@ class TeacherController extends BaseController
         $res = $model->update($id);
 
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/teachers/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');
             response()->redirect('/admin/teachers/edit/' . $id);
         } else {
-            session()->setFlash('success', 'Преподаватель успешно обновлен');
+            session()->setFlash('success', 'Преподаватель успешно обновлён');
             response()->redirect('/admin/teachers/');
         }
 
@@ -84,10 +78,10 @@ class TeacherController extends BaseController
         $model = new TeacherModel();
         $model->loadData();
         if ($model->delete($id)) {
-            session()->setFlash('success', 'Преподаватель успешно удален');
+            session()->setFlash('success', 'Преподаватель успешно удалён');
             cacheRedis()->delete('teachers');
         } else {
-            session()->setFlash('error', 'Произошла ошибка при удалении здания');
+            session()->setFlash('error', 'Произошла ошибка при удалении преподавателя');
         }
         response()->redirect('/admin/teachers/');
     }

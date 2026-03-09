@@ -2,28 +2,26 @@
 
 namespace App\Models;
 
-use Youpi\Model;
-
-class LessonTypeModel extends Model
+class LessonTypeModel extends BaseModel
 {
     protected string $table = 'lesson_types';
     public bool $timestamp = true;
 
-    protected array $loaded = ["code", "name"];
+    protected array $loaded = ['code', 'name'];
     protected array $fillable = ['code', 'name'];
 
     public array $rules = [
         'required' => ['name', 'code'],
-        'unique' => [['code', "lesson_types,code"]],
+        'unique'   => [['code', 'lesson_types,code']],
     ];
 
-    public function getLessonTypes()
+    public function getLessonTypes(): array
     {
-        return db()->query("SELECT id, code, name FROM $this->table")->getAssoc();
+        return $this->getAllRecords();
     }
 
-    public function getLessonType($id)
+    public function getLessonType(int|string $id): array
     {
-        return db()->findOrFail('lesson_types', $id);
+        return $this->getRecordById($id);
     }
 }

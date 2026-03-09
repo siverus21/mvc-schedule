@@ -2,28 +2,26 @@
 
 namespace App\Models;
 
-use Youpi\Model;
-
-class RoomTypeModel extends Model
+class RoomTypeModel extends BaseModel
 {
     protected string $table = 'room_types';
     public bool $timestamp = true;
 
-    protected array $loaded = ["code", "name"];
+    protected array $loaded = ['code', 'name'];
     protected array $fillable = ['code', 'name'];
 
     public array $rules = [
         'required' => ['name', 'code'],
-        'unique' => [['code', "room_types,code"]],
+        'unique'   => [['code', 'room_types,code']],
     ];
 
-    public function getRoomTypes()
+    public function getRoomTypes(): array
     {
-        return db()->query("SELECT id, code, name FROM $this->table")->getAssoc();
+        return $this->getAllRecords();
     }
 
-    public function getRoomType($id)
+    public function getRoomType(int|string $id): array
     {
-        return db()->findOrFail('room_types', $id);
+        return $this->getRecordById($id);
     }
 }

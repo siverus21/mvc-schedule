@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Youpi\Model;
-
-class TeacherModel extends Model
+class TeacherModel extends BaseModel
 {
     protected string $table = 'teachers';
     public bool $timestamp = true;
@@ -38,9 +36,9 @@ class TeacherModel extends Model
         ")->getAssoc();
     }
 
-    public function getTeacher($id): array
+    public function getTeacher(int|string $id): array
     {
-        return db()->findOrFail($this->table, $id);
+        return $this->getRecordById($id);
     }
 
     public function countTeachers()

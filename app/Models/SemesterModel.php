@@ -2,28 +2,26 @@
 
 namespace App\Models;
 
-use Youpi\Model;
-
-class SemesterModel extends Model
+class SemesterModel extends BaseModel
 {
     protected string $table = 'semesters';
     public bool $timestamp = true;
 
-    protected array $loaded = ["name"];
+    protected array $loaded = ['name'];
     protected array $fillable = ['name'];
 
     public array $rules = [
         'required' => ['name'],
-        'unique' => [['name', "semesters,name"]],
+        'unique'   => [['name', 'semesters,name']],
     ];
 
-    public function getSemesters()
+    public function getSemesters(): array
     {
-        return db()->query("SELECT id, name FROM $this->table")->getAssoc();
+        return $this->getAllRecords();
     }
 
-    public function getSemester($id)
+    public function getSemester(int|string $id): array
     {
-        return db()->findOrFail('semesters', $id);
+        return $this->getRecordById($id);
     }
 }

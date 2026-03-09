@@ -10,12 +10,12 @@ class AcademicDegreeController extends BaseController
     {
         $model = new AcademicDegreeModel();
         $academicDegrees = $model->getAllAcademicDegrees();
-        return view('admin/academic-degrees', ['title' => "Room Types Page", 'academicDegrees' => $academicDegrees], 'admin');
+        return view('admin/academic-degrees', ['title' => 'Учёные степени', 'academicDegrees' => $academicDegrees], 'admin');
     }
 
     public function create()
     {
-        return view('admin/academic-degrees/create', ['title' => "Create Room Types Page"], 'admin');
+        return view('admin/academic-degrees/create', ['title' => 'Добавить учёную степень'], 'admin');
     }
 
     public function store()
@@ -24,17 +24,13 @@ class AcademicDegreeController extends BaseController
         $model->loadData();
 
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             if ($id = $model->save()) {
-                session()->setFlash('success', 'Тип аудитории успешно добавлен. ID = ' . $id);
+                session()->setFlash('success', 'Учёная степень успешно добавлена. ID = ' . $id);
                 response()->redirect('/admin/academic-degrees/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления типа аудитории');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления учёной степени');
             }
         }
         response()->redirect('/admin/academic-degrees/create');
@@ -44,7 +40,7 @@ class AcademicDegreeController extends BaseController
     {
         $model = new AcademicDegreeModel();
         $academicDegree = $model->getAcademicDegree($id);
-        return view('admin/academic-degrees/edit', ['title' => "Edit Room Type Page", 'academicDegree' => $academicDegree], 'admin');
+        return view('admin/academic-degrees/edit', ['title' => 'Редактировать учёную степень', 'academicDegree' => $academicDegree], 'admin');
     }
 
     public function update($id)
@@ -55,15 +51,13 @@ class AcademicDegreeController extends BaseController
         $res = $model->update($id);
 
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/academic-degrees/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');
             response()->redirect('/admin/academic-degrees/edit/' . $id);
         } else {
-            session()->setFlash('success', 'Тип помещения успешно обновлен');
+            session()->setFlash('success', 'Учёная степень успешно обновлена');
             response()->redirect('/admin/academic-degrees/');
         }
 
@@ -75,10 +69,10 @@ class AcademicDegreeController extends BaseController
         $model = new AcademicDegreeModel();
         $model->loadData();
         if ($model->delete($id)) {
-            session()->setFlash('success', 'Тип помещения успешно удален');
+            session()->setFlash('success', 'Учёная степень успешно удалена');
             cacheRedis()->delete('academic-degrees');
         } else {
-            session()->setFlash('error', 'Произошла ошибка при удалении типа помещения');
+            session()->setFlash('error', 'Произошла ошибка при удалении учёной степени');
         }
         response()->redirect('/admin/academic-degrees/');
     }

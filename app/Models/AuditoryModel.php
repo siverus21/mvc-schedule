@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Youpi\Model;
-
-class AuditoryModel extends Model
+class AuditoryModel extends BaseModel
 {
     protected string $table = 'rooms';
 
@@ -55,9 +53,9 @@ class AuditoryModel extends Model
         ")->get();
     }
 
-    public function getAuditory($id)
+    public function getAuditory(int|string $id): array
     {
-        return db()->findOrFail('rooms', $id);
+        return $this->getRecordById($id);
     }
 
     public function countAuditories()

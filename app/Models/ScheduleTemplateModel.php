@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Youpi\Model;
 use App\Models\SemesterModel;
 use App\Models\StudentGroupModel;
 
-class ScheduleTemplateModel extends Model
+class ScheduleTemplateModel extends BaseModel
 {
     protected string $table = 'schedule_templates';
     public bool $timestamp = true;
@@ -128,9 +127,9 @@ class ScheduleTemplateModel extends Model
         return db()->query("SELECT * FROM $this->table")->getAssoc();
     }
 
-    public function getScheduleTemplate($id)
+    public function getScheduleTemplate(int|string $id): array
     {
-        return db()->findOrFail($this->table, $id);
+        return $this->getRecordById($id);
     }
 
     public function countScheduleTemplates()

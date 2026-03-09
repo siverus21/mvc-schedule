@@ -1,9 +1,6 @@
 <?
 
 namespace App\Filters;
-
-
-use App\Filters\BaseFilter;
 use App\Models\TeacherModel;
 
 
@@ -25,6 +22,6 @@ class TeacherFilter extends BaseFilter
             unset($teachers[$key]['academic_degree']);
         }
 
-        return view()->renderPartial('incs/filters/defaultSelectFilter', ['items' => $teachers, 'disableItemText' => self::$disableItemText, 'id' => self::$id, 'name' => self::$name, 'title' => self::$title]);
+        return static::renderDefaultSelect($teachers);
     }
 }

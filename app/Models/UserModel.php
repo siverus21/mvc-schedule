@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Youpi\Model;
-
-class UserModel extends Model
+class UserModel extends BaseModel
 {
     // Название таблицы
     protected string $table = "users";
@@ -60,9 +58,9 @@ class UserModel extends Model
         ")->get();
     }
 
-    public function getUser($id)
+    public function getUser(int|string $id): array
     {
-        return db()->findOrFail('users', $id);
+        return $this->getRecordById($id);
     }
 
     public function getUsersTeacherButNoInTableTeacher()

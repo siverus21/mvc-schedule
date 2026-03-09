@@ -12,16 +12,15 @@ class RoomEquipmentController extends BaseController
         $res = [];
         foreach ($data as $item) {
             $res[$item['room_id_pk']]['room_name'] = $item['room_name'];
-            $res[$item['room_id_pk']]["items"][] = $item;
+            $res[$item['room_id_pk']]['items'][] = $item;
         }
-        // dd($res);
-        return view('admin/room_equipment', ['title' => "Room Equipment Types Page", 'equipmentTypes' => $res], 'admin');
+        return view('admin/room_equipment', ['title' => 'Оборудование аудиторий', 'equipmentTypes' => $res], 'admin');
     }
 
     public function create()
     {
         $model = new RoomEquipmentModel();
-        return view('admin/room-equipment/create', ['title' => "Create Equipment Types Page", "rooms" => $model->getAllRooms(), "equipmentTypes" => $model->getAllEquipmentTypes()], 'admin');
+        return view('admin/room-equipment/create', ['title' => 'Добавить оборудование', 'rooms' => $model->getAllRooms(), 'equipmentTypes' => $model->getAllEquipmentTypes()], 'admin');
     }
 
     public function store()
@@ -30,17 +29,13 @@ class RoomEquipmentController extends BaseController
         $model->loadData();
 
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             if ($model->save()) {
-                session()->setFlash('success', 'Тип оборудования успешно добавлен.');
+                session()->setFlash('success', 'Оборудование успешно добавлено.');
                 response()->redirect('/admin/room-equipment/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления типа оборудования');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления оборудования');
             }
         }
         response()->redirect('/admin/room-equipment/create');
@@ -49,7 +44,7 @@ class RoomEquipmentController extends BaseController
     public function edit($id)
     {
         $model = new RoomEquipmentModel();
-        return view('admin/room-equipment/edit', ['title' => "Edit Equipment Types Page", "rooms" => $model->getAllRooms(), "equipmentTypes" => $model->getAllEquipmentTypes(), "roomEquipment" => $model->getCurrentRoomEquipment($id)], 'admin');
+        return view('admin/room-equipment/edit', ['title' => 'Редактировать оборудование', 'rooms' => $model->getAllRooms(), 'equipmentTypes' => $model->getAllEquipmentTypes(), 'roomEquipment' => $model->getCurrentRoomEquipment($id)], 'admin');
     }
 
     public function update($id)
@@ -60,15 +55,13 @@ class RoomEquipmentController extends BaseController
         $res = $model->update($id);
 
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/room-equipment/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');
             response()->redirect('/admin/room-equipment/edit/' . $id);
         } else {
-            session()->setFlash('success', 'Тип оборудования успешно обновлен');
+            session()->setFlash('success', 'Оборудование успешно обновлено');
             response()->redirect('/admin/room-equipment/');
         }
     }

@@ -1,9 +1,6 @@
 <?
 
 namespace App\Filters;
-
-
-use App\Filters\BaseFilter;
 use App\Models\StudentGroupModel;
 
 
@@ -19,6 +16,6 @@ class GroupFilter extends BaseFilter
     {
         $studentGroupModel = new StudentGroupModel();
         $groups = $studentGroupModel->getStudentGroups();
-        return view()->renderPartial('incs/filters/defaultSelectFilter', ['items' => $groups, 'disableItemText' => self::$disableItemText, 'id' => self::$id, 'name' => self::$name, 'title' => self::$title]);
+        return static::renderDefaultSelect($groups);
     }
 }

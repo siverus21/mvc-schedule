@@ -10,12 +10,12 @@ class LessonTypeController extends BaseController
     {
         $model = new LessonTypeModel();
         $lessonTypes = $model->getLessonTypes();
-        return view('admin/lesson-types', ['title' => "Lesson Types Page", 'lessonTypes' => $lessonTypes], 'admin');
+        return view('admin/lesson-types', ['title' => 'Типы занятий', 'lessonTypes' => $lessonTypes], 'admin');
     }
 
     public function create()
     {
-        return view('admin/lesson-types/create', ['title' => "Create Lesson Types Page"], 'admin');
+        return view('admin/lesson-types/create', ['title' => 'Добавить тип занятия'], 'admin');
     }
 
     public function store()
@@ -24,17 +24,13 @@ class LessonTypeController extends BaseController
         $model->loadData();
 
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             if ($id = $model->save()) {
                 session()->setFlash('success', 'Тип занятия успешно добавлен. ID = ' . $id);
                 response()->redirect('/admin/lesson-types/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления типа занятия');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления типа занятия');
             }
         }
         response()->redirect('/admin/lesson-types/create');
@@ -44,7 +40,7 @@ class LessonTypeController extends BaseController
     {
         $model = new LessonTypeModel();
         $lessonType = $model->getLessonType($id);
-        return view('admin/lesson-types/edit', ['title' => "Edit Room Type Page", 'lessonType' => $lessonType], 'admin');
+        return view('admin/lesson-types/edit', ['title' => 'Редактировать тип занятия', 'lessonType' => $lessonType], 'admin');
     }
 
     public function update($id)
@@ -55,15 +51,13 @@ class LessonTypeController extends BaseController
         $res = $model->update($id);
 
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/lesson-types/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');
             response()->redirect('/admin/lesson-types/edit/' . $id);
         } else {
-            session()->setFlash('success', 'Тип занятия успешно обновлен');
+            session()->setFlash('success', 'Тип занятия успешно обновлён');
             response()->redirect('/admin/lesson-types/');
         }
 
@@ -75,10 +69,10 @@ class LessonTypeController extends BaseController
         $model = new LessonTypeModel();
         $model->loadData();
         if ($model->delete($id)) {
-            session()->setFlash('success', 'Тип занятия успешно удален');
+            session()->setFlash('success', 'Тип занятия успешно удалён');
             cacheRedis()->delete('lesson-types');
         } else {
-            session()->setFlash('error', 'Произошла ошибка при удалении типа помещения');
+            session()->setFlash('error', 'Произошла ошибка при удалении типа занятия');
         }
         response()->redirect('/admin/lesson-types/');
     }

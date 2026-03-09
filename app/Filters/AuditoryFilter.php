@@ -1,9 +1,6 @@
 <?
 
 namespace App\Filters;
-
-
-use App\Filters\BaseFilter;
 use App\Models\AuditoryModel;
 
 
@@ -25,6 +22,6 @@ class AuditoryFilter extends BaseFilter
             unset($auditories[$key]['building_name']);
         }
 
-        return view()->renderPartial('incs/filters/defaultSelectFilter', ['items' => $auditories, 'disableItemText' => self::$disableItemText, 'id' => self::$id, 'name' => self::$name, 'title' => self::$title]);
+        return static::renderDefaultSelect($auditories);
     }
 }

@@ -2,20 +2,19 @@
 
 namespace App\Controllers;
 
-use Youpi\Controller;
 use App\Models\DepartmentModel;
 
-class DepartmentController extends Controller
+class DepartmentController extends BaseController
 {
     public function list()
     {
         $model = new DepartmentModel();
-        return view('admin/department', ['title' => "Department Page", 'departments' => $model->getAllDepartments()], 'admin');
+        return view('admin/department', ['title' => 'Кафедры', 'departments' => $model->getAllDepartments()], 'admin');
     }
 
     public function create()
     {
-        return view('admin/department/create', ['title' => "Create Department Page"], 'admin');
+        return view('admin/department/create', ['title' => 'Добавить кафедру'], 'admin');
     }
 
     public function store()
@@ -24,18 +23,14 @@ class DepartmentController extends Controller
         $model->loadData();
 
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             $model->attributes['created_at'] = date('Y-m-d H:i:s');
             if ($id = $model->save()) {
-                session()->setFlash('success', 'Кафедра успешно добавлено. ID = ' . $id);
+                session()->setFlash('success', 'Кафедра успешно добавлена. ID = ' . $id);
                 response()->redirect('/admin/department/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления здания');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления кафедры');
             }
         }
         response()->redirect('/admin/department/create');
@@ -45,7 +40,7 @@ class DepartmentController extends Controller
     {
         $model = new DepartmentModel();
         $department = $model->getDepartment($id);
-        return view('admin/department/edit', ['title' => "Edit department Page", 'department' => $department], 'admin');
+        return view('admin/department/edit', ['title' => 'Редактировать кафедру', 'department' => $department], 'admin');
     }
 
     public function update($id)
@@ -56,15 +51,13 @@ class DepartmentController extends Controller
         $res = $model->update($id);
 
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/department/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');
             response()->redirect('/admin/department/edit/' . $id);
         } else {
-            session()->setFlash('success', 'Кафедра успешно обновлено');
+            session()->setFlash('success', 'Кафедра успешно обновлена');
             response()->redirect('/admin/department/');
         }
 
@@ -79,7 +72,7 @@ class DepartmentController extends Controller
             session()->setFlash('success', 'Кафедра успешно удалена');
             cacheRedis()->delete('department');
         } else {
-            session()->setFlash('error', 'Произошла ошибка при удалении здания');
+            session()->setFlash('error', 'Произошла ошибка при удалении кафедры');
         }
         response()->redirect('/admin/department/');
     }

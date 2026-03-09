@@ -2,28 +2,26 @@
 
 namespace App\Models;
 
-use Youpi\Model;
-
-class SubjectModel extends Model
+class SubjectModel extends BaseModel
 {
     protected string $table = 'subjects';
     public bool $timestamp = true;
 
-    protected array $loaded = ["name", "code", "description"];
-    protected array $fillable = ["name", "code", "description"];
+    protected array $loaded = ['name', 'code', 'description'];
+    protected array $fillable = ['name', 'code', 'description'];
 
     public array $rules = [
         'required' => ['name', 'code'],
-        'unique' => [['code', "subjects,code"]],
+        'unique'   => [['code', 'subjects,code']],
     ];
 
-    public function getAllSubjects()
+    public function getAllSubjects(): array
     {
-        return db()->query("SELECT id, code, name, description FROM $this->table")->getAssoc();
+        return $this->getAllRecords();
     }
 
-    public function getSubject($id)
+    public function getSubject(int|string $id): array
     {
-        return db()->findOrFail('subjects', $id);
+        return $this->getRecordById($id);
     }
 }

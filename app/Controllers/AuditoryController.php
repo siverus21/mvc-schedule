@@ -11,32 +11,29 @@ class AuditoryController extends BaseController
     public function list()
     {
         $model = new AuditoryModel();
-        return view('admin/auditories', ['title' => "Auditories Page", 'auditories' => $model->getListData()], 'admin');
+        return view('admin/auditories', ['title' => 'Аудитории', 'auditories' => $model->getListData()], 'admin');
     }
 
     public function create()
     {
         $buildingsModel = new BuildingModel();
         $roomTypesModel = new RoomTypeModel();
-        return view('admin/auditories/create', ['title' => "Create Auditories Page", 'buildings' => $buildingsModel->getBuildings(), 'roomTypes' => $roomTypesModel->getRoomTypes()], 'admin');
+        return view('admin/auditories/create', ['title' => 'Добавить аудиторию', 'buildings' => $buildingsModel->getBuildings(), 'roomTypes' => $roomTypesModel->getRoomTypes()], 'admin');
     }
 
     public function store()
     {
         $model = new AuditoryModel();
         $model->loadData();
+
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             if ($id = $model->save()) {
                 session()->setFlash('success', 'Аудитория успешно добавлена. ID = ' . $id);
                 response()->redirect('/admin/auditories/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления аудитории');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления аудитории');
             }
         }
         response()->redirect('/admin/auditories/create');
@@ -47,7 +44,7 @@ class AuditoryController extends BaseController
         $buildingsModel = (new BuildingModel())->getBuildings();
         $roomTypesModel = (new RoomTypeModel())->getRoomTypes();
         $auditory = (new AuditoryModel())->getAuditory($id);
-        return view('admin/auditories/edit', ['title' => "Edit Auditories Page", 'auditory' => $auditory, 'buildings' => $buildingsModel, 'roomTypes' => $roomTypesModel], 'admin');
+        return view('admin/auditories/edit', ['title' => 'Редактировать аудиторию', 'auditory' => $auditory, 'buildings' => $buildingsModel, 'roomTypes' => $roomTypesModel], 'admin');
     }
 
     public function update($id)
@@ -55,10 +52,9 @@ class AuditoryController extends BaseController
         $model = new AuditoryModel();
         $model->loadData();
         $res = $model->update($id);
+
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/auditories/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');

@@ -2,29 +2,27 @@
 
 namespace App\Models;
 
-use Youpi\Model;
-
-class BuildingModel extends Model
+class BuildingModel extends BaseModel
 {
     protected string $table = 'buildings';
-
     public bool $timestamp = true;
 
-    protected array $loaded = ["code", "name", "address"];
+    protected array $loaded = ['code', 'name', 'address'];
     protected array $fillable = ['code', 'name', 'address', 'created_at'];
+    protected array $listColumns = ['id', 'name', 'address'];
 
     public array $rules = [
         'required' => ['name', 'address'],
-        'unique' => [['name', "buildings,name"]],
+        'unique'   => [['name', 'buildings,name']],
     ];
 
-    public function getBuildings()
+    public function getBuildings(): array
     {
-        return db()->query("SELECT id, name, address FROM $this->table")->getAssoc();
+        return $this->getAllRecords();
     }
 
-    public function getBuilding($id)
+    public function getBuilding(int|string $id): array
     {
-        return db()->findOrFail('buildings', $id);
+        return $this->getRecordById($id);
     }
 }

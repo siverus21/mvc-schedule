@@ -2,19 +2,18 @@
 
 namespace App\Controllers;
 
-use Youpi\Controller;
 use App\Models\BuildingModel;
 
-class BuildingController extends Controller
+class BuildingController extends BaseController
 {
     public function list()
     {
-        return view('admin/buildings', ['title' => "Buildings Page", 'buildings' => $this->getBuildings()], 'admin');
+        return view('admin/buildings', ['title' => 'Здания', 'buildings' => $this->getBuildings()], 'admin');
     }
 
     public function create()
     {
-        return view('admin/buildings/create', ['title' => "Create Buildings Page"], 'admin');
+        return view('admin/buildings/create', ['title' => 'Добавить здание'], 'admin');
     }
 
     public function store()
@@ -23,18 +22,14 @@ class BuildingController extends Controller
         $model->loadData();
 
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             $model->attributes['created_at'] = date('Y-m-d H:i:s');
             if ($id = $model->save()) {
                 session()->setFlash('success', 'Здание успешно добавлено. ID = ' . $id);
                 response()->redirect('/admin/buildings/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления здания');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления здания');
             }
         }
         response()->redirect('/admin/buildings/create');
@@ -44,7 +39,7 @@ class BuildingController extends Controller
     {
         $model = new BuildingModel();
         $building = $model->getBuilding($id);
-        return view('admin/buildings/edit', ['title' => "Edit Buildings Page", 'building' => $building], 'admin');
+        return view('admin/buildings/edit', ['title' => 'Редактировать здание', 'building' => $building], 'admin');
     }
 
     public function update($id)
@@ -55,9 +50,7 @@ class BuildingController extends Controller
         $res = $model->update($id);
 
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/buildings/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');
@@ -86,7 +79,6 @@ class BuildingController extends Controller
     public function getBuildings()
     {
         $model = new BuildingModel();
-        $buildings = $model->getBuildings();
-        return $buildings;
+        return $model->getBuildings();
     }
 }

@@ -8,12 +8,12 @@ class RoomTypeController extends BaseController
 {
     public function list()
     {
-        return view('admin/room_types', ['title' => "Room Types Page", 'roomTypes' => $this->getRoomTypes()], 'admin');
+        return view('admin/room_types', ['title' => 'Типы помещений', 'roomTypes' => $this->getRoomTypes()], 'admin');
     }
 
     public function create()
     {
-        return view('admin/room-types/create', ['title' => "Create Room Types Page"], 'admin');
+        return view('admin/room-types/create', ['title' => 'Добавить тип помещения'], 'admin');
     }
 
     public function store()
@@ -22,17 +22,13 @@ class RoomTypeController extends BaseController
         $model->loadData();
 
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             if ($id = $model->save()) {
-                session()->setFlash('success', 'Тип аудитории успешно добавлен. ID = ' . $id);
+                session()->setFlash('success', 'Тип помещения успешно добавлен. ID = ' . $id);
                 response()->redirect('/admin/room-types/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления типа аудитории');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления типа помещения');
             }
         }
         response()->redirect('/admin/room-types/create');
@@ -42,7 +38,7 @@ class RoomTypeController extends BaseController
     {
         $model = new RoomTypeModel();
         $roomType = $model->getRoomType($id);
-        return view('admin/room-types/edit', ['title' => "Edit Room Type Page", 'roomType' => $roomType], 'admin');
+        return view('admin/room-types/edit', ['title' => 'Редактировать тип помещения', 'roomType' => $roomType], 'admin');
     }
 
     public function update($id)
@@ -53,15 +49,13 @@ class RoomTypeController extends BaseController
         $res = $model->update($id);
 
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/room-types/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');
             response()->redirect('/admin/room-types/edit/' . $id);
         } else {
-            session()->setFlash('success', 'Тип помещения успешно обновлен');
+            session()->setFlash('success', 'Тип помещения успешно обновлён');
             response()->redirect('/admin/room-types/');
         }
 
@@ -73,7 +67,7 @@ class RoomTypeController extends BaseController
         $model = new RoomTypeModel();
         $model->loadData();
         if ($model->delete($id)) {
-            session()->setFlash('success', 'Тип помещения успешно удален');
+            session()->setFlash('success', 'Тип помещения успешно удалён');
             cacheRedis()->delete('room-types');
         } else {
             session()->setFlash('error', 'Произошла ошибка при удалении типа помещения');

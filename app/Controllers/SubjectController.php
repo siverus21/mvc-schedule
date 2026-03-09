@@ -9,12 +9,12 @@ class SubjectController extends BaseController
     public function list()
     {
         $model = new SubjectModel();
-        return view('admin/subjects', ['title' => "Room Types Page", 'subjects' => $model->getAllSubjects()], 'admin');
+        return view('admin/subjects', ['title' => 'Дисциплины', 'subjects' => $model->getAllSubjects()], 'admin');
     }
 
     public function create()
     {
-        return view('admin/subjects/create', ['title' => "Create Room Types Page"], 'admin');
+        return view('admin/subjects/create', ['title' => 'Добавить дисциплину'], 'admin');
     }
 
     public function store()
@@ -23,17 +23,13 @@ class SubjectController extends BaseController
         $model->loadData();
 
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             if ($id = $model->save()) {
                 session()->setFlash('success', 'Дисциплина успешно добавлена. ID = ' . $id);
                 response()->redirect('/admin/subjects/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления типа аудитории');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления дисциплины');
             }
         }
         response()->redirect('/admin/subjects/create');
@@ -43,7 +39,7 @@ class SubjectController extends BaseController
     {
         $model = new SubjectModel();
         $subject = $model->getSubject($id);
-        return view('admin/subjects/edit', ['title' => "Edit Room Type Page", 'subject' => $subject], 'admin');
+        return view('admin/subjects/edit', ['title' => 'Редактировать дисциплину', 'subject' => $subject], 'admin');
     }
 
     public function update($id)
@@ -54,9 +50,7 @@ class SubjectController extends BaseController
         $res = $model->update($id);
 
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/subjects/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');
@@ -77,7 +71,7 @@ class SubjectController extends BaseController
             session()->setFlash('success', 'Дисциплина успешно удалена');
             cacheRedis()->delete('subjects');
         } else {
-            session()->setFlash('error', 'Произошла ошибка при удалении типа помещения');
+            session()->setFlash('error', 'Произошла ошибка при удалении дисциплины');
         }
         response()->redirect('/admin/subjects/');
     }

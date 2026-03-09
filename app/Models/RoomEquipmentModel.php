@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Youpi\Model;
 use App\Models\AuditoryModel;
 use App\Models\EquipmentTypeModel;
 
-class RoomEquipmentModel extends Model
+class RoomEquipmentModel extends BaseModel
 {
     protected string $table = 'room_equipments';
 
@@ -56,9 +55,9 @@ class RoomEquipmentModel extends Model
         return $res;
     }
 
-    public function getCurrentRoomEquipment($id)
+    public function getCurrentRoomEquipment(int|string $id): array
     {
-        return db()->findOrFail('room_equipments', $id);
+        return $this->getRecordById($id);
     }
 
     public function getAllData()

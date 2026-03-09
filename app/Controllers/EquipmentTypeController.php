@@ -8,12 +8,12 @@ class EquipmentTypeController extends BaseController
 {
     public function list()
     {
-        return view('admin/equipment_types', ['title' => "Equipment Types Page", 'equipmentTypes' => $this->getEquipmentTypes()], 'admin');
+        return view('admin/equipment_types', ['title' => 'Типы оборудования', 'equipmentTypes' => $this->getEquipmentTypes()], 'admin');
     }
 
     public function create()
     {
-        return view('admin/equipment-types/create', ['title' => "Create Equipment Types Page"], 'admin');
+        return view('admin/equipment-types/create', ['title' => 'Добавить тип оборудования'], 'admin');
     }
 
     public function store()
@@ -22,17 +22,13 @@ class EquipmentTypeController extends BaseController
         $model->loadData();
 
         if (!$model->validate()) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
         } else {
             if ($id = $model->save()) {
                 session()->setFlash('success', 'Тип оборудования успешно добавлен. ID = ' . $id);
                 response()->redirect('/admin/equipment-types/');
             } else {
-                session()->setFlash('error', 'Ошибка добавления типа оборудования');
-                session()->set('form_errors', $model->getErrors());
-                session()->set('form_data', $model->attributes);
+                $this->rememberFormErrors($model, 'Ошибка добавления типа оборудования');
             }
         }
         response()->redirect('/admin/equipment-types/create');
@@ -42,7 +38,7 @@ class EquipmentTypeController extends BaseController
     {
         $model = new EquipmentTypeModel();
         $equipmentType = $model->getEquipmentType($id);
-        return view('admin/equipment-types/edit', ['title' => "Edit Equipment Type Page", 'equipmentType' => $equipmentType], 'admin');
+        return view('admin/equipment-types/edit', ['title' => 'Редактировать тип оборудования', 'equipmentType' => $equipmentType], 'admin');
     }
 
     public function update($id)
@@ -53,15 +49,13 @@ class EquipmentTypeController extends BaseController
         $res = $model->update($id);
 
         if ($res === false) {
-            session()->setFlash('error', 'Не заполнены обязательные поля');
-            session()->set('form_errors', $model->getErrors());
-            session()->set('form_data', $model->attributes);
+            $this->rememberFormErrors($model);
             response()->redirect('/admin/equipment-types/edit/' . $id);
         } elseif ($res === 0) {
             session()->setFlash('info', 'Данные не изменены');
             response()->redirect('/admin/equipment-types/edit/' . $id);
         } else {
-            session()->setFlash('success', 'Тип обоборудования успешно обновлен');
+            session()->setFlash('success', 'Тип оборудования успешно обновлён');
             response()->redirect('/admin/equipment-types/');
         }
 
@@ -73,7 +67,7 @@ class EquipmentTypeController extends BaseController
         $model = new EquipmentTypeModel();
         $model->loadData();
         if ($model->delete($id)) {
-            session()->setFlash('success', 'Тип оборудования успешно удален');
+            session()->setFlash('success', 'Тип оборудования успешно удалён');
             cacheRedis()->delete('equipment-types');
         } else {
             session()->setFlash('error', 'Произошла ошибка при удалении типа оборудования');

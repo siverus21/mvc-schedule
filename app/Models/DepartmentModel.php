@@ -2,29 +2,26 @@
 
 namespace App\Models;
 
-use Youpi\Model;
-
-class DepartmentModel extends Model
+class DepartmentModel extends BaseModel
 {
     protected string $table = 'department';
-
     public bool $timestamp = true;
 
-    protected array $loaded = ["code", "name", "notes"];
+    protected array $loaded = ['code', 'name', 'notes'];
     protected array $fillable = ['code', 'name', 'notes'];
 
     public array $rules = [
         'required' => ['name', 'code'],
-        'unique' => [['code', "equipment_types,code"]],
+        'unique'   => [['code', 'department,code']],
     ];
 
-    public function getAllDepartments()
+    public function getAllDepartments(): array
     {
-        return db()->query("SELECT id, code, name, notes FROM $this->table")->getAssoc();
+        return $this->getAllRecords();
     }
 
-    public function getDepartment($id)
+    public function getDepartment(int|string $id): array
     {
-        return db()->findOrFail($this->table, $id);
+        return $this->getRecordById($id);
     }
 }
