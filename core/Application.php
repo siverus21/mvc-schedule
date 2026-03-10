@@ -1,8 +1,9 @@
-<?
+<?php
 
 namespace Youpi;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Youpi\Contracts\CacheInterface;
 
 class Application
 {
@@ -17,10 +18,10 @@ class Application
 
     public Session $session;
 
-    public Cache $cache;
+    /** Драйвер кэша (Redis или файловый), переключение через USE_REDIS */
+    public CacheInterface $cache;
 
     public Database $db;
-    public CacheRedis $cacheRedis;
 
     public static Application $app;
 
@@ -41,14 +42,21 @@ class Application
 
         $this->view = new View(LAYOUT);
 
-        if (USE_REDIS) {
-            $this->cacheRedis = new CacheRedis();
-        } else {
-            $this->cache = new Cache();
-        }
+        $this->cache = $this->createCacheDriver();
 
         $this->generateCsrfToken();
         Auth::setUser();
+    }
+
+    /**
+     * Создаёт драйвер кэша по конфигу (USE_REDIS). Легко расширить под другие драйверы.
+     */
+    protected function createCacheDriver(): CacheInterface
+    {
+        if (USE_REDIS) {
+            return new CacheRedis();
+        }
+        return new Cache();
     }
 
     public function run(): void

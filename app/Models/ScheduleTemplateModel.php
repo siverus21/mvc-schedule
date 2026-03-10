@@ -122,6 +122,97 @@ class ScheduleTemplateModel extends BaseModel
         return $result;
     }
 
+    /**
+     * Расписание по преподавателю (все группы) на семестр.
+     * Структура как у getCurrentGroupScheduleTemplates; у каждого занятия остаётся student_group_name для отображения группы.
+     */
+    public function getScheduleByTeacher($semesterId, $teacherId, $allDays = true, $is_active = true)
+    {
+        $query = "
+        SELECT
+            st.id AS id,
+            st.student_group_id AS group_id,
+            st.subject_id AS subject_id,
+            st.teacher_id AS teacher_id,
+            st.room_id AS room_id,
+            st.lesson_type_id AS lesson_type_id,
+            st.day_of_week AS day_of_week,
+            st.week_parity AS week_parity,
+            st.start_time AS start_time,
+            st.end_time AS end_time,
+            st.ordinal AS ordinal,
+            st.notes AS notes,
+            st.is_active AS is_active,
+
+            sg.name AS student_group_name,
+            sg.notes AS student_group_notes,
+
+            s.id AS semester_name,
+
+            sub.name AS subject_name,
+
+            t.user_id AS teacher_user_id,
+
+            u.display_name AS teacher_name,
+
+            r.name AS room_name,
+
+            lt.code AS lesson_type_code,
+            lt.name AS lesson_type_name
+
+            FROM schedule_templates AS st
+            LEFT JOIN student_groups AS sg ON sg.id = st.student_group_id
+            LEFT JOIN semesters AS s ON s.id = st.semester_id
+            LEFT JOIN subjects AS sub ON sub.id = st.subject_id
+            LEFT JOIN teachers AS t ON t.id = st.teacher_id
+            LEFT JOIN users AS u ON u.id = t.user_id
+            LEFT JOIN rooms AS r ON r.id = st.room_id
+            LEFT JOIN lesson_types AS lt ON lt.id = st.lesson_type_id
+
+            WHERE st.semester_id = " . (int) $semesterId . " AND st.teacher_id = " . (int) $teacherId;
+
+        if ($is_active) {
+            $query .= " AND st.is_active = 1";
+        }
+
+        $query .= " ORDER BY st.day_of_week ASC, st.start_time ASC";
+
+        $data = db()->query($query)->get();
+
+        $result = [
+            'group_name' => '',
+            'group_notes' => '',
+            'semester_name' => null,
+            'days' => [],
+        ];
+        $dayOfWeek = getDays();
+
+        foreach ($data as $item) {
+            if ($result['semester_name'] === null && isset($item['semester_name'])) {
+                $result['semester_name'] = $item['semester_name'];
+            }
+            unset($item['semester_name']);
+            unset($item['student_group_notes']);
+            // student_group_name оставляем в каждом занятии для отображения группы в шаблоне
+
+            $result['days'][$dayOfWeek[$item['day_of_week']]][$item['week_parity']][] = $item;
+        }
+
+        if (isset($result['days'])) {
+            foreach ($result['days'] as $day => $v) {
+                ksort($result['days'][$day]);
+            }
+
+            $sortedDays = [];
+            foreach ($dayOfWeek as $dayName) {
+                $sortedDays[$dayName] = isset($result['days'][$dayName]) ? $result['days'][$dayName] : [];
+            }
+            $result['days'] = $sortedDays;
+        }
+
+        return $result;
+    }
+
     public function getAllScheduleTemplates()
     {
         return db()->query("SELECT * FROM $this->table")->getAssoc();

@@ -27,14 +27,12 @@ function db()
     return app()->db;
 }
 
-function cache()
+/**
+ * Возвращает текущий драйвер кэша (Redis или файловый — зависит от USE_REDIS).
+ */
+function cache(): \Youpi\Contracts\CacheInterface
 {
     return app()->cache;
-}
-
-function cacheRedis()
-{
-    return app()->cacheRedis;
 }
 
 function view($view = '', $data = [], $layout = 'default'): string|View
@@ -61,6 +59,18 @@ function base_url($path = ''): string
 function publicUrl($path = ''): string
 {
     return PUBLIC_PATH . $path;
+}
+
+/**
+ * URL статического файла из public с параметром версии (mtime) для сброса кэша браузера после сборки.
+ * Пример: asset_url('assets/js/app.js') → "http://localhost:8080/assets/js/app.js?v=1234567890"
+ */
+function asset_url(string $path): string
+{
+    $path = '/' . ltrim($path, '/');
+    $file = PUBLIC_PATH . $path;
+    $version = (is_file($file)) ? '?v=' . filemtime($file) : '';
+    return base_url($path) . $version;
 }
 
 function getAlerts(): void

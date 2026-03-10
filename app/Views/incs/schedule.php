@@ -47,7 +47,7 @@
                                     <p style="text-align: center;">Нет пар</p>
                                 <? else: ?>
                                     <? foreach ($item as $schedule): ?>
-                                        <div class="schedule__block <?= $schedule['lesson_type_code'] ? "schedule__block_" . $schedule['lesson_type_code'] : "" ?>">
+                                        <div class="schedule__block <?= $schedule['lesson_type_code'] ? "schedule__block_" . $schedule['lesson_type_code'] : "" ?>" data-teacher-id="<?= (string)($schedule['teacher_id'] ?? '') ?>">
                                             <div class="schedule__time">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock w-4 h-4" aria-hidden="true" style="color: rgb(99, 102, 241);">
                                                     <path d="M12 6v6l4 2"></path>
@@ -73,6 +73,17 @@
                                                 </svg>
                                                 <p><?= $schedule['teacher_name'] ?></p>
                                             </div>
+                                            <? if (!empty($schedule['student_group_name'])): ?>
+                                            <div class="schedule__group">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users w-4 h-4" aria-hidden="true" style="color: var(--color-text-secondary);">
+                                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                                    <circle cx="9" cy="7" r="4"></circle>
+                                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                                </svg>
+                                                <p><?= h($schedule['student_group_name']) ?></p>
+                                            </div>
+                                            <? endif; ?>
                                             <div class="schedule__room">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin w-4 h-4" aria-hidden="true" style="color: var(--color-text-secondary);">
                                                     <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>

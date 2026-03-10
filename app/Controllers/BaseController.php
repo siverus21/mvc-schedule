@@ -8,14 +8,19 @@ class BaseController extends Controller
 {
     public function __construct()
     {
-        if (!$menu = cacheRedis()->get('menu')) {
-            cacheRedis()->set('menu', $this->renderMenu());
+        $menu = cache()->get('menu');
+        if ($menu === null || $menu === '' || strpos((string) $menu, ' not found') !== false) {
+            if ($menu !== null && $menu !== '') {
+                cache()->delete('menu');
+            }
+            $menu = $this->renderMenu();
+            cache()->set('menu', $menu, 3600);
         }
     }
 
     public function renderMenu(): string
     {
-        return view()->renderPartial('incs/menu');
+        return view()->renderPartial('incs/admin/menu');
     }
 
     /**

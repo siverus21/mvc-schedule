@@ -2,105 +2,99 @@
 
 namespace Youpi;
 
-class CacheRedis
-{
-    private $redis;
-    private $address;
-    private $port;
-    private $prefix;
+use Youpi\Contracts\CacheInterface;
 
-    public function __construct($address = REDIS_IP, $port = REDIS_PORT, $prefix = null)
-    {
-        if (!class_exists('Redis')) {
+/**
+ * Драйвер кэша на Redis. Поддерживает префикс ключей и TTL.
+ */
+class CacheRedis implements CacheInterface
+{
+    private \Redis $redis;
+    private string $prefix;
+
+    public function __construct(
+        string $address = REDIS_IP,
+        int|string $port = REDIS_PORT,
+        ?string $prefix = null
+    ) {
+        if (!class_exists(\Redis::class)) {
             throw new \RuntimeException('Расширение phpredis (класс Redis) не установлено.');
         }
-
-        $this->address = $address;
-        $this->port = (int)$port;
-        $this->prefix = $prefix;
-
         $this->redis = new \Redis();
-        $this->connect();
+        $this->prefix = (string) $prefix;
+        $this->connect($address, (int) $port);
     }
 
-    private function connect()
+    private function connect(string $address, int $port): void
     {
-        // @ подавляет предупреждения, мы обрабатываем результат вручную
-        $ok = @$this->redis->connect($this->address, $this->port);
+        $ok = @$this->redis->connect($address, $port);
         if ($ok === false) {
-            throw new \RuntimeException("Не удалось подключиться к Redis {$this->address}:{$this->port}");
+            throw new \RuntimeException("Не удалось подключиться к Redis {$address}:{$port}");
         }
     }
 
-    private function prefixedKey($key)
+    private function prefixedKey(string $key): string
     {
-        return $this->prefix ? $this->prefix . $key : $key;
+        return $this->prefix !== '' ? $this->prefix . $key : $key;
     }
 
-    public function set($key, $data, $seconds = 3600)
+    private function encode(mixed $data): string
     {
-        $key = $this->prefixedKey((string)$key);
-
         if (is_scalar($data) || $data === null) {
-            $value = (string)$data;
-        } else {
-            $value = json_encode($data, JSON_UNESCAPED_UNICODE);
-            if ($value === false) {
-                $value = serialize($data);
-            }
+            return (string) $data;
         }
-
-        if ((int)$seconds > 0) {
-            return (bool)$this->redis->setex($key, (int)$seconds, $value);
-        } else {
-            return (bool)$this->redis->set($key, $value);
-        }
+        $json = json_encode($data, JSON_UNESCAPED_UNICODE);
+        return $json !== false ? $json : serialize($data);
     }
 
-    public function get($key)
+    private function decode(string $value): mixed
     {
-        $key = $this->prefixedKey((string)$key);
-        $val = $this->redis->get($key);
-        if ($val === false) {
-            return false;
-        }
-
-        $decoded = json_decode($val, true);
+        $decoded = json_decode($value, true);
         if (json_last_error() === JSON_ERROR_NONE) {
             return $decoded;
         }
+        $unserialized = @unserialize($value);
+        return $unserialized !== false ? $unserialized : $value;
+    }
 
-        if (@unserialize($val) !== false || $val === 'b:0;') {
-            $u = @unserialize($val);
-            if ($u !== false) {
-                return $u;
-            }
+    public function set(string $key, mixed $data, int $seconds = 3600): bool
+    {
+        $key = $this->prefixedKey($key);
+        $value = $this->encode($data);
+        if ($seconds > 0) {
+            return (bool) $this->redis->setex($key, $seconds, $value);
         }
-
-        return $val;
+        return (bool) $this->redis->set($key, $value);
     }
 
-    public function delete($key)
+    public function get(string $key, mixed $default = null): mixed
     {
-        $key = $this->prefixedKey((string)$key);
-        return $this->redis->del($key);
+        $key = $this->prefixedKey($key);
+        $val = $this->redis->get($key);
+        if ($val === false) {
+            return $default;
+        }
+        return $this->decode($val);
     }
 
-
-    public function isSet($key)
+    public function delete(string $key): bool
     {
-        $key = $this->prefixedKey((string)$key);
-        // EXISTS возвращает 1/0
-        return (bool)$this->redis->exists($key);
+        $key = $this->prefixedKey($key);
+        return $this->redis->del($key) > 0;
     }
 
-    public function close()
+    public function has(string $key): bool
     {
-        if ($this->redis instanceof \Redis) {
-            try {
-                $this->redis->close();
-            } catch (\Exception $e) {
-            }
+        $key = $this->prefixedKey($key);
+        return (bool) $this->redis->exists($key);
+    }
+
+    public function close(): void
+    {
+        try {
+            $this->redis->close();
+        } catch (\Throwable $e) {
+            // игнорируем при закрытии
         }
     }
 

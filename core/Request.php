@@ -79,4 +79,13 @@ class Request
         }
         return $data;
     }
+
+    /**
+     * Объединённые GET и POST (POST перезаписывает GET).
+     * Нужно для API, чтобы параметры доходили и из query string, и из тела.
+     */
+    public function getMergedParams(): array
+    {
+        return array_merge($this->get, $this->post);
+    }
 }

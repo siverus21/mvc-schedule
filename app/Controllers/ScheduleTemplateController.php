@@ -17,7 +17,7 @@ class ScheduleTemplateController extends BaseController
         return view('admin/schedule-templates', ['title' => 'Шаблоны расписания', 'groups' => $model->getListGroupsWithSemesters()], 'admin');
     }
 
-    public function schedules($semesterId, $groupId, $api = false)
+    public function schedules($semesterId, $groupId)
     {
         $model = new ScheduleTemplateModel();
         $list = $model->getCurrentGroupScheduleTemplates($semesterId, $groupId);
@@ -93,6 +93,8 @@ class ScheduleTemplateController extends BaseController
         }
 
         if ($id = $model->save()) {
+            cache()->delete('schedules');
+            cache()->delete('api:schedule:' . $semesterId . ':' . $groupId);
             session()->setFlash('success', 'Занятие успешно добавлено. ID = ' . $id);
             response()->redirect("/admin/schedules/semester/{$semesterId}/group/{$groupId}");
         } else {
@@ -173,7 +175,8 @@ class ScheduleTemplateController extends BaseController
             response()->redirect("/admin/schedules/semester/{$semesterId}/group/{$groupId}/");
         }
 
-        cacheRedis()->delete('schedules');
+        cache()->delete('schedules');
+        cache()->delete('api:schedule:' . $semesterId . ':' . $groupId);
     }
 
     public function delete($semesterId, $groupId, $itemId)
@@ -182,7 +185,8 @@ class ScheduleTemplateController extends BaseController
         $model->loadData();
         if ($model->delete($itemId)) {
             session()->setFlash('success', 'Занятие успешно удалено');
-            cacheRedis()->delete('schedules');
+            cache()->delete('schedules');
+            cache()->delete('api:schedule:' . $semesterId . ':' . $groupId);
         } else {
             session()->setFlash('error', 'Произошла ошибка при удалении занятия');
         }
