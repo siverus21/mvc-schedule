@@ -16,9 +16,13 @@
 
 	& .filter__form {
 		display: grid;
-		grid-template-columns: repeat(3, auto);
+		grid-template-columns: repeat(3, 1fr);
 		gap: 0.5rem;
 		margin-bottom: 0.5rem;
+
+		@media (max-width: map-get($breakpoints, xxl)) {
+			grid-template-columns: repeat(1, 1fr);
+		}
 	}
 
 	& .filter__item {

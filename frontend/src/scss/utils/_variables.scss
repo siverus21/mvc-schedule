@@ -1,3 +1,12 @@
+// Брейкпоинты (min-width), mobile-first
+$breakpoints: (
+  xs: 576px,
+  md: 768px,
+  l: 992px,
+  xl: 1200px,
+  xxl: 1440px
+);
+
 :root {
 	/* Base Colors */
 	--color-background: #ffffff;

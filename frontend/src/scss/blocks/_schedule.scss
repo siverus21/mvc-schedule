@@ -12,9 +12,26 @@
 		display: grid;
 		grid-template-columns: repeat(7, 1fr);
 		gap: 1rem;
-	}
 
-	&__item {
+		@media (max-width: map-get($breakpoints, xxl)) {
+			grid-template-columns: repeat(6, 1fr);
+		}
+
+		@media (max-width: map-get($breakpoints, xl)) {
+			grid-template-columns: repeat(5, 1fr);
+		}
+
+		@media (max-width: map-get($breakpoints, l)) {
+			grid-template-columns: repeat(4, 1fr);
+		}
+
+		@media (max-width: map-get($breakpoints, md)) {
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		@media (max-width: map-get($breakpoints, xs)) {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
 
 	&__header {
